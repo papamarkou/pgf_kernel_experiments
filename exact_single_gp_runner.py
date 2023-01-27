@@ -28,7 +28,7 @@ class ExactSingleGPRunner:
 
         if verbose:
             n = len(str(num_iters))
-            msg = "Iteration {:"+str(n)+"d}/{:"+str(n)+"d}, loss: {:.6f}"
+            msg = 'Iteration {:'+str(n)+'d}/{:'+str(n)+'d}, loss: {:.6f}'
 
         for i in range(num_iters):
             losses[i] = self.step(optimizer, train_x, train_y).item()
