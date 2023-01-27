@@ -1,4 +1,5 @@
 import gpytorch
+import torch
 
 from exact_gp_model import ExactGPModel
 
@@ -27,3 +28,15 @@ class ExactGPRunner:
             loss = self.step(optimizer)
 
         return loss
+
+    def predict(self, test_x):
+        return self.likelihood(self.model(test_x))
+
+    def test(self, test_x, test_y):
+        self.model.setup('test')
+
+        predictions = self.predict(test_x)
+
+        error = torch.mean(torch.abs(predictions.mean - test_y))
+
+        return predictions, error
