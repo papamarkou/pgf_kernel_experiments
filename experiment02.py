@@ -10,6 +10,8 @@ from matplotlib import pyplot as plt
 
 from pgfml.kernels import GFKernel
 
+from exact_single_gp_runner import ExactSingleGPRunner
+
 # %% Simulate data
 
 # See
@@ -78,78 +80,35 @@ train_y = torch.as_tensor(train_labels.T, dtype=torch.float32)
 test_x = torch.as_tensor(test_pos.T, dtype=torch.float32)
 test_y = torch.as_tensor(test_labels.T, dtype=torch.float32)
 
-# %% Define GP model for exact inference
+# %% Set up single GP runner
 
-class ExactGPModel(gpytorch.models.ExactGP):
-    def __init__(self, train_x, train_y, likelihood):
-        super(ExactGPModel, self).__init__(train_x, train_y, likelihood)
-
-        self.mean_module = gpytorch.means.ConstantMean()
-        # self.covar_module = GFKernel(width=[20])
-        self.covar_module = gpytorch.kernels.ScaleKernel(GFKernel(width=[20]))
-        # self.covar_module = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel())
-
-    def forward(self, x):
-        mean_x = self.mean_module(x)
-        covar_x = self.covar_module(x)
-
-        return gpytorch.distributions.MultivariateNormal(mean_x, covar_x)
-
-# %% Initialize likelihood and model
-
-likelihood = gpytorch.likelihoods.GaussianLikelihood()
-
-model = ExactGPModel(train_x, train_y, likelihood)
+runner = ExactSingleGPRunner(train_x, train_y, gpytorch.kernels.RBFKernel())
+# runner = ExactSingleGPRunner(train_x, train_y, gpytorch.kernels.ScaleKernel(GFKernel(width=[20])))
 
 # %% Print parameter names and values
 
-for param_name, param_value in model.named_parameters():
+for param_name, param_value in runner.model.named_parameters():
     print('Parameter name: {}. Parameter value: {}'.format(param_name, param_value))
 
 # %% Configurate training setup for GP model
 
-num_training_iters = 20
-
-# Get to training mode
-model.train()
-likelihood.train()
-
-# model.covar_module.base_kernel.lengthscale
-
 # Set the optimizer
-optimizer = torch.optim.SGD(model.parameters(), lr=0.1)  # Includes GaussianLikelihood parameters
+optimizer = torch.optim.SGD(runner.model.parameters(), lr=0.1)  # Includes GaussianLikelihood parameters
 
-# Set the loss for GPs to be the marginal log-likelihood
-mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
+# Set number of training itereations
+num_iters = 20
 
 # %% Train GP model to find optimal hyperparameters
 
-for i in range(num_training_iters):
-    # Zero gradients from previous iteration
-    optimizer.zero_grad()
-
-    # Output from model
-    output = model(train_x)
-
-    # Calculate loss and gradients
-    loss = -mll(output, train_y)
-    loss.backward()
-
-    print('Iteration {}/{}, loss: {:.4f}'.format(i + 1, num_training_iters, loss.item()))
-
-    optimizer.step()
+losses = runner.train(optimizer, train_x, train_y, num_iters)
 
 # %% Make predictions
 
-# Get to evaluation (predictive posterior) mode
-model.eval()
-likelihood.eval()
+predictions = runner.test(test_x)
 
-with torch.no_grad(), gpytorch.settings.fast_pred_var():
-    # Make predictions by feeding model through likelihood
-    preds = likelihood(model(test_x))
+# %% Compute error metrics
 
-print('Test MAE: {}'.format(torch.mean(torch.abs(preds.mean - test_y))))
+print('Test MAE: {}'.format(gpytorch.metrics.mean_absolute_error(predictions, test_y)))
 
 # %% Plot predictions
 
@@ -159,7 +118,7 @@ ax[0].imshow(srf.field.reshape(len(x), len(y)).T, origin="lower")
 ax[1].imshow(srf_normed.field.reshape(len(x), len(y)).T, origin="lower")
 ax[2].scatter(*train_pos, c=train_labels)
 ax[3].scatter(*test_pos, c=test_labels)
-ax[4].scatter(*test_pos, c=preds.mean.numpy())
+ax[4].scatter(*test_pos, c=predictions.mean.numpy())
 
 ax[0].set_title("Original field")
 ax[1].set_title("Normed field")

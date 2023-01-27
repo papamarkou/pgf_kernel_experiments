@@ -2,15 +2,12 @@ import gpytorch
 import torch
 
 from exact_gp_model import ExactGPModel
-from metrics import mae
 
 class ExactSingleGPRunner:
-    def __init__(self, train_x, train_y, kernel, likelihood=gpytorch.likelihoods.GaussianLikelihood(), metric=mae):
+    def __init__(self, train_x, train_y, kernel, likelihood=gpytorch.likelihoods.GaussianLikelihood()):
         self.model = ExactGPModel(train_x, train_y, kernel, likelihood=likelihood)
 
         self.mll = gpytorch.mlls.ExactMarginalLogLikelihood(self.model.likelihood, self.model)
-
-        self.metric = metric
 
     def step(self, optimizer, train_x, train_y):
         optimizer.zero_grad()
@@ -36,15 +33,13 @@ class ExactSingleGPRunner:
 
     def predict(self, test_x):
         with torch.no_grad(), gpytorch.settings.fast_pred_var():
-            predictions = self.likelihood(self.model(test_x))
+            predictions = self.model.likelihood(self.model(test_x))
 
         return predictions
 
-    def test(self, test_x, test_y):
+    def test(self, test_x):
         self.model.setup('test')
 
         predictions = self.predict(test_x)
 
-        error = self.metric(predictions.mean, test_y)
-
-        return error, predictions
+        return predictions
