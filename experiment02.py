@@ -109,6 +109,8 @@ predictions = runner.test(test_x)
 # %% Compute error metrics
 
 print('Test MAE: {}'.format(gpytorch.metrics.mean_absolute_error(predictions, test_y)))
+print('Test MSE: {}'.format(gpytorch.metrics.mean_absolute_error(predictions, test_y)))
+print('Test LNPD: {}'.format(gpytorch.metrics.negative_log_predictive_density(predictions, test_y)))
 
 # %% Plot predictions
 

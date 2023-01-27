@@ -21,13 +21,20 @@ class ExactSingleGPRunner:
 
         return loss
 
-    def train(self, optimizer, train_x, train_y, num_iters):
+    def train(self, optimizer, train_x, train_y, num_iters, verbose=True):
         self.model.setup('train')
 
         losses = torch.empty([num_iters], dtype=train_x.dtype, device=train_x.device)
 
+        if verbose:
+            n = len(str(num_iters))
+            msg = "Iteration {:"+str(n)+"d}/{:"+str(n)+"d}, loss: {:.6f}"
+
         for i in range(num_iters):
             losses[i] = self.step(optimizer, train_x, train_y).item()
+
+            if verbose:
+                print(msg.format(i + 1, num_iters, losses[i]))
 
         return losses
 
