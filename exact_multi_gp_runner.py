@@ -11,21 +11,23 @@ class ExactMultiGPRunner:
         return len(self.single_runners)
 
     def step(self, optimizers, train_x, train_y):
-        loss = torch.empty([self.num_gps()], dtype=train_x.dtype, device=train_x.device)
+        losses = torch.empty([self.num_gps()], dtype=train_x.dtype, device=train_x.device)
 
         for i in range(self.num_gps()):
             optimizers[i].zero_grad()
 
             output = self.single_runners[i].model(train_x)
 
-            loss[i] = -self.mll(output, train_y)
-            loss[i].backward()
+            loss = -self.single_runners[i].mll(output, train_y)
+            loss.backward()
 
             optimizers[i].step()
 
-        return loss
+            losses[i] = loss
 
-    def train(self, optimizer, train_x, train_y, num_iters, verbose=True):
+        return losses
+
+    def train(self, optimizers, train_x, train_y, num_iters, verbose=True):
         for i in range(self.num_gps()):
             self.single_runners[i].model.setup('train')
 
@@ -38,7 +40,7 @@ class ExactMultiGPRunner:
                 msg += ', {:.6f}'
 
         for i in range(num_iters):
-            losses[i, :] = self.step(optimizer, train_x, train_y)
+            losses[i, :] = self.step(optimizers, train_x, train_y)
 
             if verbose:
                 print(msg.format(i + 1, num_iters, *(losses[i, :])))
@@ -62,4 +64,14 @@ class ExactMultiGPRunner:
 
         return predictions
 
-    # Function for constructing single GP runners
+    @classmethod
+    def generator(selfclass, train_x, train_y, kernels, likelihoods=None):
+        if likelihoods is None:
+            likelihoods = [gpytorch.likelihoods.GaussianLikelihood() for _ in range(len(kernels))]
+
+        single_runners = []
+
+        for i in range(len(kernels)):
+            single_runners.append(ExactSingleGPRunner(train_x, train_y, kernels[i], likelihood=likelihoods[i]))
+
+        return selfclass(single_runners)
