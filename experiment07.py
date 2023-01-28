@@ -99,14 +99,15 @@ runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
 optimizers = []
 
 for i in range(2):
-    optimizers.append(torch.optim.SGD(runner.single_runners[i].model.parameters(), lr=0.1))  # Includes GaussianLikelihood parameters
+    optimizers.append(torch.optim.SGD(runner.single_runners[i].model.parameters(), lr=0.1))
+    # Includes GaussianLikelihood parameters
 
 # Set number of training itereations
 num_iters = 20
 
 # %% Train GP model to find optimal hyperparameters
 
-losses = runner.train(optimizers, train_x, train_y, num_iters)
+losses = runner.train(train_x, train_y, optimizers, num_iters)
 
 # %% Make predictions
 
@@ -114,9 +115,10 @@ predictions = runner.test(test_x)
 
 # %% Compute error metrics
 
-print('Test MAE: {}'.format(gpytorch.metrics.mean_absolute_error(predictions, test_y)))
-print('Test MSE: {}'.format(gpytorch.metrics.mean_absolute_error(predictions, test_y)))
-print('Test LNPD: {}'.format(gpytorch.metrics.negative_log_predictive_density(predictions, test_y)))
+for i in range(2):
+    print('Test MAE: {}'.format(gpytorch.metrics.mean_absolute_error(predictions[i], test_y)))
+    print('Test MSE: {}'.format(gpytorch.metrics.mean_absolute_error(predictions[i], test_y)))
+    print('Test LNPD: {}'.format(gpytorch.metrics.negative_log_predictive_density(predictions[i], test_y)))
 
 # %% Plot predictions
 
@@ -126,7 +128,7 @@ ax[0].imshow(srf.field.reshape(len(x), len(y)).T, origin="lower")
 ax[1].imshow(srf_normed.field.reshape(len(x), len(y)).T, origin="lower")
 ax[2].scatter(*train_pos, c=train_labels)
 ax[3].scatter(*test_pos, c=test_labels)
-ax[4].scatter(*test_pos, c=predictions.mean.numpy())
+ax[4].scatter(*test_pos, c=predictions[1].mean.numpy())
 
 ax[0].set_title("Original field")
 ax[1].set_title("Normed field")

@@ -100,7 +100,7 @@ num_iters = 20
 
 # %% Train GP model to find optimal hyperparameters
 
-losses = runner.train(optimizer, train_x, train_y, num_iters)
+losses = runner.train(train_x, train_y, optimizer, num_iters)
 
 # %% Make predictions
 

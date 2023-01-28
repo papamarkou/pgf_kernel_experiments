@@ -9,7 +9,7 @@ class ExactSingleGPRunner:
 
         self.mll = gpytorch.mlls.ExactMarginalLogLikelihood(self.model.likelihood, self.model)
 
-    def step(self, optimizer, train_x, train_y):
+    def step(self, train_x, train_y, optimizer):
         optimizer.zero_grad()
 
         output = self.model(train_x)
@@ -21,7 +21,7 @@ class ExactSingleGPRunner:
 
         return loss
 
-    def train(self, optimizer, train_x, train_y, num_iters, verbose=True):
+    def train(self, train_x, train_y, optimizer, num_iters, verbose=True):
         self.model.setup('train')
 
         losses = torch.empty([num_iters], dtype=train_x.dtype, device=train_x.device)
@@ -31,7 +31,7 @@ class ExactSingleGPRunner:
             msg = 'Iteration {:'+str(n)+'d}/{:'+str(n)+'d}, loss: {:.6f}'
 
         for i in range(num_iters):
-            losses[i] = self.step(optimizer, train_x, train_y).item()
+            losses[i] = self.step(train_x, train_y, optimizer).item()
 
             if verbose:
                 print(msg.format(i + 1, num_iters, losses[i]))

@@ -10,7 +10,7 @@ class ExactMultiGPRunner:
     def num_gps(self):
         return len(self.single_runners)
 
-    def step(self, optimizers, train_x, train_y):
+    def step(self, train_x, train_y, optimizers):
         losses = torch.empty([self.num_gps()], dtype=train_x.dtype, device=train_x.device)
 
         for i in range(self.num_gps()):
@@ -27,7 +27,7 @@ class ExactMultiGPRunner:
 
         return losses
 
-    def train(self, optimizers, train_x, train_y, num_iters, verbose=True):
+    def train(self, train_x, train_y, optimizers, num_iters, verbose=True):
         for i in range(self.num_gps()):
             self.single_runners[i].model.setup('train')
 
@@ -40,7 +40,7 @@ class ExactMultiGPRunner:
                 msg += ', {:.6f}'
 
         for i in range(num_iters):
-            losses[i, :] = self.step(optimizers, train_x, train_y)
+            losses[i, :] = self.step(train_x, train_y, optimizers)
 
             if verbose:
                 print(msg.format(i + 1, num_iters, *(losses[i, :])))
@@ -52,13 +52,13 @@ class ExactMultiGPRunner:
 
         with torch.no_grad(), gpytorch.settings.fast_pred_var():
             for i in range(self.num_gps()):
-                predictions.append(self.model.likelihood(self.model(test_x)))
+                predictions.append(self.single_runners[i].model.likelihood(self.single_runners[i].model(test_x)))
 
         return predictions
 
     def test(self, test_x):
         for i in range(self.num_gps()):
-            self.model.setup('test')
+            self.single_runners[i].model.setup('test')
 
         predictions = self.predict(test_x)
 
