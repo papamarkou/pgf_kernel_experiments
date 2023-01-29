@@ -50,11 +50,11 @@ plt.colorbar()
 
 tempanomaly_nans = np.isnan(dataset['tempanomaly'][1695, :, :])
 
-lon_nans, lat_nans = np.meshgrid(lon[tempanomaly_nans], lat[tempanomaly_nans])
+# lon_nans, lat_nans = np.meshgrid(lon[tempanomaly_nans], lat[tempanomaly_nans])
 
 tempanomaly_no_nans = ~np.isnan(dataset['tempanomaly'][1695, :, :])
 
-lon_no_nans, lat_no_nans = np.meshgrid(lon[tempanomaly_no_nans], lat[tempanomaly_no_nans])
+# lon_no_nans, lat_no_nans = np.meshgrid(lon[tempanomaly_no_nans], lat[tempanomaly_no_nans])
 
 # %%
 
@@ -63,9 +63,11 @@ from scipy.interpolate import griddata
 gdata = griddata(
     np.column_stack((lon[tempanomaly_no_nans].flatten(), lat[tempanomaly_no_nans].flatten())),
     dataset['tempanomaly'][1695, :, :][tempanomaly_no_nans],
-    (lon_nans, lat_nans),
+    np.column_stack((lon[tempanomaly_nans].flatten(), lat[tempanomaly_nans].flatten())),
     method='cubic'
 )
+
+dataset['tempanomaly'][1695, :, :][tempanomaly_nans] = gdata
 
 # %%
 
