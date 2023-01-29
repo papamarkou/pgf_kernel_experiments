@@ -1,4 +1,5 @@
 __pycache__
 pgf_kernel_experiments.egg-info
+pgf_kernel_experiments/experiments/air_passengers/passenger_numbers.csv
 pgf_kernel_experiments/experiments/earth_temperature/gistemp1200_GHCNv4_ERSSTv5.zarr
 pgf_kernel_experiments/experiments/earth_topography/sea_bed.tiff
