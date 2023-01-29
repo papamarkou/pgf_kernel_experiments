@@ -1,7 +1,7 @@
 import gpytorch
 import torch
 
-from exact_single_gp_runner import ExactSingleGPRunner
+from .exact_single_gp_runner import ExactSingleGPRunner
 
 class ExactMultiGPRunner:
     def __init__(self, single_runners):

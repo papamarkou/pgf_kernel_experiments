@@ -1,0 +1,9 @@
+numpy>=1.19.2
+torch>=1.11.0
+gpytorch>=1.9.0
+pgfml>=0.0.1
+zarr>=2.13.3
+scipy>=1.10.0
+gstools>=1.4.1
+matplotlib>=3.6.3
+cartopy>=0.21.0

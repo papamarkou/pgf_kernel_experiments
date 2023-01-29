@@ -1,2 +1,3 @@
 __pycache__
-gistemp1200_GHCNv4_ERSSTv5.zarr
+pgf_kernel_experiments.egg-info
+pgf_kernel_experiments/experiments/earth_temperature/gistemp1200_GHCNv4_ERSSTv5.zarr

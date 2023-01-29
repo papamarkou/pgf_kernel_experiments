@@ -10,7 +10,7 @@ from matplotlib import pyplot as plt
 
 from pgfml.kernels import GFKernel
 
-from exact_multi_gp_runner import ExactMultiGPRunner
+from pgf_kernel_experiments.runners.exact_multi_gp_runner import ExactMultiGPRunner
 
 # %% Simulate data
 

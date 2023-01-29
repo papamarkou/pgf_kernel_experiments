@@ -1,7 +1,7 @@
 import gpytorch
 import torch
 
-from exact_gp_model import ExactGPModel
+from pgf_kernel_experiments.models.exact_gp_model import ExactGPModel
 
 class ExactSingleGPRunner:
     def __init__(self, train_x, train_y, kernel, likelihood=gpytorch.likelihoods.GaussianLikelihood()):
