@@ -83,9 +83,14 @@ from cartopy import crs as ccrs
 projMoll = ccrs.Mollweide(central_longitude=0)
 
 fig = plt.figure(figsize=(11, 8.5))
+
 ax = plt.subplot(1, 1, 1, projection=projMoll)
 ax.coastlines()
+
 dataplot = ax.pcolormesh(lon, lat, dataset['tempanomaly'][1695, :, :], cmap="RdBu_r", transform=ccrs.PlateCarree())
+
+plt.title('Temperature anomaly')
+
 plt.colorbar(dataplot, orientation='horizontal');
 
 # %%
