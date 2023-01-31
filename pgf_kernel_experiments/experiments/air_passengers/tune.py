@@ -13,8 +13,6 @@ from pgfml.kernels import GFKernel
 
 dataset = np.loadtxt('passenger_numbers.csv')
 
-dataset = dataset / dataset.max()
-
 # %% Plot data
 
 plt.plot(dataset)
@@ -81,7 +79,7 @@ optimizers = []
 for i in range(runner.num_gps()):
     optimizers.append(torch.optim.SGD(runner.single_runners[i].model.parameters(), lr=0.1))
 
-n_iters = 5000
+n_iters = 1000
 
 # %% Train GP model to find optimal hyperparameters
 
@@ -93,10 +91,14 @@ predictions = runner.test(test_x)
 
 # %% Compute error metrics
 
-for i in range(2):
-    print('Test MAE: {}'.format(gpytorch.metrics.mean_absolute_error(predictions[i], test_y)))
-    print('Test MSE: {}'.format(gpytorch.metrics.mean_absolute_error(predictions[i], test_y)))
-    print('Test LPD: {}'.format(-gpytorch.metrics.negative_log_predictive_density(predictions[i], test_y)))
+scores = runner.assess(
+    predictions,
+    test_y, metrics=[
+        gpytorch.metrics.mean_absolute_error,
+        gpytorch.metrics.mean_squared_error,
+        gpytorch.metrics.negative_log_predictive_density
+    ]
+)
 
 # %% Plot predictions
 
@@ -104,6 +106,5 @@ plt.plot(range(n_train), train_output)
 
 plt.plot(range(n_train, n_samples), test_output)
 
-plt.plot(range(n_train, n_samples), predictions[0].mean.numpy())
-
-plt.plot(range(n_train, n_samples), predictions[1].mean.numpy())
+for i in range(runner.num_gps()):
+    plt.plot(range(n_train, n_samples), predictions[i].mean.numpy())

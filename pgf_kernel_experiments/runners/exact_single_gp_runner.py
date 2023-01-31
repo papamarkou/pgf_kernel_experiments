@@ -44,7 +44,21 @@ class ExactSingleGPRunner:
 
         return predictions
 
-    def test(self, test_x):
+    def assess(self, predictions, test_y, metrics, verbose=True):
+        scores = []
+
+        if verbose:
+            msg = ', '.join(['{:.6f}']*len(metrics))
+
+        for i in range(len(metrics)):
+            scores.append(metrics[i](predictions, test_y))
+
+        if verbose:
+            print(msg.format(*(scores)))
+
+        return scores
+
+    def test(self, test_x, metrics=None):
         self.model.setup('test')
 
         predictions = self.predict(test_x)

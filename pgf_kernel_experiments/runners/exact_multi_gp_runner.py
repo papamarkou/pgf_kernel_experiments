@@ -56,6 +56,21 @@ class ExactMultiGPRunner:
 
         return predictions
 
+    def assess(self, predictions, test_y, metrics, verbose=True):
+        scores = torch.empty([self.num_gps(), len(metrics)], dtype=test_y.dtype, device=test_y.device)
+
+        if verbose:
+            msg = ', '.join(['{:.6f}']*len(metrics))
+
+        for i in range(self.num_gps()):
+            for j in range(len(metrics)):
+                scores[i, j] = metrics[j](predictions[i], test_y)
+
+            if verbose:
+                print(msg.format(*(scores[i, :])))
+
+        return scores
+
     def test(self, test_x):
         for i in range(self.num_gps()):
             self.single_runners[i].model.setup('test')
