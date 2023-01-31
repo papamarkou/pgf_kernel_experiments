@@ -72,7 +72,7 @@ kernels = [
 
 runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
 
-# %% Configurate training setup for GP model
+# %% Configurate training setup for GP models
 
 optimizers = []
 
@@ -81,7 +81,7 @@ for i in range(runner.num_gps()):
 
 n_iters = 1000
 
-# %% Train GP model to find optimal hyperparameters
+# %% Train GP models to find optimal hyperparameters
 
 losses = runner.train(train_x, train_y, optimizers, n_iters)
 
