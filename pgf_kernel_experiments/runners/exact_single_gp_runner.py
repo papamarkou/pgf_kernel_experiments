@@ -45,16 +45,16 @@ class ExactSingleGPRunner:
         return predictions
 
     def assess(self, predictions, test_y, metrics, verbose=True):
-        scores = []
+        scores = torch.empty([len(metrics)], dtype=test_y.dtype, device=test_y.device)
 
         if verbose:
             msg = ', '.join(['{:.6f}']*len(metrics))
 
         for i in range(len(metrics)):
-            scores.append(metrics[i](predictions, test_y))
+            scores[i] = metrics[i](predictions, test_y)
 
         if verbose:
-            print(msg.format(*(scores)))
+            print(msg.format(*scores))
 
         return scores
 

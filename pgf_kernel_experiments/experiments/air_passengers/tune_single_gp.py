@@ -9,7 +9,7 @@ import numpy as np
 from datetime import date
 from dateutil import relativedelta
 
-from pgf_kernel_experiments.runners import ExactMultiGPRunner
+from pgf_kernel_experiments.runners import ExactSingleGPRunner
 from pgfml.kernels import GFKernel
 
 # %% Load data
@@ -100,25 +100,17 @@ test_y = torch.as_tensor(test_output.T, dtype=torch.float32)
 
 # %% Set up ExactMultiGPRunner
 
-kernels = [
-    GFKernel(width=[20, 20, 20]),
-    gpytorch.kernels.RBFKernel()
-]
-
-runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
+runner = ExactSingleGPRunner(train_x, train_y, GFKernel(width=[20, 20, 20]))
 
 # %% Configurate training setup for GP models
 
-optimizers = []
-
-for i in range(runner.num_gps()):
-    optimizers.append(torch.optim.SGD(runner.single_runners[i].model.parameters(), lr=0.1))
+optimizer = torch.optim.SGD(runner.model.parameters(), lr=0.1)
 
 n_iters = 100
 
 # %% Train GP models to find optimal hyperparameters
 
-losses = runner.train(train_x, train_y, optimizers, n_iters)
+losses = runner.train(train_x, train_y, optimizer, n_iters)
 
 # %% Make predictions
 
@@ -128,10 +120,11 @@ predictions = runner.test(test_x)
 
 scores = runner.assess(
     predictions,
-    test_y, metrics=[
+    test_y,
+    metrics=[
         gpytorch.metrics.mean_absolute_error,
         gpytorch.metrics.mean_squared_error,
-        gpytorch.metrics.negative_log_predictive_density
+        lambda predictions, test_y : -gpytorch.metrics.negative_log_predictive_density(predictions, test_y)
     ]
 )
 
@@ -143,8 +136,7 @@ plt.plot(range(n_train), train_output)
 
 plt.plot(range(n_train, n_samples), test_output)
 
-for i in range(runner.num_gps()):
-    plt.plot(range(n_train, n_samples), predictions[i].mean.numpy())
+plt.plot(range(n_train, n_samples), predictions.mean.numpy())
 
 plt.ylim([100 - 35, 600 + 35])
 
@@ -159,4 +151,4 @@ years = [(start_date + relativedelta.relativedelta(months=i)).year for i in mont
 
 plt.xticks(ticks=month_counts, labels=years, rotation=30)
 
-plt.legend(['Training data', 'Test data', 'PGF-GP predictions', 'RBF-GP predictions'])
+plt.legend(['Training data', 'Test data', 'PGF-GP predictions'])

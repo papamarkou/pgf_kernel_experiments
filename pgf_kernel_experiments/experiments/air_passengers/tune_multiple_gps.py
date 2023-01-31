@@ -128,10 +128,11 @@ predictions = runner.test(test_x)
 
 scores = runner.assess(
     predictions,
-    test_y, metrics=[
+    test_y,
+    metrics=[
         gpytorch.metrics.mean_absolute_error,
         gpytorch.metrics.mean_squared_error,
-        gpytorch.metrics.negative_log_predictive_density
+        lambda predictions, test_y : -gpytorch.metrics.negative_log_predictive_density(predictions, test_y)
     ]
 )
 
