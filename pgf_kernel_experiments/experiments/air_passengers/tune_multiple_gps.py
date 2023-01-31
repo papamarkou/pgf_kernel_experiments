@@ -6,6 +6,9 @@ import torch
 import matplotlib.pyplot as plt
 import numpy as np
 
+from datetime import date
+from dateutil import relativedelta
+
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 from pgfml.kernels import GFKernel
 
@@ -13,13 +16,28 @@ from pgfml.kernels import GFKernel
 
 dataset = np.loadtxt('passenger_numbers.csv')
 
+n_samples = len(dataset)
+
 # %% Plot data
 
-plt.plot(dataset)
+plt.figure(figsize=(8, 4))
+
+plt.plot(range(n_samples), dataset)
+
+plt.ylim([100 - 35, 600 + 35])
+
+plt.title('Air passenger data')
+
+plt.xlabel('Date')
+plt.ylabel('Number of passengers')
+
+start_date = date.fromisoformat('1949-01-01')
+month_counts = [i*12 for i in range(int(len(dataset) / 12) + 1)]
+years = [(start_date + relativedelta.relativedelta(months=i)).year for i in month_counts]
+
+plt.xticks(ticks=month_counts, labels=years, rotation=30)
 
 # %% Place data on the unit circle
-
-n_samples = len(dataset)
 
 theta = np.linspace(-np.pi, np.pi, num=n_samples, endpoint=False)
 
@@ -51,9 +69,26 @@ test_output = dataset[test_ids]
 
 # %% Plot training and test data
 
-plt.plot(train_output)
+plt.figure(figsize=(8, 4))
+
+plt.plot(range(n_train), train_output)
 
 plt.plot(range(n_train, n_samples), test_output)
+
+plt.ylim([100 - 35, 600 + 35])
+
+plt.title('Air passenger data')
+
+plt.xlabel('Date')
+plt.ylabel('Number of passengers')
+
+start_date = date.fromisoformat('1949-01-01')
+month_counts = [i*12 for i in range(int(len(dataset) / 12) + 1)]
+years = [(start_date + relativedelta.relativedelta(months=i)).year for i in month_counts]
+
+plt.xticks(ticks=month_counts, labels=years, rotation=30)
+
+plt.legend(['Training data', 'Test data'])
 
 # %% Convert training and test data to PyTorch format
 
@@ -79,7 +114,7 @@ optimizers = []
 for i in range(runner.num_gps()):
     optimizers.append(torch.optim.SGD(runner.single_runners[i].model.parameters(), lr=0.1))
 
-n_iters = 1000
+n_iters = 100
 
 # %% Train GP models to find optimal hyperparameters
 
@@ -102,9 +137,26 @@ scores = runner.assess(
 
 # %% Plot predictions
 
+plt.figure(figsize=(8, 4))
+
 plt.plot(range(n_train), train_output)
 
 plt.plot(range(n_train, n_samples), test_output)
 
 for i in range(runner.num_gps()):
     plt.plot(range(n_train, n_samples), predictions[i].mean.numpy())
+
+plt.ylim([100 - 35, 600 + 35])
+
+plt.title('Air passenger data')
+
+plt.xlabel('Date')
+plt.ylabel('Number of passengers')
+
+start_date = date.fromisoformat('1949-01-01')
+month_counts = [i*12 for i in range(int(len(dataset) / 12) + 1)]
+years = [(start_date + relativedelta.relativedelta(months=i)).year for i in month_counts]
+
+plt.xticks(ticks=month_counts, labels=years, rotation=30)
+
+plt.legend(['Training data', 'Test data', 'PGF-GP predictions', 'RBF-GP predictions'])
