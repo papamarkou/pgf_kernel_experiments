@@ -6,7 +6,7 @@ import torch
 import matplotlib.pyplot as plt
 import numpy as np
 
-from pgf_kernel_experiments.runners.exact_multi_gp_runner import ExactMultiGPRunner
+from pgf_kernel_experiments.runners import ExactMultiGPRunner
 from pgfml.kernels import GFKernel
 
 # %% Load data
