@@ -11,6 +11,10 @@ from scipy.stats import vonmises
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 from pgfml.kernels import GFKernel
 
+# Set seed
+
+torch.manual_seed(1)
+
 # %% Generate data
 
 n_samples = 3000
@@ -100,21 +104,12 @@ test_y = torch.as_tensor(test_output.T, dtype=torch.float32)
 
 # %% Set up ExactMultiGPRunner
 
-# kernels = [
-#     # gpytorch.kernels.ScaleKernel(GFKernel(width=[20, 20, 20])),
-#     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
-#     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
-#     gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
-#     gpytorch.kernels.ScaleKernel(gpytorch.kernels.PeriodicKernel()),
-#     gpytorch.kernels.ScaleKernel(gpytorch.kernels.LinearKernel())
-# ]
-
 kernels = [
+    GFKernel(width=[20, 20, 20]),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
-    gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
-    gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
-    gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
-    gpytorch.kernels.ScaleKernel(gpytorch.kernels.CosineKernel())
+    gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
+    gpytorch.kernels.PeriodicKernel(),
+    gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2)
 ]
 
 runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
@@ -124,9 +119,9 @@ runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
 optimizers = []
 
 for i in range(runner.num_gps()):
-    optimizers.append(torch.optim.SGD(runner.single_runners[i].model.parameters(), lr=0.01))
+    optimizers.append(torch.optim.SGD(runner.single_runners[i].model.parameters(), lr=0.1))
 
-n_iters = 20
+n_iters = 10
 
 # %% Train GP models to find optimal hyperparameters
 
