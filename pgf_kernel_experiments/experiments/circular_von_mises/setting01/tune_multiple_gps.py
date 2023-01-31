@@ -29,7 +29,7 @@ z = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
 
 ids = np.arange(n_samples)
 
-n_train = int(0.75 * n_samples)
+n_train = int(0.7 * n_samples)
 
 train_ids = np.random.RandomState(300).choice(ids, size=n_train, replace=False)
 
@@ -49,9 +49,11 @@ test_output = z[test_ids]
 
 # %% Plot training and test data
 
-fontsize = 10
+fontsize = 11
 
 titles = ['von Mises', 'Training data', 'Test data']
+
+titles = [r'$von~Mises~density$', r'$Training~data$', r'$Test~data$']
 
 cols = ['green', 'orange', 'brown']
 
@@ -68,23 +70,25 @@ for i in range(3):
 
     ax[i].plot(x, y, 0, color='black', lw=2, zorder=0)
 
+    ax[i].grid(False)
+
+    ax[i].tick_params(pad=-1.5)
+
     ax[i].set_xlim((-1, 1))
     ax[i].set_ylim((-1, 1))
-    ax[i].set_zlim((0, 0.6))
+    ax[i].set_zlim((0, 11))
 
-    ax[i].set_xticks([-1, 0, 1])
-    ax[i].set_yticks([-1, 0, 1])
-    ax[i].set_zticks([0, 0.3, 11.])
+    ax[i].set_title(titles[i], fontsize=fontsize, pad=-1.5)
 
-    ax[i].set_xlabel('x', fontsize=fontsize)
-    ax[i].set_ylabel('y', fontsize=fontsize)
-    ax[i].set_zlabel('z', fontsize=fontsize)
+    ax[i].set_xlabel('x', fontsize=fontsize, labelpad=-3)
+    ax[i].set_ylabel('y', fontsize=fontsize, labelpad=-3)
+    ax[i].set_zlabel('z', fontsize=fontsize, labelpad=-3)
 
-    ax[i].set_title(titles[i], fontsize=fontsize)
+    ax[i].set_xticks([-1, 0, 1], fontsize=fontsize)
+    ax[i].set_yticks([-1, 0, 1], fontsize=fontsize)
+    ax[i].set_zticks([0, 5., 10.], fontsize=fontsize)
 
     ax[i].zaxis.set_rotate_label(False)
-
-    ax[i].grid(False)
 
 # %% Convert training and test data to PyTorch format
 
@@ -96,9 +100,21 @@ test_y = torch.as_tensor(test_output.T, dtype=torch.float32)
 
 # %% Set up ExactMultiGPRunner
 
+# kernels = [
+#     # gpytorch.kernels.ScaleKernel(GFKernel(width=[20, 20, 20])),
+#     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
+#     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
+#     gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
+#     gpytorch.kernels.ScaleKernel(gpytorch.kernels.PeriodicKernel()),
+#     gpytorch.kernels.ScaleKernel(gpytorch.kernels.LinearKernel())
+# ]
+
 kernels = [
-    gpytorch.kernels.ScaleKernel(GFKernel(width=[20, 20, 20])),
-    gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel())
+    gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
+    gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
+    gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
+    gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
+    gpytorch.kernels.ScaleKernel(gpytorch.kernels.CosineKernel())
 ]
 
 runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
@@ -108,7 +124,7 @@ runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
 optimizers = []
 
 for i in range(runner.num_gps()):
-    optimizers.append(torch.optim.SGD(runner.single_runners[i].model.parameters(), lr=0.1))
+    optimizers.append(torch.optim.SGD(runner.single_runners[i].model.parameters(), lr=0.01))
 
 n_iters = 20
 
@@ -137,8 +153,8 @@ scores = runner.assess(
 fontsize = 11
 
 titles = [
-    ['von Mises', 'Training data', 'Test data', 'PGF'],
-    ['RBF', r'$Mat\acute{e}rn$', 'Periodic', 'Spectral']
+    [r'$von~Mises~density$', r'$Training~data$', r'$Test~data$', r'$PGF~kernel$'],
+    [r'$RBF~kernel$', r'$Mat\acute{e}rn~kernel$', r'$Periodic~kernel$', r'$Spectral~kernel$']
 ]
 
 cols = ['green', 'orange', 'brown', 'red', 'blue']
@@ -155,6 +171,12 @@ ax[0, 3].scatter(test_pos[0, :], test_pos[1, :], predictions[0].mean, color=cols
 
 ax[1, 0].scatter(test_pos[0, :], test_pos[1, :], predictions[1].mean, color=cols[4], s=2)
 
+ax[1, 1].scatter(test_pos[0, :], test_pos[1, :], predictions[2].mean, color=cols[4], s=2)
+
+ax[1, 2].scatter(test_pos[0, :], test_pos[1, :], predictions[3].mean, color=cols[4], s=2)
+
+ax[1, 3].scatter(test_pos[0, :], test_pos[1, :], predictions[4].mean, color=cols[4], s=2)
+
 for i in range(2):
     for j in range(4):
         ax[i, j].set_proj_type('ortho')
@@ -164,10 +186,10 @@ for i in range(2):
         ax[i, j].grid(False)
 
         ax[i, j].tick_params(pad=-1.5)
-
+        
         ax[i, j].set_xlim((-1, 1))
         ax[i, j].set_ylim((-1, 1))
-        ax[i, j].set_zlim((0, 11.))
+        ax[i, j].set_zlim((0, 11))
 
         ax[i, j].set_title(titles[i][j], fontsize=fontsize, pad=-1.5)
 
