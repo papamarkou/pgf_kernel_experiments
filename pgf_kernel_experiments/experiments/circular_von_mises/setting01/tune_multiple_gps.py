@@ -197,5 +197,3 @@ for i in range(2):
         ax[i, j].set_zticks([0, 5., 10.], fontsize=fontsize)
 
         ax[i, j].zaxis.set_rotate_label(False)
-
-# %%
