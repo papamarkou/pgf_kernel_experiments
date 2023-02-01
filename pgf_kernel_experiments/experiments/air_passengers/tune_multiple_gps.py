@@ -20,22 +20,25 @@ n_samples = len(dataset)
 
 # %% Plot data
 
+fontsize = 11
+
 plt.figure(figsize=(8, 4))
 
 plt.plot(range(n_samples), dataset)
 
 plt.ylim([100 - 35, 600 + 35])
 
-plt.title('Air passenger data')
+plt.title('Air passenger data', fontsize=fontsize)
 
-plt.xlabel('Date')
-plt.ylabel('Number of passengers')
+plt.xlabel('Date', fontsize=fontsize)
+plt.ylabel('Number of passengers', fontsize=fontsize)
 
 start_date = date.fromisoformat('1949-01-01')
 month_counts = [i*12 for i in range(int(len(dataset) / 12) + 1)]
 years = [(start_date + relativedelta.relativedelta(months=i)).year for i in month_counts]
 
-plt.xticks(ticks=month_counts, labels=years, rotation=30)
+plt.xticks(ticks=month_counts, labels=years, fontsize=fontsize, rotation=30)
+plt.yticks(fontsize=fontsize)
 
 # %% Place data on the unit circle
 
@@ -69,6 +72,8 @@ test_output = dataset[test_ids]
 
 # %% Plot training and test data
 
+fontsize = 11
+
 plt.figure(figsize=(8, 4))
 
 plt.plot(range(n_train), train_output)
@@ -77,18 +82,19 @@ plt.plot(range(n_train, n_samples), test_output)
 
 plt.ylim([100 - 35, 600 + 35])
 
-plt.title('Air passenger data')
+plt.title('Air passenger data', fontsize=fontsize)
 
-plt.xlabel('Date')
-plt.ylabel('Number of passengers')
+plt.xlabel('Date', fontsize=fontsize)
+plt.ylabel('Number of passengers', fontsize=fontsize)
 
 start_date = date.fromisoformat('1949-01-01')
 month_counts = [i*12 for i in range(int(len(dataset) / 12) + 1)]
 years = [(start_date + relativedelta.relativedelta(months=i)).year for i in month_counts]
 
-plt.xticks(ticks=month_counts, labels=years, rotation=30)
+plt.xticks(ticks=month_counts, labels=years, fontsize=fontsize, rotation=30)
+plt.yticks(fontsize=fontsize)
 
-plt.legend(['Training data', 'Test data'])
+plt.legend(['Training data', 'Test data'], fontsize=fontsize)
 
 # %% Convert training and test data to PyTorch format
 
@@ -138,6 +144,8 @@ scores = runner.assess(
 
 # %% Plot predictions
 
+fontsize = 11
+
 plt.figure(figsize=(8, 4))
 
 plt.plot(range(n_train), train_output)
@@ -149,15 +157,16 @@ for i in range(runner.num_gps()):
 
 plt.ylim([100 - 35, 600 + 35])
 
-plt.title('Air passenger data')
+plt.title('Air passenger data', fontsize=fontsize)
 
-plt.xlabel('Date')
-plt.ylabel('Number of passengers')
+plt.xlabel('Date', fontsize=fontsize)
+plt.ylabel('Number of passengers', fontsize=fontsize)
 
 start_date = date.fromisoformat('1949-01-01')
 month_counts = [i*12 for i in range(int(len(dataset) / 12) + 1)]
 years = [(start_date + relativedelta.relativedelta(months=i)).year for i in month_counts]
 
 plt.xticks(ticks=month_counts, labels=years, rotation=30)
+plt.yticks(fontsize=fontsize)
 
-plt.legend(['Training data', 'Test data', 'PGF-GP predictions', 'RBF-GP predictions'])
+plt.legend(['Training data', 'Test data', 'PGF-GP predictions', 'RBF-GP predictions'], fontsize=fontsize)
