@@ -40,7 +40,7 @@ for param_name, param_value in runner.model.named_parameters():
 
 optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.1)
 
-n_iters = 500
+n_iters = 1000
 
 # %% Train GP models to find optimal hyperparameters
 

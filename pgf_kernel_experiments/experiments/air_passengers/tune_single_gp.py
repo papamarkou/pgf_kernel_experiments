@@ -110,7 +110,7 @@ runner = ExactSingleGPRunner(train_x, train_y, GFKernel(width=[20, 20, 20]))
 
 # %% Configurate training setup for GP models
 
-optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.1)
+optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.5)
 
 n_iters = 1000
 
