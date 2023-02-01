@@ -119,7 +119,7 @@ runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
 optimizers = []
 
 for i in range(runner.num_gps()):
-    optimizers.append(torch.optim.SGD(runner.single_runners[i].model.parameters(), lr=0.1))
+    optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=0.1))
 
 n_iters = 10
 
