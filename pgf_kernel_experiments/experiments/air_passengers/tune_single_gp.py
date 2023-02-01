@@ -161,5 +161,3 @@ plt.xticks(ticks=month_counts, labels=years, rotation=30)
 plt.yticks(fontsize=fontsize)
 
 plt.legend(['Training data', 'Test data', 'PGF-GP predictions'], fontsize=fontsize)
-
-# %%
