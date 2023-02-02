@@ -11,7 +11,7 @@ from scipy.stats import vonmises
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 from pgfml.kernels import GFKernel
 
-# Set seed
+# %% Set seed
 
 torch.manual_seed(1)
 
