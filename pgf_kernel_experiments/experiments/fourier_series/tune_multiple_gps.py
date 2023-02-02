@@ -13,9 +13,19 @@ from pgfml.kernels import GFKernel
 
 # %% Set seed
 
-torch.manual_seed(1)
+torch.manual_seed(3)
 
-# %% Generate data
+# %% Function for amplitude-phase form of Fourier series
+
+def fourier_series(theta, a, p, phi):
+    result = np.full_like(theta, 0.5 * a[0])
+
+    for n in range(1, len(a)):
+        result = result + a[n] * np.cos(2 * np.pi * n * theta / p - phi[n-1])
+
+    return result
+
+# %% Simulate data
 
 n_samples = 3000
 
@@ -27,7 +37,12 @@ y = np.sin(theta)
 
 grid = np.stack((x, y))
 
-z = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
+z = fourier_series(
+    theta,
+    a=np.array([0.2, 0.2, 0.2, 0.2, 0.2]),
+    p=np.pi  / 5,
+    phi=np.array([0., 3 * np.pi, np.pi / 5, np.pi / 10])
+)
 
 # %% Generate training data
 
@@ -57,7 +72,7 @@ fontsize = 11
 
 titles = ['von Mises', 'Training data', 'Test data']
 
-titles = [r'$von~Mises~density$', r'$Training~data$', r'$Test~data$']
+titles = [r'$Fourier~series$', r'$Training~data$', r'$Test~data$']
 
 cols = ['green', 'orange', 'brown']
 
@@ -80,7 +95,7 @@ for i in range(3):
 
     ax[i].set_xlim((-1, 1))
     ax[i].set_ylim((-1, 1))
-    ax[i].set_zlim((0, 11))
+    ax[i].set_zlim((0, 1))
 
     ax[i].set_title(titles[i], fontsize=fontsize, pad=-1.5)
 
@@ -90,7 +105,7 @@ for i in range(3):
 
     ax[i].set_xticks([-1, 0, 1], fontsize=fontsize)
     ax[i].set_yticks([-1, 0, 1], fontsize=fontsize)
-    ax[i].set_zticks([0, 5., 10.], fontsize=fontsize)
+    ax[i].set_zticks([0., 1.], fontsize=fontsize)
 
     ax[i].zaxis.set_rotate_label(False)
 
@@ -121,7 +136,7 @@ optimizers = []
 for i in range(runner.num_gps()):
     optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=0.1))
 
-n_iters = 10
+n_iters = 5 # 10
 
 # %% Train GP models to find optimal hyperparameters
 
@@ -184,7 +199,7 @@ for i in range(2):
         
         ax[i, j].set_xlim((-1, 1))
         ax[i, j].set_ylim((-1, 1))
-        ax[i, j].set_zlim((0, 11))
+        ax[i, j].set_zlim((0, 1))
 
         ax[i, j].set_title(titles[i][j], fontsize=fontsize, pad=-1.5)
 
@@ -194,6 +209,6 @@ for i in range(2):
 
         ax[i, j].set_xticks([-1, 0, 1], fontsize=fontsize)
         ax[i, j].set_yticks([-1, 0, 1], fontsize=fontsize)
-        ax[i, j].set_zticks([0, 5., 10.], fontsize=fontsize)
+        ax[i, j].set_zticks([0., 1.], fontsize=fontsize)
 
         ax[i, j].zaxis.set_rotate_label(False)
