@@ -91,11 +91,13 @@ for i in range(3):
 
     ax[i].grid(False)
 
-    ax[i].tick_params(pad=-1.5)
+    ax[i].tick_params(axis='x', pad=-1.5)
+    ax[i].tick_params(axis='y', pad=-1.5)
+    ax[i].tick_params(axis='z', pad=1.5)
 
     ax[i].set_xlim((-1, 1))
     ax[i].set_ylim((-1, 1))
-    ax[i].set_zlim((0, 1))
+    ax[i].set_zlim((-0.375, 0.65))
 
     ax[i].set_title(titles[i], fontsize=fontsize, pad=-1.5)
 
@@ -105,7 +107,7 @@ for i in range(3):
 
     ax[i].set_xticks([-1, 0, 1], fontsize=fontsize)
     ax[i].set_yticks([-1, 0, 1], fontsize=fontsize)
-    ax[i].set_zticks([0., 1.], fontsize=fontsize)
+    ax[i].set_zticks([-0.3, 0., 0.3, 0.6], fontsize=fontsize)
 
     ax[i].zaxis.set_rotate_label(False)
 
@@ -136,7 +138,7 @@ optimizers = []
 for i in range(runner.num_gps()):
     optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=0.1))
 
-n_iters = 5 # 10
+n_iters = 10
 
 # %% Train GP models to find optimal hyperparameters
 
@@ -163,7 +165,7 @@ scores = runner.assess(
 fontsize = 11
 
 titles = [
-    [r'$von~Mises~density$', r'$Training~data$', r'$Test~data$', r'$PGF~kernel$'],
+    [r'$Fourier~series$', r'$Training~data$', r'$Test~data$', r'$PGF~kernel$'],
     [r'$RBF~kernel$', r'$Mat\acute{e}rn~kernel$', r'$Periodic~kernel$', r'$Spectral~kernel$']
 ]
 
@@ -195,11 +197,13 @@ for i in range(2):
 
         ax[i, j].grid(False)
 
-        ax[i, j].tick_params(pad=-1.5)
-        
+        ax[i, j].tick_params(axis='x', pad=-1.5)
+        ax[i, j].tick_params(axis='y', pad=-1.5)
+        ax[i, j].tick_params(axis='z', pad=1.5)
+
         ax[i, j].set_xlim((-1, 1))
         ax[i, j].set_ylim((-1, 1))
-        ax[i, j].set_zlim((0, 1))
+        ax[i, j].set_zlim((-0.375, 0.65))
 
         ax[i, j].set_title(titles[i][j], fontsize=fontsize, pad=-1.5)
 
@@ -209,6 +213,6 @@ for i in range(2):
 
         ax[i, j].set_xticks([-1, 0, 1], fontsize=fontsize)
         ax[i, j].set_yticks([-1, 0, 1], fontsize=fontsize)
-        ax[i, j].set_zticks([0., 1.], fontsize=fontsize)
+        ax[i, j].set_zticks([-0.3, 0., 0.3, 0.6], fontsize=fontsize)
 
         ax[i, j].zaxis.set_rotate_label(False)
