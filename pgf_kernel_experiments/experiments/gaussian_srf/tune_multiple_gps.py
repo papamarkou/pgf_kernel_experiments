@@ -64,7 +64,6 @@ fig, ax = plt.subplots(1, 4, figsize=[14, 3])
 
 ax[0].imshow(srf.field.reshape(len(x), len(y)).T, origin="lower")
 ax[1].imshow(srf_normed.field.reshape(len(x), len(y)).T, origin="lower")
-
 ax[2].scatter(*train_pos, c=train_output)
 ax[3].scatter(*test_pos, c=test_output)
 
@@ -99,7 +98,6 @@ kernels = [
     GFKernel(width=[20]),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
-    gpytorch.kernels.PeriodicKernel(),
     gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2)
 ]
 
@@ -151,3 +149,53 @@ ax[3].set_title("Test data")
 ax[4].set_title("Predictions")
 
 [ax[i].set_aspect("equal") for i in range(5)]
+
+# %% PLot predictions
+
+fontsize = 11
+
+fig, ax = plt.subplots(2, 4, figsize=[16, 8])
+
+ax[0, 0].imshow(srf.field.reshape(len(x), len(y)).T, origin="lower")
+ax[0, 1].imshow(srf_normed.field.reshape(len(x), len(y)).T, origin="lower")
+ax[0, 2].scatter(*train_pos, c=train_output)
+ax[0, 3].scatter(*test_pos, c=test_output)
+ax[1, 0].scatter(*test_pos, c=predictions[0].mean)
+ax[1, 1].scatter(*test_pos, c=predictions[0].mean)
+ax[1, 2].scatter(*test_pos, c=predictions[0].mean)
+ax[1, 3].scatter(*test_pos, c=predictions[0].mean)
+
+ax[0, 0].set_title(r'$Original~field$', fontsize=fontsize)
+ax[0, 1].set_title(r'$Normed~field$', fontsize=fontsize)
+ax[0, 2].set_title(r'$Training~data$', fontsize=fontsize)
+ax[0, 3].set_title(r'$Test~data$', fontsize=fontsize)
+
+ax[1, 0].set_title(r'$Test~data$', fontsize=fontsize)
+ax[1, 1].set_title(r'$Test~data$', fontsize=fontsize)
+ax[1, 2].set_title(r'$Test~data$', fontsize=fontsize)
+ax[1, 3].set_title(r'$Test~data$', fontsize=fontsize)
+
+ax[1, 0].set_title(r'$PGF~kernel$')
+ax[1, 1].set_title(r'$RBF~kernel$')
+ax[1, 2].set_title(r'$Mat\acute{e}rn~kernel$')
+ax[1, 3].set_title(r'$Spectral~kernel$')
+
+ax[0, 0].set_xticks(np.linspace(0, 60, num=7), fontsize=fontsize)
+ax[0, 1].set_xticks(np.linspace(0, 60, num=7), fontsize=fontsize)
+ax[0, 2].set_xticks(np.linspace(-1, 1, num=5), fontsize=fontsize)
+ax[0, 3].set_xticks(np.linspace(-1, 1, num=5), fontsize=fontsize)
+ax[1, 0].set_xticks(np.linspace(-1, 1, num=5), fontsize=fontsize)
+ax[1, 1].set_xticks(np.linspace(-1, 1, num=5), fontsize=fontsize)
+ax[1, 2].set_xticks(np.linspace(-1, 1, num=5), fontsize=fontsize)
+ax[1, 3].set_xticks(np.linspace(-1, 1, num=5), fontsize=fontsize)
+
+ax[0, 0].set_yticks(np.linspace(0, 60, num=7), fontsize=fontsize)
+ax[0, 1].set_yticks(np.linspace(0, 60, num=7), fontsize=fontsize)
+ax[0, 2].set_yticks(np.linspace(-1, 1, num=5), fontsize=fontsize)
+ax[0, 3].set_yticks(np.linspace(-1, 1, num=5), fontsize=fontsize)
+ax[1, 0].set_yticks(np.linspace(-1, 1, num=5), fontsize=fontsize)
+ax[1, 1].set_yticks(np.linspace(-1, 1, num=5), fontsize=fontsize)
+ax[1, 2].set_yticks(np.linspace(-1, 1, num=5), fontsize=fontsize)
+ax[1, 3].set_yticks(np.linspace(-1, 1, num=5), fontsize=fontsize)
+
+[ax[i, j].set_aspect("equal") for i in range(2) for j in range(4)]
