@@ -55,8 +55,6 @@ test_output = z[test_ids]
 
 fontsize = 11
 
-titles = ['von Mises', 'Training data', 'Test data']
-
 titles = [r'$von~Mises~density$', r'$Training~data$', r'$Test~data$']
 
 cols = ['green', 'orange', 'brown']
