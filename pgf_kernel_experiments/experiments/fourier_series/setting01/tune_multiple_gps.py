@@ -50,7 +50,7 @@ ids = np.arange(n_samples)
 
 n_train = int(0.7 * n_samples)
 
-train_ids = np.random.RandomState(1).choice(ids, size=n_train, replace=False)
+train_ids = np.random.RandomState(2).choice(ids, size=n_train, replace=False)
 
 train_pos = grid[:, train_ids]
 
