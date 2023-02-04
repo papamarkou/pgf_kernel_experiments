@@ -6,8 +6,6 @@ import torch
 import matplotlib.pyplot as plt
 import numpy as np
 
-from scipy.stats import vonmises
-
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 from pgfml.kernels import GFKernel
 
