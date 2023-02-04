@@ -114,57 +114,6 @@ test_pos = pos[test_ids, :]
 
 test_output = dataset['tempanomaly'][t, :, :].flatten()[[test_ids]].squeeze()
 
-# %% Plot training and test data
-
-fontsize = 11
-
-rotation = 60
-
-fig, ax = plt.subplots(1, 4, figsize=[14, 3], sharey=True)
-
-#  https://www.geeksforgeeks.org/how-to-set-the-spacing-between-subplots-in-matplotlib-in-python/
-
-plt.subplots_adjust(wspace=0.2)
-
-ax[0].imshow(rgb_dataset)
-
-ax[1].imshow(gray_dataset, cmap=plt.get_cmap('gray'))
-
-gray_train_dataset_vis = gray_dataset.copy()
-gray_train_dataset_vis = gray_train_dataset_vis.flatten()
-gray_train_dataset_vis[[test_ids]] = gray_dataset.max()
-gray_train_dataset_vis = gray_train_dataset_vis.reshape(gray_dataset.shape)
-
-ax[2].imshow(gray_train_dataset_vis, cmap=plt.get_cmap('gray'))
-
-gray_test_dataset_vis = gray_dataset.copy()
-gray_test_dataset_vis = gray_test_dataset_vis.flatten()
-gray_test_dataset_vis[[train_ids]] = gray_dataset.max()
-gray_test_dataset_vis = gray_test_dataset_vis.reshape(gray_dataset.shape)
-
-ax[3].imshow(gray_test_dataset_vis, cmap=plt.get_cmap('gray'))
-
-ax[0].set_title(r'$Original~image$', fontsize=fontsize)
-ax[1].set_title(r'$Grayscale~image$', fontsize=fontsize)
-ax[2].set_title(r'$Training~data$', fontsize=fontsize)
-ax[3].set_title(r'$Test~data$', fontsize=fontsize)
-
-xtick_ticks = np.linspace(0, 720, num=3)
-xtick_labels = np.linspace(lon_left, lon_right, num=3)
-
-ytick_ticks = np.linspace(0, 720, num=3)
-ytick_labels = np.flip(np.linspace(lat_left, lat_right, num=3))
-
-ax[0].set_xticks(ticks=xtick_ticks, labels=xtick_labels, fontsize=fontsize, rotation=rotation)
-ax[1].set_xticks(ticks=xtick_ticks, labels=xtick_labels, fontsize=fontsize, rotation=rotation)
-ax[2].set_xticks(ticks=xtick_ticks, labels=xtick_labels, fontsize=fontsize, rotation=rotation)
-ax[3].set_xticks(ticks=xtick_ticks, labels=xtick_labels, fontsize=fontsize, rotation=rotation)
-
-ax[0].set_yticks(ticks=ytick_ticks, labels=ytick_labels, fontsize=fontsize)
-ax[1].set_yticks(ticks=ytick_ticks, labels=ytick_labels, fontsize=fontsize)
-ax[2].set_yticks(ticks=ytick_ticks, labels=ytick_labels, fontsize=fontsize)
-ax[3].set_yticks(ticks=ytick_ticks, labels=ytick_labels, fontsize=fontsize)
-
 # %% Convert training and test data to PyTorch format
 
 train_x = torch.as_tensor(train_pos, dtype=torch.float32)
