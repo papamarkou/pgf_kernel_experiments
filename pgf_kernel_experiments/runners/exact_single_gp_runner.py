@@ -39,7 +39,7 @@ class ExactSingleGPRunner:
         return losses
 
     def predict(self, test_x):
-        with torch.no_grad(), gpytorch.settings.fast_pred_var():
+        with torch.no_grad():
             predictions = self.model.likelihood(self.model(test_x))
 
         return predictions

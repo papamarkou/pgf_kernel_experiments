@@ -50,7 +50,7 @@ class ExactMultiGPRunner:
     def predict(self, test_x):
         predictions = []
 
-        with torch.no_grad(), gpytorch.settings.fast_pred_var():
+        with torch.no_grad():
             for i in range(self.num_gps()):
                 predictions.append(self.single_runners[i].model.likelihood(self.single_runners[i].model(test_x)))
 
