@@ -7,6 +7,10 @@ import zarr
 import matplotlib.pyplot as plt
 import numpy as np
 
+from cartopy import crs
+from datetime import date, timedelta
+from scipy.interpolate import griddata
+
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 from pgfml.kernels import GFKernel
 
@@ -32,26 +36,15 @@ n_times, n_lat, n_lon = dataset['tempanomaly'].shape
 
 n_locs = n_lat * n_lon
 
-# %% Set up latitude-longitude information
+# %% Select a time point
 
-# lon_left = 18.5
-# lon_right = 21.5
+t = 1695
 
-# lat_left = 34.0
-# lat_right = 37.0
+start_date = date.fromisoformat('1800-01-01')
 
-# lon = np.linspace(lon_left, lon_right, num=n_lat)
-# lat = np.linspace(lat_left, lat_right, num=n_lon)
-
-# lon_grid, lat_grid = np.meshgrid(lon, np.flip(lat))
+current_date = start_date + timedelta(days=int(dataset['time'][t]))
 
 # %% Compute Cartesian coordinates from polar coordinates
-
-# theta is lat, phi is lon
-
-# lon_grid_flat = lon_grid.flatten().squeeze()
-
-# lat_grid_flat = lat_grid.flatten().squeeze()
 
 lon, lat = np.meshgrid(dataset['lon'], dataset['lat'])
 
@@ -65,9 +58,43 @@ z = z / np.linalg.norm(z, ord=2)
 
 pos = np.column_stack((x.flatten(), y.flatten(), z.flatten()))
 
-# %% Interpolate missing values
+# %% Plot original data at chosen time point without projection (before interpolation)
 
-t = 1695
+fontsize = 11
+
+plt.figure(figsize=(10, 5))
+
+plt.pcolormesh(lon, lat, dataset['tempanomaly'][t, :, :], cmap='RdBu_r')
+
+plt.title('Temperature anomaly, {} (before interpolation)'.format(current_date), fontsize=fontsize)
+
+plt.xticks(np.linspace(-150, 150, num=7), fontsize=fontsize)
+
+plt.yticks(np.linspace(-80, 80, num=5), fontsize=fontsize)
+
+cbar = plt.colorbar()
+
+cbar.ax.tick_params(labelsize=fontsize)
+
+# %% Plot original data at chosen time point in Mollweide projection (before interpolation)
+
+fontsize = 11
+
+plt.figure(figsize=(11, 9))
+
+ax = plt.subplot(1, 1, 1, projection=crs.Mollweide(central_longitude=0))
+
+ax.coastlines()
+
+dataplot = ax.pcolormesh(lon, lat, dataset['tempanomaly'][t, :, :], cmap='RdBu_r', transform=crs.PlateCarree())
+
+plt.title('Temperature anomaly, {} (before interpolation)'.format(current_date), fontsize=fontsize)
+
+cbar = plt.colorbar(dataplot, orientation='horizontal')
+
+cbar.ax.tick_params(labelsize=fontsize)
+
+# %% Interpolate missing values
 
 tempanomaly_nans = np.isnan(dataset['tempanomaly'][t, :, :])
 
@@ -77,8 +104,6 @@ tempanomaly_no_nans = ~np.isnan(dataset['tempanomaly'][t, :, :])
 
 # lon_no_nans, lat_no_nans = np.meshgrid(lon[tempanomaly_no_nans], lat[tempanomaly_no_nans])
 
-from scipy.interpolate import griddata
-
 gdata = griddata(
     np.column_stack((lon[tempanomaly_no_nans].flatten(), lat[tempanomaly_no_nans].flatten())),
     dataset['tempanomaly'][1695, :, :][tempanomaly_no_nans],
@@ -87,6 +112,42 @@ gdata = griddata(
 )
 
 dataset['tempanomaly'][t, :, :][tempanomaly_nans] = gdata
+
+# %% Plot original data at chosen time point without projection (after interpolation)
+
+fontsize = 11
+
+plt.figure(figsize=(10, 5))
+
+plt.pcolormesh(lon, lat, dataset['tempanomaly'][t, :, :], cmap='RdBu_r')
+
+plt.title('Temperature anomaly, {} (after interpolation)'.format(current_date), fontsize=fontsize)
+
+plt.xticks(np.linspace(-150, 150, num=7), fontsize=fontsize)
+
+plt.yticks(np.linspace(-80, 80, num=5), fontsize=fontsize)
+
+cbar = plt.colorbar()
+
+cbar.ax.tick_params(labelsize=fontsize)
+
+# %% Plot original data at chosen time point in Mollweide projection (after interpolation)
+
+fontsize = 11
+
+plt.figure(figsize=(11, 9))
+
+ax = plt.subplot(1, 1, 1, projection=crs.Mollweide(central_longitude=0))
+
+ax.coastlines()
+
+dataplot = ax.pcolormesh(lon, lat, dataset['tempanomaly'][t, :, :], cmap='RdBu_r', transform=crs.PlateCarree())
+
+plt.title('Temperature anomaly, {} (after interpolation)'.format(current_date), fontsize=fontsize)
+
+cbar = plt.colorbar(dataplot, orientation='horizontal')
+
+cbar.ax.tick_params(labelsize=fontsize)
 
 # %% Generate training data
 
@@ -102,7 +163,7 @@ train_pos = pos[train_ids, :]
 
 train_output = dataset['tempanomaly'][t, :, :].flatten()[[train_ids]].squeeze()
 
-# %% Generate test datat
+# %% Generate test data
 
 test_ids = np.array(list(set(ids).difference(set(train_ids))))
 
