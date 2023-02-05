@@ -132,24 +132,6 @@ scores = runner.assess(
     ]
 )
 
-# %% Plot predictions
-
-fig, ax = plt.subplots(1, 5, figsize=[16, 3])
-
-ax[0].imshow(srf.field.reshape(len(x), len(y)).T, origin="lower")
-ax[1].imshow(srf_normed.field.reshape(len(x), len(y)).T, origin="lower")
-ax[2].scatter(*train_pos, c=train_output)
-ax[3].scatter(*test_pos, c=test_output)
-ax[4].scatter(*test_pos, c=predictions[1].mean.numpy())
-
-ax[0].set_title("Original field")
-ax[1].set_title("Normed field")
-ax[2].set_title("Training data")
-ax[3].set_title("Test data")
-ax[4].set_title("Predictions")
-
-[ax[i].set_aspect("equal") for i in range(5)]
-
 # %% PLot predictions
 
 fontsize = 11
