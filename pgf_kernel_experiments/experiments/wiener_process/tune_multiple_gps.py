@@ -6,18 +6,80 @@ import torch
 import matplotlib.pyplot as plt
 import numpy as np
 
-from scipy.stats import vonmises
-
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 from pgfml.kernels import GFKernel
 
 # %% Set seed
 
-torch.manual_seed(1)
+seed = 5
 
-# %% Generate data
+# np.random.seed(seed)
+torch.manual_seed(seed)
 
-n_samples = 1000
+# %%
+
+from typing import Optional
+
+def get_dW(T: int, random_state: Optional[int] = None) -> np.ndarray:
+    """
+    Sample T times from a normal distribution,
+    to simulate discrete increments (dW) of a Brownian Motion.
+    Optional random_state to reproduce results.
+    """
+    np.random.seed(random_state)
+    return np.random.normal(0.0, 1.0, T)
+
+
+def get_W(T: int, random_state: Optional[int] = None) -> np.ndarray:
+    """
+    Simulate a Brownian motion discretely samplet at unit time increments.
+    Returns the cumulative sum
+    """
+    dW = get_dW(T, random_state)
+    # cumulative sum and then make the first index 0.
+    dW_cs = dW.cumsum()
+    return np.insert(dW_cs, 0, 0)[:-1]
+
+# %%
+
+# dW = get_dW(T=500, random_state=4)
+W = get_W(T=500, random_state=seed)
+
+#----------------------------------------------------------------
+# plot
+
+import matplotlib.pyplot as plt 
+import seaborn as sns
+
+fig = plt.figure(figsize=(15, 5))
+
+# title = "Brownian motion increments"
+# plt.subplot(1, 2, 1)
+# plt.plot(dW)
+# plt.gca().set_title(title, fontsize=15)
+# plt.xticks(fontsize=15)
+# plt.yticks(fontsize=15)
+
+title = "Brownian motion path"
+plt.subplot(1, 2, 2)
+plt.plot(W)
+plt.gca().set_title(title, fontsize=15)
+plt.xticks(fontsize=15)
+plt.yticks(fontsize=15)
+
+# %% Chirp signal function
+
+# def chirp_signal(theta):
+#     # return np.cos(-1.2 * (theta ** 3) - 2.1 * (theta ** 2) - 3 * theta)
+#     return 3 * np.cos(-0.72 * (theta ** 4) + 1.1 * (theta ** 3) - 0.5 * (theta ** 2) + 2 * theta)
+
+# theta = np.linspace(-np.pi, np.pi, num=400, endpoint=False)
+
+# plt.plot(theta, chirp_signal(theta))
+
+# %% Simulate data
+
+n_samples = 500
 
 theta = np.linspace(-np.pi, np.pi, num=n_samples, endpoint=False)
 
@@ -27,15 +89,22 @@ y = np.sin(theta)
 
 grid = np.stack((x, y))
 
-z = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
+# z = chirp_signal(theta) # + np.random.normal(loc=0.0, scale=0.05, size=n_samples)
+
+z = W
+
+plt.plot(theta, z)
+# plt.scatter(theta, z)
 
 # %% Generate training data
 
 ids = np.arange(n_samples)
 
-n_train = int(0.5 * n_samples)
+n_train = int(1 * n_samples)
 
-train_ids = np.random.RandomState(1).choice(ids, size=n_train, replace=False)
+train_ids = np.random.RandomState(2).choice(ids, size=n_train, replace=False)
+
+train_ids.sort()
 
 train_pos = grid[:, train_ids]
 
@@ -47,15 +116,17 @@ test_ids = np.array(list(set(ids).difference(set(train_ids))))
 
 n_test = n_samples - n_train
 
-test_pos = grid[:, test_ids]
+test_pos = grid[:, train_ids]
 
-test_output = z[test_ids]
+test_output = z[train_ids]
 
 # %% Plot training and test data
 
 fontsize = 11
 
-titles = [r'$von~Mises~density$', r'$Training~data$', r'$Test~data$']
+titles = ['von Mises', 'Training data', 'Test data']
+
+titles = [r'$Fourier~series$', r'$Training~data$', r'$Test~data$']
 
 cols = ['green', 'orange', 'brown']
 
@@ -74,11 +145,13 @@ for i in range(3):
 
     ax[i].grid(False)
 
-    ax[i].tick_params(pad=-1.5)
+    ax[i].tick_params(axis='x', pad=-1.5)
+    ax[i].tick_params(axis='y', pad=-1.5)
+    ax[i].tick_params(axis='z', pad=1.5)
 
     ax[i].set_xlim((-1, 1))
     ax[i].set_ylim((-1, 1))
-    ax[i].set_zlim((0, 11))
+    ax[i].set_zlim((-3, 15))
 
     ax[i].set_title(titles[i], fontsize=fontsize, pad=-1.5)
 
@@ -88,22 +161,22 @@ for i in range(3):
 
     ax[i].set_xticks([-1, 0, 1], fontsize=fontsize)
     ax[i].set_yticks([-1, 0, 1], fontsize=fontsize)
-    ax[i].set_zticks([0, 5., 10.], fontsize=fontsize)
+    ax[i].set_zticks([-0.3, 0., 0.3, 0.6], fontsize=fontsize)
 
     ax[i].zaxis.set_rotate_label(False)
 
 # %% Convert training and test data to PyTorch format
 
-train_x = torch.as_tensor(train_pos.T, dtype=torch.float32)
-train_y = torch.as_tensor(train_output.T, dtype=torch.float32)
+train_x = torch.as_tensor(train_pos.T, dtype=torch.float64)
+train_y = torch.as_tensor(train_output.T, dtype=torch.float64)
 
-test_x = torch.as_tensor(test_pos.T, dtype=torch.float32)
-test_y = torch.as_tensor(test_output.T, dtype=torch.float32)
+test_x = torch.as_tensor(test_pos.T, dtype=torch.float64)
+test_y = torch.as_tensor(test_output.T, dtype=torch.float64)
 
 # %% Set up ExactMultiGPRunner
 
 kernels = [
-    GFKernel(width=[20, 20, 20]),
+    gpytorch.kernels.ScaleKernel(GFKernel(width=[20, 20, 20])),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
     gpytorch.kernels.PeriodicKernel(),
@@ -111,6 +184,12 @@ kernels = [
 ]
 
 runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
+
+# %%
+
+for i in range(5):
+    runner.single_runners[i].model.double()
+    runner.single_runners[i].model.likelihood.double()
 
 # %% Configurate training setup for GP models
 
@@ -146,7 +225,7 @@ scores = runner.assess(
 fontsize = 11
 
 titles = [
-    [r'$von~Mises~density$', r'$Training~data$', r'$Test~data$', r'$PGF~kernel$'],
+    [r'$Fourier~series$', r'$Training~data$', r'$Test~data$', r'$PGF~kernel$'],
     [r'$RBF~kernel$', r'$Mat\acute{e}rn~kernel$', r'$Periodic~kernel$', r'$Spectral~kernel$']
 ]
 
@@ -178,11 +257,13 @@ for i in range(2):
 
         ax[i, j].grid(False)
 
-        ax[i, j].tick_params(pad=-1.5)
-        
+        ax[i, j].tick_params(axis='x', pad=-1.5)
+        ax[i, j].tick_params(axis='y', pad=-1.5)
+        ax[i, j].tick_params(axis='z', pad=1.5)
+
         ax[i, j].set_xlim((-1, 1))
         ax[i, j].set_ylim((-1, 1))
-        ax[i, j].set_zlim((0, 11))
+        ax[i, j].set_zlim((-3, 15))
 
         ax[i, j].set_title(titles[i][j], fontsize=fontsize, pad=-1.5)
 
@@ -192,6 +273,18 @@ for i in range(2):
 
         ax[i, j].set_xticks([-1, 0, 1], fontsize=fontsize)
         ax[i, j].set_yticks([-1, 0, 1], fontsize=fontsize)
-        ax[i, j].set_zticks([0, 5., 10.], fontsize=fontsize)
+        ax[i, j].set_zticks([-0.3, 0., 0.3, 0.6], fontsize=fontsize)
 
         ax[i, j].zaxis.set_rotate_label(False)
+
+# %%
+
+plt.plot(theta, z)
+
+plt.plot(theta, predictions[0].mean)
+
+plt.plot(theta, predictions[2].mean)
+
+# plt.plot(theta, predictions[4].mean)
+
+# %%
