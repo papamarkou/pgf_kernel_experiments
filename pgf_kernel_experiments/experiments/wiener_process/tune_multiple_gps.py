@@ -14,7 +14,6 @@ from pgfml.kernels import GFKernel
 seed = 5
 
 np.random.seed(seed)
-# torch.manual_seed(seed)
 
 # %% Function for simulating from Wiener process with variance
 
@@ -37,7 +36,7 @@ y = np.sin(theta)
 
 grid = np.stack((x, y))
 
-z = sim_W(n_samples, scale=1.)
+z = sim_W(n_samples, scale=0.5)
 
 # %% Generate training data
 
@@ -96,7 +95,7 @@ for i in range(3):
 
     ax[i].set_xlim((-1, 1))
     ax[i].set_ylim((-1, 1))
-    ax[i].set_zlim((-5, 35))
+    ax[i].set_zlim((-2, 17))
 
     ax[i].set_title(titles[i], fontsize=fontsize, pad=-1.5)
 
@@ -106,7 +105,7 @@ for i in range(3):
 
     ax[i].set_xticks([-1, 0, 1], fontsize=fontsize)
     ax[i].set_yticks([-1, 0, 1], fontsize=fontsize)
-    ax[i].set_zticks([0., 10., 20., 30.], fontsize=fontsize)
+    ax[i].set_zticks([0., 5., 10., 15.], fontsize=fontsize)
 
     ax[i].zaxis.set_rotate_label(False)
 
@@ -121,7 +120,7 @@ test_y = torch.as_tensor(test_output.T, dtype=torch.float64)
 # %% Set up ExactMultiGPRunner
 
 kernels = [
-    gpytorch.kernels.ScaleKernel(GFKernel(width=[20, 20, 20])),
+    GFKernel(width=[20, 20, 20]),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
     gpytorch.kernels.PeriodicKernel(),
@@ -208,7 +207,7 @@ for i in range(2):
 
         ax[i, j].set_xlim((-1, 1))
         ax[i, j].set_ylim((-1, 1))
-        ax[i, j].set_zlim((-5, 35))
+        ax[i, j].set_zlim((-2, 17))
 
         ax[i, j].set_title(titles[i][j], fontsize=fontsize, pad=-1.5)
 
@@ -218,6 +217,6 @@ for i in range(2):
 
         ax[i, j].set_xticks([-1, 0, 1], fontsize=fontsize)
         ax[i, j].set_yticks([-1, 0, 1], fontsize=fontsize)
-        ax[i, j].set_zticks([0., 10., 20., 30.], fontsize=fontsize)
+        ax[i, j].set_zticks([0., 5., 10., 15.], fontsize=fontsize)
 
         ax[i, j].zaxis.set_rotate_label(False)
