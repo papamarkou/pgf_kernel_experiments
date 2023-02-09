@@ -13,73 +13,21 @@ from pgfml.kernels import GFKernel
 
 seed = 5
 
-# np.random.seed(seed)
-torch.manual_seed(seed)
+np.random.seed(seed)
+# torch.manual_seed(seed)
 
-# %%
+# %% Function for simulating from Wiener process with variance
 
-from typing import Optional
+def sim_dW(n, scale=1.) -> np.ndarray:
+    return np.random.normal(loc=0.0, scale=scale, size=n)
 
-def get_dW(T: int, random_state: Optional[int] = None) -> np.ndarray:
-    """
-    Sample T times from a normal distribution,
-    to simulate discrete increments (dW) of a Brownian Motion.
-    Optional random_state to reproduce results.
-    """
-    np.random.seed(random_state)
-    return np.random.normal(0.0, 1.0, T)
-
-
-def get_W(T: int, random_state: Optional[int] = None) -> np.ndarray:
-    """
-    Simulate a Brownian motion discretely samplet at unit time increments.
-    Returns the cumulative sum
-    """
-    dW = get_dW(T, random_state)
-    # cumulative sum and then make the first index 0.
-    dW_cs = dW.cumsum()
-    return np.insert(dW_cs, 0, 0)[:-1]
-
-# %%
-
-# dW = get_dW(T=500, random_state=4)
-W = get_W(T=500, random_state=seed)
-
-#----------------------------------------------------------------
-# plot
-
-import matplotlib.pyplot as plt 
-import seaborn as sns
-
-fig = plt.figure(figsize=(15, 5))
-
-# title = "Brownian motion increments"
-# plt.subplot(1, 2, 1)
-# plt.plot(dW)
-# plt.gca().set_title(title, fontsize=15)
-# plt.xticks(fontsize=15)
-# plt.yticks(fontsize=15)
-
-title = "Brownian motion path"
-plt.subplot(1, 2, 2)
-plt.plot(W)
-plt.gca().set_title(title, fontsize=15)
-plt.xticks(fontsize=15)
-plt.yticks(fontsize=15)
-
-# %% Chirp signal function
-
-# def chirp_signal(theta):
-#     # return np.cos(-1.2 * (theta ** 3) - 2.1 * (theta ** 2) - 3 * theta)
-#     return 3 * np.cos(-0.72 * (theta ** 4) + 1.1 * (theta ** 3) - 0.5 * (theta ** 2) + 2 * theta)
-
-# theta = np.linspace(-np.pi, np.pi, num=400, endpoint=False)
-
-# plt.plot(theta, chirp_signal(theta))
+def sim_W(n, scale=1.):
+    dW = sim_dW(n, scale=scale)
+    return np.insert(dW.cumsum(), 0, 0)[:-1]
 
 # %% Simulate data
 
-n_samples = 500
+n_samples = 1000
 
 theta = np.linspace(-np.pi, np.pi, num=n_samples, endpoint=False)
 
@@ -89,18 +37,13 @@ y = np.sin(theta)
 
 grid = np.stack((x, y))
 
-# z = chirp_signal(theta) # + np.random.normal(loc=0.0, scale=0.05, size=n_samples)
-
-z = W
-
-plt.plot(theta, z)
-# plt.scatter(theta, z)
+z = sim_W(n_samples, scale=1.)
 
 # %% Generate training data
 
 ids = np.arange(n_samples)
 
-n_train = int(1 * n_samples)
+n_train = int(0.5 * n_samples)
 
 train_ids = np.random.RandomState(2).choice(ids, size=n_train, replace=False)
 
@@ -114,11 +57,13 @@ train_output = z[train_ids]
 
 test_ids = np.array(list(set(ids).difference(set(train_ids))))
 
+test_ids.sort()
+
 n_test = n_samples - n_train
 
-test_pos = grid[:, train_ids]
+test_pos = grid[:, test_ids]
 
-test_output = z[train_ids]
+test_output = z[test_ids]
 
 # %% Plot training and test data
 
@@ -151,7 +96,7 @@ for i in range(3):
 
     ax[i].set_xlim((-1, 1))
     ax[i].set_ylim((-1, 1))
-    ax[i].set_zlim((-3, 15))
+    ax[i].set_zlim((-5, 35))
 
     ax[i].set_title(titles[i], fontsize=fontsize, pad=-1.5)
 
@@ -161,7 +106,7 @@ for i in range(3):
 
     ax[i].set_xticks([-1, 0, 1], fontsize=fontsize)
     ax[i].set_yticks([-1, 0, 1], fontsize=fontsize)
-    ax[i].set_zticks([-0.3, 0., 0.3, 0.6], fontsize=fontsize)
+    ax[i].set_zticks([0., 10., 20., 30.], fontsize=fontsize)
 
     ax[i].zaxis.set_rotate_label(False)
 
@@ -263,7 +208,7 @@ for i in range(2):
 
         ax[i, j].set_xlim((-1, 1))
         ax[i, j].set_ylim((-1, 1))
-        ax[i, j].set_zlim((-3, 15))
+        ax[i, j].set_zlim((-5, 35))
 
         ax[i, j].set_title(titles[i][j], fontsize=fontsize, pad=-1.5)
 
@@ -273,18 +218,6 @@ for i in range(2):
 
         ax[i, j].set_xticks([-1, 0, 1], fontsize=fontsize)
         ax[i, j].set_yticks([-1, 0, 1], fontsize=fontsize)
-        ax[i, j].set_zticks([-0.3, 0., 0.3, 0.6], fontsize=fontsize)
+        ax[i, j].set_zticks([0., 10., 20., 30.], fontsize=fontsize)
 
         ax[i, j].zaxis.set_rotate_label(False)
-
-# %%
-
-plt.plot(theta, z)
-
-plt.plot(theta, predictions[0].mean)
-
-plt.plot(theta, predictions[2].mean)
-
-# plt.plot(theta, predictions[4].mean)
-
-# %%
