@@ -12,7 +12,7 @@ from pgfml.kernels import GFKernel
 # %% Generate training data
 
 # Training data: 200 points in [-1, 1], inclusive, regularly spaced
-train_x = torch.linspace(-1., 1., 200)
+train_x = torch.linspace(-1., 1., 200, dtype=torch.float64)
 
 # Objective function: sin(2*pi*x) with Gaussian noise
 train_y = torch.sin(train_x * (2 * math.pi)) + torch.randn(train_x.size()) * math.sqrt(0.04)
@@ -20,6 +20,13 @@ train_y = torch.sin(train_x * (2 * math.pi)) + torch.randn(train_x.size()) * mat
 # %% Generate test data
 
 test_x = torch.linspace(-1., 1., 50)
+
+# %% Convert training and test data from float32 to float64
+
+train_x = train_x.to(torch.float64)
+train_y = train_y.to(torch.float64)
+
+test_x = test_x.to(torch.float64)
 
 # %% Plot training data
 
@@ -30,6 +37,11 @@ plt.scatter(train_x, train_y)
 # %% Set up ExactMultiGPRunner
 
 runner = ExactSingleGPRunner(train_x, train_y, gpytorch.kernels.ScaleKernel(GFKernel(width=[100])))
+
+# %% Set the model in double mode
+
+runner.model.double()
+runner.model.likelihood.double()
 
 # %% Print parameter names and values
 

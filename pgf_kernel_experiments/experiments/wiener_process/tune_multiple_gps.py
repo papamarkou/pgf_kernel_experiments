@@ -185,9 +185,9 @@ kernels = [
 
 runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
 
-# %%
+# %% Set the models in double mode
 
-for i in range(5):
+for i in range(len(kernels)):
     runner.single_runners[i].model.double()
     runner.single_runners[i].model.likelihood.double()
 

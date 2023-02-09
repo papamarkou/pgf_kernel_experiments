@@ -108,6 +108,11 @@ test_y = torch.as_tensor(test_output.T, dtype=torch.float64)
 
 runner = ExactSingleGPRunner(train_x, train_y, GFKernel(width=[20, 20, 20]))
 
+# %% Set the model in double mode
+
+runner.model.double()
+runner.model.likelihood.double()
+
 # %% Configurate training setup for GP models
 
 optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.5)
