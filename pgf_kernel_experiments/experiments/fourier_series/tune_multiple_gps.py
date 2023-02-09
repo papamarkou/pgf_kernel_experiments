@@ -25,7 +25,7 @@ def fourier_series(theta, a, p, phi):
 
 # %% Simulate data
 
-n_samples = 3000
+n_samples = 1000
 
 theta = np.linspace(-np.pi, np.pi, num=n_samples, endpoint=False)
 
@@ -46,7 +46,7 @@ z = fourier_series(
 
 ids = np.arange(n_samples)
 
-n_train = int(0.7 * n_samples)
+n_train = int(0.5 * n_samples)
 
 train_ids = np.random.RandomState(2).choice(ids, size=n_train, replace=False)
 
@@ -142,7 +142,7 @@ optimizers = []
 for i in range(runner.num_gps()):
     optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=0.1))
 
-n_iters = 10
+n_iters = 50
 
 # %% Train GP models to find optimal hyperparameters
 
