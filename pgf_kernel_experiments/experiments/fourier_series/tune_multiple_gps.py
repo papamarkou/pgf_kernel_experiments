@@ -111,11 +111,11 @@ for i in range(3):
 
 # %% Convert training and test data to PyTorch format
 
-train_x = torch.as_tensor(train_pos.T, dtype=torch.float32)
-train_y = torch.as_tensor(train_output.T, dtype=torch.float32)
+train_x = torch.as_tensor(train_pos.T, dtype=torch.float64)
+train_y = torch.as_tensor(train_output.T, dtype=torch.float64)
 
-test_x = torch.as_tensor(test_pos.T, dtype=torch.float32)
-test_y = torch.as_tensor(test_output.T, dtype=torch.float32)
+test_x = torch.as_tensor(test_pos.T, dtype=torch.float64)
+test_y = torch.as_tensor(test_output.T, dtype=torch.float64)
 
 # %% Set up ExactMultiGPRunner
 
