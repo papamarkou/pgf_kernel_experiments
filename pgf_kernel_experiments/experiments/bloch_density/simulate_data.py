@@ -1,137 +1,37 @@
-# %%
-
-from qutip import Bloch
-from math import sqrt, sin, cos, pi
-from colorsys import hsv_to_rgb
-
-from scipy.interpolate import interp2d
-from numpy.random import rand
-
-from numpy import linspace, outer, ones, sin, cos, arccos, arctan2, size, empty
-
-import scipy
-
-import matplotlib.pyplot as plt
+# %% Import packages
 
 import numpy as np
+import scipy
 
-# %%
+# %% Function for generating uniform polar density
 
-class BlochDensity(Bloch):
-  def plot_back(self):
-    # back half of sphere
-    u = linspace(0, pi, 25)
-    v = linspace(0, pi, 25)
-    x = outer(cos(u), sin(v))
-    y = outer(sin(u), sin(v))
-    z = outer(ones(size(u)), cos(v))
+def gen_unif_polar_density(phi, theta):
+    return scipy.interpolate.RegularGridInterpolator((phi, theta), np.random.rand(len(phi), len(theta)))
 
-    colours = empty(x.shape, dtype=object)
+# %% Function for generating data
 
-    for i in range(len(x)):
-      for j in range(len(y)):
-        theta = arctan2(y[i,j], x[i,j])
-        phi = arccos(z[i,j])
+def gen_bloch_data(phi, theta):
+    x = np.outer(np.cos(phi), np.sin(theta))
+    y = np.outer(np.sin(phi), np.sin(theta))
+    z = np.outer(np.ones(np.size(phi)), np.cos(theta))
 
-        colours[i,j] = self.density(theta, phi)
+    return x, y, z, unif_polar_density(np.column_stack((phi, theta)))
 
+# %% Generate uniform polar density
 
-    self.axes.plot_surface(x, y, z, rstride=1, cstride=1,
-                           facecolors=colours,
-                           alpha=self.sphere_alpha, 
-                           linewidth=0, antialiased=True)
-    # wireframe
-    self.axes.plot_wireframe(x, y, z, rstride=5, cstride=5,
-                             color=self.frame_color,
-                             alpha=self.frame_alpha)
-    # equator
-    self.axes.plot(1.0 * cos(u), 1.0 * sin(u), zs=0, zdir='z',
-                   lw=self.frame_width, color=self.frame_color)
-    self.axes.plot(1.0 * cos(u), 1.0 * sin(u), zs=0, zdir='x',
-                   lw=self.frame_width, color=self.frame_color)
+n_design = 20
 
-  def plot_front(self):
-    # front half of sphere
-    u = linspace(-pi, 0, 25)
-    v = linspace(0, pi, 25)
-    x = outer(cos(u), sin(v))
-    y = outer(sin(u), sin(v))
-    z = outer(ones(size(u)), cos(v))
+# Inclination theta and azimuth phi
+phi_design, theta_design = np.linspace(-np.pi, np.pi, n_design), np.linspace(0, np.pi, n_design)
 
-    colours = empty(x.shape, dtype=object)
-    for i in range(len(x)):
-      for j in range(len(y)):
-        theta = arctan2(y[i,j], x[i,j])
-        phi = arccos(z[i,j])
+unif_polar_density = gen_unif_polar_density(phi_design, theta_design)
 
-        colours[i,j] = self.density(theta, phi)
+# %% Generate data
 
-    self.axes.plot_surface(x, y, z, rstride=1, cstride=1,
-                           facecolors=colours,
-                           alpha=self.sphere_alpha, 
-                           linewidth=0, antialiased=True)
+n_incl = 25
 
+phi = np.linspace(-np.pi, np.pi, 2 * n_incl)
+theta = np.tile(np.linspace(0, np.pi, n_incl), 2)
 
-    # wireframe
-    self.axes.plot_wireframe(x, y, z, rstride=5, cstride=5,
-                             color=self.frame_color,
-                             alpha=self.frame_alpha)
-    # equator
-    self.axes.plot(1.0 * cos(u), 1.0 * sin(u),
-                   zs=0, zdir='z', lw=self.frame_width,
-                   color=self.frame_color)
-    self.axes.plot(1.0 * cos(u), 1.0 * sin(u),
-                   zs=0, zdir='x', lw=self.frame_width,
-                   color=self.frame_color)
+x, y, z, freqs = gen_bloch_data(phi, theta)
 
-# %%
-
-b = BlochDensity()
-b.sphere_alpha=0.5
-
-thetas, phis = linspace(-pi,pi, 20), linspace(0,pi, 20)
-density = rand(len(thetas), len(phis))
-
-#scale density to a maximum of 1
-# density /= density.max()
-
-# interpolated_density = interp2d(thetas, phis, density)
-
-interpolated_density = scipy.interpolate.RegularGridInterpolator((thetas, phis), density)
-
-def f(theta, phi):
-  # return hsv_to_rgb(interpolated_density(theta,phi)[0, 0], 1, 1)
-  # return interpolated_density(theta,phi)[0, 0]
-  return hsv_to_rgb(interpolated_density(np.array([theta, phi]))[0], 1, 1)
-
-b.density = f
-
-b.show()
-
-# %%
-
-u = linspace(0, pi, 25)
-v = linspace(0, pi, 25)
-x = outer(cos(u), sin(v))
-y = outer(sin(u), sin(v))
-z = outer(ones(size(u)), cos(v))
-
-colours = empty(x.shape, dtype=object)
-
-for i in range(len(x)):
-    for j in range(len(y)):
-        theta = arctan2(y[i,j], x[i,j])
-        phi = arccos(z[i,j])
-
-        colours[i,j] = b.density(theta, phi)
-
-# %%
-
-fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-
-ax.plot_surface(x, y, z, rstride=1, cstride=1,
-                           facecolors=colours,
-                           alpha=b.sphere_alpha, 
-                           linewidth=0, antialiased=True)
-
-# %%
