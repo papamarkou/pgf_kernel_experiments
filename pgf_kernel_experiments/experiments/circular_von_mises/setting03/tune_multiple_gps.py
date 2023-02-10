@@ -17,7 +17,7 @@ torch.manual_seed(6)
 
 # %% Generate data
 
-n_samples = 1000
+n_samples = 600
 
 theta = np.linspace(-np.pi, np.pi, num=n_samples, endpoint=False)
 
@@ -33,7 +33,7 @@ z = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
 
 ids = np.arange(n_samples)
 
-n_train = int(0.5 * n_samples)
+n_train = int(0.97 * n_samples)
 
 train_ids = np.arange(n_train)
 
@@ -131,97 +131,24 @@ n_iters = 50
 
 losses = runner.train(train_x, train_y, optimizers, n_iters)
 
-# %%
+# %% Set the models in test mode
 
 for i in range(runner.num_gps()):
     runner.single_runners[i].model.setup('test')
 
-# %%
+# %% Make predictions
 
-n = 10
+predictions = []
 
-preds = []
-
-for i in range(n):
+for i in range(n_test):
     test_point = test_x[i, :][None, :]
     prediction = runner.predict(test_point)
     prediction = [prediction[j] for j in range(runner.num_gps())]
 
-    preds.append(prediction)
+    predictions.append(prediction)
 
     for j in range(runner.num_gps()):
         runner.single_runners[j].model.get_fantasy_model(test_point, prediction[j].mean)
-
-# %% Make predictions
-
-# predictions = runner.test(test_x)
-
-# %% Compute error metrics
-
-# scores = runner.assess(
-#     predictions,
-#     test_y,
-#     metrics=[
-#         gpytorch.metrics.mean_absolute_error,
-#         gpytorch.metrics.mean_squared_error,
-#         lambda predictions, y : -gpytorch.metrics.negative_log_predictive_density(predictions, y)
-#     ]
-# )
-
-# %% Plot predictions
-
-# fontsize = 11
-
-# titles = [
-#     [r'$von~Mises~density$', r'$Training~data$', r'$Test~data$', r'$PGF~kernel$'],
-#     [r'$RBF~kernel$', r'$Mat\acute{e}rn~kernel$', r'$Periodic~kernel$', r'$Spectral~kernel$']
-# ]
-
-# cols = ['green', 'orange', 'brown', 'red', 'blue']
-
-# fig, ax = plt.subplots(2, 4, figsize=[16, 6], subplot_kw={'projection': '3d'})
-
-# ax[0, 0].plot(x, y, z, color=cols[0], lw=2)
-
-# ax[0, 1].scatter(train_pos[0, :], train_pos[1, :], train_output, color=cols[1], s=2)
-
-# ax[0, 2].scatter(test_pos[0, :], test_pos[1, :], test_output, color=cols[2], s=2)
-
-# ax[0, 3].scatter(test_pos[0, :], test_pos[1, :], predictions[0].mean, color=cols[3], s=2)
-
-# ax[1, 0].scatter(test_pos[0, :], test_pos[1, :], predictions[1].mean, color=cols[4], s=2)
-
-# ax[1, 1].scatter(test_pos[0, :], test_pos[1, :], predictions[2].mean, color=cols[4], s=2)
-
-# ax[1, 2].scatter(test_pos[0, :], test_pos[1, :], predictions[3].mean, color=cols[4], s=2)
-
-# ax[1, 3].scatter(test_pos[0, :], test_pos[1, :], predictions[4].mean, color=cols[4], s=2)
-
-# for i in range(2):
-#     for j in range(4):
-#         ax[i, j].set_proj_type('ortho')
-
-#         ax[i, j].plot(x, y, 0, color='black', lw=2, zorder=0)
-
-#         ax[i, j].grid(False)
-
-#         ax[i, j].tick_params(pad=-1.5)
-        
-#         ax[i, j].set_xlim((-1, 1))
-#         ax[i, j].set_ylim((-1, 1))
-#         ax[i, j].set_zlim((0, 11))
-
-#         ax[i, j].set_title(titles[i][j], fontsize=fontsize, pad=-1.5)
-
-#         ax[i, j].set_xlabel('x', fontsize=fontsize, labelpad=-3)
-#         ax[i, j].set_ylabel('y', fontsize=fontsize, labelpad=-3)
-#         ax[i, j].set_zlabel('z', fontsize=fontsize, labelpad=-3)
-
-#         ax[i, j].set_xticks([-1, 0, 1], fontsize=fontsize)
-#         ax[i, j].set_yticks([-1, 0, 1], fontsize=fontsize)
-#         ax[i, j].set_zticks([0, 5., 10.], fontsize=fontsize)
-
-#         ax[i, j].zaxis.set_rotate_label(False)
 
 # %% Plot predictions
 
@@ -240,17 +167,17 @@ ax[0, 0].plot(x, y, z, color=cols[0], lw=2)
 
 ax[0, 1].scatter(train_pos[0, :], train_pos[1, :], train_output, color=cols[1], s=2)
 
-ax[0, 2].scatter(test_pos[0, :n], test_pos[1, :n], test_output[:n], color=cols[2], s=2)
+ax[0, 2].scatter(test_pos[0, :], test_pos[1, :], test_output, color=cols[2], s=2)
 
-ax[0, 3].scatter(test_pos[0, :n], test_pos[1, :n], [preds[i][0].mean.item() for i in range(n)], color=cols[3], s=2)
+ax[0, 3].scatter(test_pos[0, :], test_pos[1, :], [predictions[i][0].mean.item() for i in range(n_test)], color=cols[3], s=2)
 
-ax[1, 0].scatter(test_pos[0, :n], test_pos[1, :n], [preds[i][1].mean.item() for i in range(n)], color=cols[4], s=2)
+ax[1, 0].scatter(test_pos[0, :], test_pos[1, :], [predictions[i][1].mean.item() for i in range(n_test)], color=cols[4], s=2)
 
-ax[1, 1].scatter(test_pos[0, :n], test_pos[1, :n], [preds[i][2].mean.item() for i in range(n)], color=cols[4], s=2)
+ax[1, 1].scatter(test_pos[0, :], test_pos[1, :], [predictions[i][2].mean.item() for i in range(n_test)], color=cols[4], s=2)
 
-ax[1, 2].scatter(test_pos[0, :n], test_pos[1, :n], [preds[i][3].mean.item() for i in range(n)], color=cols[4], s=2)
+ax[1, 2].scatter(test_pos[0, :], test_pos[1, :], [predictions[i][3].mean.item() for i in range(n_test)], color=cols[4], s=2)
 
-ax[1, 3].scatter(test_pos[0, :n], test_pos[1, :n], [preds[i][4].mean.item() for i in range(n)], color=cols[4], s=2)
+ax[1, 3].scatter(test_pos[0, :], test_pos[1, :], [predictions[i][4].mean.item() for i in range(n_test)], color=cols[4], s=2)
 
 for i in range(2):
     for j in range(4):
