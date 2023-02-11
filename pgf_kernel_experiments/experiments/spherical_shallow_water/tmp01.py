@@ -18,7 +18,6 @@ To run and plot using e.g. 4 processes:
 # %% Import packages
 
 import numpy as np
-import dedalus
 import dedalus.public as d3
 import logging
 logger = logging.getLogger(__name__)
@@ -46,7 +45,7 @@ dtype = np.float64
 # %% Bases
 
 coords = d3.S2Coordinates('phi', 'theta')
-dist = dedalus.core.distributor.Distributor(coords, dtype=dtype)
+dist = d3.Distributor(coords, dtype=dtype)
 basis = d3.SphereBasis(coords, (Nphi, Ntheta), radius=R, dealias=dealias, dtype=dtype)
 
 # %% Fields
