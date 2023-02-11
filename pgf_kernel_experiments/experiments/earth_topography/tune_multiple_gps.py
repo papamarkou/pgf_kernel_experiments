@@ -164,7 +164,7 @@ kernels = [
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
     gpytorch.kernels.PeriodicKernel(),
-    gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2)
+    gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=3)
 ]
 
 runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
