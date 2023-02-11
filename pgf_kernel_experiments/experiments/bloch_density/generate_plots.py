@@ -6,10 +6,6 @@ import numpy as np
 from bloch_density import BlochDensity
 from set_paths import data_path
 
-# %% Set seed
-
-np.random.seed(7)
-
 # %% Load data
 
 phi = np.loadtxt(data_path.joinpath('phi.csv'))
@@ -21,26 +17,36 @@ z = np.loadtxt(data_path.joinpath('z.csv'), delimiter=',')
 
 freqs = np.loadtxt(data_path.joinpath('freqs.csv'), delimiter=',')
 
-n_samples = freqs.shape[0] * freqs.shape[1]
-
 train_ids = np.loadtxt(data_path.joinpath('train_ids.csv'), dtype='int')
 test_ids = np.loadtxt(data_path.joinpath('test_ids.csv'), dtype='int')
 
+x_flat = x.flatten()
+y_flat = y.flatten()
+z_flat = z.flatten()
+
+freqs_flat = freqs.flatten()
+
+pos = np.column_stack((x_flat, y_flat, z_flat))
+
+# %% Set up training and test data
+
 # %% Generate BlochDensity for all data
 
-phi_front = phi[:int(freqs.shape[0] / 2)]
-theta_front = theta
-x_front = x[:int(freqs.shape[0] / 2), :]
-y_front = y[:int(freqs.shape[0] / 2), :]
-z_front = z[:int(freqs.shape[0] / 2), :]
-freqs_front = freqs[:int(freqs.shape[0] / 2), :]
+n_train_freqs = int((freqs.shape[0] - 1) / 2)
 
-phi_back = phi[(int(freqs.shape[0] / 2) - 1):]
+phi_front = phi[:n_train_freqs]
+theta_front = theta
+x_front = x[:n_train_freqs, :]
+y_front = y[:n_train_freqs, :]
+z_front = z[:n_train_freqs, :]
+freqs_front = freqs[:n_train_freqs, :]
+
+phi_back = phi[(n_train_freqs - 1):]
 theta_back = theta
-x_back = x[(int(freqs.shape[0] / 2) - 1):, :]
-y_back = y[(int(freqs.shape[0] / 2) - 1):, :]
-z_back = z[(int(freqs.shape[0] / 2) - 1):, :]
-freqs_back = freqs[(int(freqs.shape[0] / 2) - 1):, :]
+x_back = x[(n_train_freqs - 1):, :]
+y_back = y[(n_train_freqs - 1):, :]
+z_back = z[(n_train_freqs - 1):, :]
+freqs_back = freqs[(n_train_freqs - 1):, :]
 
 bloch_all_data = BlochDensity(
     phi_front, theta_front, x_front, y_front, z_front, freqs_front,
