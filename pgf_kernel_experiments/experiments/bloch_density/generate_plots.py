@@ -20,14 +20,6 @@ freqs = np.loadtxt(data_path.joinpath('freqs.csv'), delimiter=',')
 train_ids = np.loadtxt(data_path.joinpath('train_ids.csv'), dtype='int')
 test_ids = np.loadtxt(data_path.joinpath('test_ids.csv'), dtype='int')
 
-x_flat = x.flatten()
-y_flat = y.flatten()
-z_flat = z.flatten()
-
-freqs_flat = freqs.flatten()
-
-pos = np.column_stack((x_flat, y_flat, z_flat))
-
 # %% Set up training and test data
 
 # %% Generate BlochDensity for all data
