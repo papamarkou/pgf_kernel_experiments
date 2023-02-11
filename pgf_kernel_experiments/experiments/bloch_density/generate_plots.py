@@ -57,32 +57,64 @@ bloch_training_data = BlochDensity(
     alpha = 0.33
 )
 
-# %%
+# %% Generate BlochDensity for test data
+
+bloch_test_data = BlochDensity(
+    phi_front, theta_front, x_front, y_front, z_front, freqs_front,
+    phi_back, theta_back, x_back, y_back, z_back, freqs_back,
+    alpha = 0.33
+)
+
+# %% Plot data
+
+# https://qutip.org/docs/4.0.2/guide/guide-bloch.html
+
+fontsize = 18
 
 fig = plt.figure(figsize=[16, 6], constrained_layout=True)
 
-ax1 = fig.add_subplot(1, 2, 1, projection='3d')
+ax1 = fig.add_subplot(1, 3, 1, projection='3d')
 
 bloch_all_data.fig = fig
 bloch_all_data.axes = ax1
+
+bloch_all_data.xlpos = [1.55, -1.1]
+bloch_all_data.zlpos = [1.22, -1.35]
 
 bloch_all_data.render()
 
 ax1.set_box_aspect([1, 1, 1]) 
 
-ax1.set_title('All data')
+ax1.set_title('All data', fontsize=fontsize)
 
-ax2 = fig.add_subplot(1, 2, 2, projection='3d')
+ax2 = fig.add_subplot(1, 3, 2, projection='3d')
 
 bloch_training_data.fig = fig
 bloch_training_data.axes = ax2
+
+bloch_training_data.xlpos = [1.55, -1.1]
+bloch_training_data.zlpos = [1.22, -1.35]
 
 bloch_training_data.render()
 
 ax2.set_box_aspect([1, 1, 1])
 
-ax2.set_title('Training data')
+ax2.set_title('Training data', fontsize=fontsize)
 
-plt.show()
+ax3 = fig.add_subplot(1, 3, 3, projection='3d')
+
+bloch_test_data.fig = fig
+bloch_test_data.axes = ax3
+
+bloch_test_data.xlpos = [1.55, -1.1]
+bloch_test_data.zlpos = [1.22, -1.35]
+
+bloch_test_data.render()
+
+ax3.set_box_aspect([1, 1, 1])
+
+ax3.set_title('Test data', fontsize=fontsize)
+
+# plt.show()
 
 # %%
