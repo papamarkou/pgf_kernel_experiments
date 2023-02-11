@@ -44,8 +44,8 @@ unif_polar_density = gen_unif_polar_density(phi_design, theta_design)
 
 n_incl = 25
 
-phi = np.linspace(-np.pi, np.pi, 2 * n_incl)
-theta = np.tile(np.linspace(0, np.pi, n_incl), 2)
+phi = np.linspace(-np.pi, np.pi, num=2*n_incl, endpoint=True)
+theta = np.tile(np.linspace(0, np.pi, num=n_incl, endpoint=True), 2)
 
 x, y, z, freqs = gen_bloch_data(phi, theta)
 
