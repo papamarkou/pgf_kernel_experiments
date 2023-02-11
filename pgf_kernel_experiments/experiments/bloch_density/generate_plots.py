@@ -1,8 +1,10 @@
 # %% Import packages
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 from bloch_density import BlochDensity
+from mpl_toolkits.mplot3d import Axes3D
 from set_paths import data_path
 
 # %% Set seed
@@ -25,7 +27,7 @@ n_samples = freqs.shape[0] * freqs.shape[1]
 train_ids = np.loadtxt(data_path.joinpath('train_ids.csv'), dtype='int')
 test_ids = np.loadtxt(data_path.joinpath('test_ids.csv'), dtype='int')
 
-# %%
+# %% Generate BlochDensity for all data
 
 phi_front = phi[:int(freqs.shape[0] / 2)]
 theta_front = theta
@@ -41,7 +43,15 @@ y_back = y[(int(freqs.shape[0] / 2) - 1):, :]
 z_back = z[(int(freqs.shape[0] / 2) - 1):, :]
 freqs_back = freqs[(int(freqs.shape[0] / 2) - 1):, :]
 
-b = BlochDensity(
+bloch_all_data = BlochDensity(
+    phi_front, theta_front, x_front, y_front, z_front, freqs_front,
+    phi_back, theta_back, x_back, y_back, z_back, freqs_back,
+    alpha = 0.33
+)
+
+# %% Generate BlochDensity for training data
+
+bloch_training_data = BlochDensity(
     phi_front, theta_front, x_front, y_front, z_front, freqs_front,
     phi_back, theta_back, x_back, y_back, z_back, freqs_back,
     alpha = 0.33
@@ -49,20 +59,29 @@ b = BlochDensity(
 
 # %%
 
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.pyplot as plt
+fig = plt.figure(figsize=[16, 6], constrained_layout=True)
 
-fig = plt.figure(figsize=[16, 6]) # constrained_layout=True)
+ax1 = fig.add_subplot(1, 2, 1, projection='3d')
 
-ax1 = fig.add_subplot(1, 2, 1)
-ax1.plot(range(10), range(10), "o-")
+bloch_all_data.fig = fig
+bloch_all_data.axes = ax1
+
+bloch_all_data.render()
+
+ax1.set_box_aspect([1, 1, 1]) 
+
+ax1.set_title('All data')
 
 ax2 = fig.add_subplot(1, 2, 2, projection='3d')
-# b1 = Bloch(fig=fig, axes=ax2)
-b.fig = fig
-b.axes = ax2
-b.render()
-ax2.set_box_aspect([1, 1, 1]) # required for mpl > 3.1
+
+bloch_training_data.fig = fig
+bloch_training_data.axes = ax2
+
+bloch_training_data.render()
+
+ax2.set_box_aspect([1, 1, 1])
+
+ax2.set_title('Training data')
 
 plt.show()
 

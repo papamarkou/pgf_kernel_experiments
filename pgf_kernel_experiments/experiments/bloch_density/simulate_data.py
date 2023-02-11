@@ -53,7 +53,7 @@ n_samples = freqs.shape[0] * freqs.shape[1]
 
 # %% Generate training and test IDs
 
-ids = np.arange(n_samples)
+ids = np.arange(n_samples - 1)
 
 n_train = int(0.7 * n_samples)
 
