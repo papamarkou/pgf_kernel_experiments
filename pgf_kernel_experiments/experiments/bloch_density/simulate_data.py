@@ -3,6 +3,10 @@
 import numpy as np
 import scipy
 
+# %% Set seed
+
+np.random.seed(7)
+
 # %% Function for generating uniform polar density
 
 def gen_unif_polar_density(phi, theta):
@@ -34,3 +38,14 @@ phi = np.linspace(-np.pi, np.pi, 2 * n_incl)
 theta = np.tile(np.linspace(0, np.pi, n_incl), 2)
 
 x, y, z, freqs = gen_bloch_data(phi, theta)
+
+# %% Save data
+
+np.savetxt('phi.csv', phi)
+np.savetxt('theta.csv', theta)
+
+np.savetxt('x.csv', x, delimiter=',')
+np.savetxt('y.csv', y, delimiter=',')
+np.savetxt('z.csv', z, delimiter=',')
+
+np.savetxt('freqs.csv', freqs, delimiter=',')
