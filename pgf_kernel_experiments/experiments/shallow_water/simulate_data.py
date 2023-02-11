@@ -1,3 +1,5 @@
+# %% Documentation
+
 """
 Dedalus script simulating the viscous shallow water equations on a sphere. This
 script demonstrates solving an initial value problem on the sphere. It can be
@@ -15,11 +17,14 @@ To run and plot using e.g. 4 processes:
     $ mpiexec -n 4 python3 plot_sphere.py snapshots/*.h5
 """
 
-# %% Import packages
+# %% Load packages
 
 import numpy as np
 import dedalus.public as d3
 import logging
+
+# %% Set logger
+
 logger = logging.getLogger(__name__)
 
 # %% Simulation units
@@ -39,7 +44,7 @@ nu = 1e5 * meter**2 / second / 32**2 # Hyperdiffusion matched at ell=32
 g = 9.80616 * meter / second**2
 H = 1e4 * meter
 timestep = 600 * second
-stop_sim_time = 360 * hour
+stop_sim_time = 100 * hour # 360 * hour
 dtype = np.float64
 
 # %% Bases
@@ -53,7 +58,7 @@ basis = d3.SphereBasis(coords, (Nphi, Ntheta), radius=R, dealias=dealias, dtype=
 u = dist.VectorField(coords, name='u', bases=basis)
 h = dist.Field(name='h', bases=basis)
 
-# %% Substitutions
+# %% sSubstitutions
 
 zcross = lambda A: d3.MulCosine(d3.skew(A))
 

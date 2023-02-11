@@ -3,7 +3,7 @@
 import numpy as np
 import scipy
 
-from set_paths import data_path
+from pgf_kernel_experiments.experiments.bloch_density.set_paths import data_path
 
 # %% Set seed
 
