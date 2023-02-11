@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from bloch_density import BlochDensity
-from mpl_toolkits.mplot3d import Axes3D
 from set_paths import data_path
 
 # %% Set seed

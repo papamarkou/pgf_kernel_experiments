@@ -36,7 +36,8 @@ def gen_bloch_data(phi, theta):
 n_design = 20
 
 # Inclination theta and azimuth phi
-phi_design, theta_design = np.linspace(-np.pi, np.pi, n_design), np.linspace(0, np.pi, n_design)
+phi_design = np.linspace(-np.pi, np.pi, num=n_design+1, endpoint=True)
+theta_design = np.linspace(0, np.pi, num=n_design, endpoint=True)
 
 unif_polar_density = gen_unif_polar_density(phi_design, theta_design)
 
@@ -44,16 +45,18 @@ unif_polar_density = gen_unif_polar_density(phi_design, theta_design)
 
 n_incl = 25
 
-phi = np.linspace(-np.pi, np.pi, num=2*n_incl, endpoint=True)
+phi = np.linspace(-np.pi, np.pi, num=2 * n_incl + 1, endpoint=True)
 theta = np.tile(np.linspace(0, np.pi, num=n_incl, endpoint=True), 2)
 
 x, y, z, freqs = gen_bloch_data(phi, theta)
 
-n_samples = freqs.shape[0] * freqs.shape[1]
+freqs[-1] = freqs[0]
+
+n_samples = (freqs.shape[0] - 1) * freqs.shape[1]
 
 # %% Generate training and test IDs
 
-ids = np.arange(n_samples - 1)
+ids = np.arange(n_samples)
 
 n_train = int(0.7 * n_samples)
 
