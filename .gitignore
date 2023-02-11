@@ -1,11 +1,6 @@
 __pycache__
 pgf_kernel_experiments.egg-info
 pgf_kernel_experiments/experiments/air_passengers/passenger_numbers.csv
+pgf_kernel_experiments/experiments/bloch_density/data
 pgf_kernel_experiments/experiments/earth_temperature/gistemp1200_GHCNv4_ERSSTv5.zarr
 pgf_kernel_experiments/experiments/earth_topography/sea_bed.tiff
-pgf_kernel_experiments/experiments/bloch_density/freqs.csv
-pgf_kernel_experiments/experiments/bloch_density/phi.csv
-pgf_kernel_experiments/experiments/bloch_density/theta.csv
-pgf_kernel_experiments/experiments/bloch_density/x.csv
-pgf_kernel_experiments/experiments/bloch_density/y.csv
-pgf_kernel_experiments/experiments/bloch_density/z.csv

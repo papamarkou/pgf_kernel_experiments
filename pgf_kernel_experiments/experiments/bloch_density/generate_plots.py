@@ -2,6 +2,8 @@
 
 import numpy as np
 
+from bloch_density import BlochDensity
+
 # %% Set seed
 
 np.random.seed(7)

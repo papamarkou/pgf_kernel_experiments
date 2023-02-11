@@ -3,6 +3,8 @@
 import numpy as np
 import scipy
 
+from pathlib import Path
+
 # %% Set seed
 
 np.random.seed(7)
@@ -19,7 +21,15 @@ def gen_bloch_data(phi, theta):
     y = np.outer(np.sin(phi), np.sin(theta))
     z = np.outer(np.ones(np.size(phi)), np.cos(theta))
 
-    return x, y, z, unif_polar_density(np.column_stack((phi, theta)))
+    freqs = np.empty_like(x)
+
+    n_rows, n_cols = freqs.shape
+
+    for i in range(n_rows):
+        for j in range(n_cols):
+            freqs[i, j] = unif_polar_density(np.array([phi[i], theta[j]]))
+
+    return x, y, z, freqs
 
 # %% Generate uniform polar density
 
@@ -41,11 +51,15 @@ x, y, z, freqs = gen_bloch_data(phi, theta)
 
 # %% Save data
 
-np.savetxt('phi.csv', phi)
-np.savetxt('theta.csv', theta)
+data_path = Path('data')
 
-np.savetxt('x.csv', x, delimiter=',')
-np.savetxt('y.csv', y, delimiter=',')
-np.savetxt('z.csv', z, delimiter=',')
+data_path.mkdir(parents=True, exist_ok=True)
 
-np.savetxt('freqs.csv', freqs, delimiter=',')
+np.savetxt(data_path.joinpath('phi.csv'), phi)
+np.savetxt(data_path.joinpath('theta.csv'), theta)
+
+np.savetxt(data_path.joinpath('x.csv'), x, delimiter=',')
+np.savetxt(data_path.joinpath('y.csv'), y, delimiter=',')
+np.savetxt(data_path.joinpath('z.csv'), z, delimiter=',')
+
+np.savetxt(data_path.joinpath('freqs.csv'), freqs, delimiter=',')
