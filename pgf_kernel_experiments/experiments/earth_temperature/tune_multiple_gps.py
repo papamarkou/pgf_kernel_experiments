@@ -155,7 +155,7 @@ ids = np.arange(n_locs)
 
 n_train = int(0.7 * n_locs)
 
-train_ids = np.random.RandomState(4).choice(ids, size=n_train, replace=False)
+train_ids = np.random.choice(ids, size=n_train, replace=False)
 
 train_ids.sort()
 

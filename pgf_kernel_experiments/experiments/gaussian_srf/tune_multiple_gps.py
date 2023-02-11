@@ -40,7 +40,7 @@ ids = np.arange(srf_normed.field.size)
 
 n_train = int(0.75 * srf_normed.field.size)
 
-train_ids = np.random.RandomState(3).choice(ids, size=n_train, replace=False)
+train_ids = np.random.choice(ids, size=n_train, replace=False)
 
 train_pos = grid_normed[:, train_ids]
 

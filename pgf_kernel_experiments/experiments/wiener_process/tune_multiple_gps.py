@@ -42,7 +42,7 @@ ids = np.arange(n_samples)
 
 n_train = int(0.5 * n_samples)
 
-train_ids = np.random.RandomState(6).choice(ids, size=n_train, replace=False)
+train_ids = np.random.choice(ids, size=n_train, replace=False)
 
 train_ids.sort()
 

@@ -3,7 +3,7 @@
 import numpy as np
 import scipy
 
-from pathlib import Path
+from set_paths import data_path
 
 # %% Set seed
 
@@ -49,9 +49,30 @@ theta = np.tile(np.linspace(0, np.pi, n_incl), 2)
 
 x, y, z, freqs = gen_bloch_data(phi, theta)
 
-# %% Save data
+n_samples = freqs.shape[0] * freqs.shape[1]
 
-data_path = Path('data')
+# %% Generate training and test IDs
+
+ids = np.arange(n_samples)
+
+n_train = int(0.7 * n_samples)
+
+train_ids = np.random.choice(ids, size=n_train, replace=False)
+
+train_ids.sort()
+
+train_pos = pos[train_ids, :]
+
+train_output = gray_dataset.flatten()[[train_ids]].squeeze()
+
+# %% Generate test data
+
+test_ids = np.array(list(set(ids).difference(set(train_ids))))
+
+test_ids.sort()
+
+
+# %% Save data
 
 data_path.mkdir(parents=True, exist_ok=True)
 

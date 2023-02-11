@@ -2,17 +2,23 @@
 
 import numpy as np
 
+from set_paths import data_path
+
 # %% Set seed
 
 np.random.seed(7)
 
 # %% Load data
 
-phi = np.loadtxt('phi.csv')
-theta = np.loadtxt('theta.csv')
+phi = np.loadtxt(data_path.joinpath('phi.csv'))
+theta = np.loadtxt(data_path.joinpath('theta.csv'))
 
-x = np.loadtxt('x.csv', delimiter=',')
-y = np.loadtxt('y.csv', delimiter=',')
-z = np.loadtxt('z.csv', delimiter=',')
+x = np.loadtxt(data_path.joinpath('x.csv'), delimiter=',')
+y = np.loadtxt(data_path.joinpath('y.csv'), delimiter=',')
+z = np.loadtxt(data_path.joinpath('z.csv'), delimiter=',')
 
-freqs = np.loadtxt('freqs.csv', delimiter=',')
+freqs = np.loadtxt(data_path.joinpath('freqs.csv'), delimiter=',')
+
+n_samples = freqs.shape[0] * freqs.shape[1]
+
+# %%
