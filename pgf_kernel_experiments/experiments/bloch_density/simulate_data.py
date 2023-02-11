@@ -34,4 +34,3 @@ phi = np.linspace(-np.pi, np.pi, 2 * n_incl)
 theta = np.tile(np.linspace(0, np.pi, n_incl), 2)
 
 x, y, z, freqs = gen_bloch_data(phi, theta)
-

@@ -19,7 +19,7 @@ import numpy as np
 
 class BlochDensity(Bloch):
   def __init__(self, fig=None, axes=None, view=None, figsize=None, background=False):
-    super.__init__(fig=fig, axes=axes, view=view, figsize=figsize, background=background)
+    super().__init__(fig=fig, axes=axes, view=view, figsize=figsize, background=background)
 
   def plot_back(self):
     # back half of sphere
@@ -174,8 +174,10 @@ ax1 = fig.add_subplot(1, 2, 1)
 ax1.plot(range(10), range(10), "o-")
 
 ax2 = fig.add_subplot(1, 2, 2, projection='3d')
-b1 = Bloch(fig=fig, axes=ax2)
-b1.render()
+# b1 = Bloch(fig=fig, axes=ax2)
+b.fig = fig
+b.axes = ax2
+b.render()
 ax2.set_box_aspect([1, 1, 1]) # required for mpl > 3.1
 
 plt.show()
