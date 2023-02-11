@@ -9,7 +9,7 @@ import numpy as np
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 from pgfml.kernels import GFKernel
 
-# from bloch_density import BlochDensity
+from pgf_kernel_experiments.experiments.bloch_density.bloch_density import BlochDensity
 from pgf_kernel_experiments.experiments.bloch_density.set_paths import data_path
 
 # %% Load data

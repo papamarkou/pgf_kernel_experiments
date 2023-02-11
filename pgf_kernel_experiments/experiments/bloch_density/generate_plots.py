@@ -3,8 +3,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from bloch_density import BlochDensity
-from set_paths import data_path
+from pgf_kernel_experiments.experiments.bloch_density.bloch_density import BlochDensity
+from pgf_kernel_experiments.experiments.bloch_density.set_paths import data_path
 
 # %% Load data
 

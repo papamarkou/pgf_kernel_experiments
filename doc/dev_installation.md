@@ -9,7 +9,7 @@ conda install -c conda-forge numpy pytorch-cpu torchvision gpytorch
 
 conda install -c conda-forge scipy pandas scikit-learn matplotlib seaborn ipykernel
 
-conda install -c conda-forge zarr python-geotiff gstools cartopy
+conda install -c conda-forge zarr python-geotiff gstools qutip cartopy
 
 # conda install -c conda-forge geotiff iris iris-sample-data
 
