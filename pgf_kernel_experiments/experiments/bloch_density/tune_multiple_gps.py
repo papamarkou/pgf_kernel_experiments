@@ -21,4 +21,7 @@ freqs = np.loadtxt(data_path.joinpath('freqs.csv'), delimiter=',')
 
 n_samples = freqs.shape[0] * freqs.shape[1]
 
+train_ids = np.loadtxt(data_path.joinpath('train_ids.csv'), dtype='int')
+test_ids = np.loadtxt(data_path.joinpath('test_ids.csv'), dtype='int')
+
 # %%

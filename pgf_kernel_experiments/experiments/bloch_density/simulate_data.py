@@ -61,16 +61,9 @@ train_ids = np.random.choice(ids, size=n_train, replace=False)
 
 train_ids.sort()
 
-train_pos = pos[train_ids, :]
-
-train_output = gray_dataset.flatten()[[train_ids]].squeeze()
-
-# %% Generate test data
-
 test_ids = np.array(list(set(ids).difference(set(train_ids))))
 
 test_ids.sort()
-
 
 # %% Save data
 
@@ -84,3 +77,6 @@ np.savetxt(data_path.joinpath('y.csv'), y, delimiter=',')
 np.savetxt(data_path.joinpath('z.csv'), z, delimiter=',')
 
 np.savetxt(data_path.joinpath('freqs.csv'), freqs, delimiter=',')
+
+np.savetxt(data_path.joinpath('train_ids.csv'), train_ids, fmt='%i')
+np.savetxt(data_path.joinpath('test_ids.csv'), test_ids, fmt='%i')
