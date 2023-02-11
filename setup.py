@@ -36,11 +36,8 @@ setup(
         'torch>=1.11.0',
         'gpytorch>=1.6.0',
         'pgfml>=0.0.1',
-        'zarr>=2.13.3',
         'scipy>=1.10.0',
-        'geotiff>=0.2.7',
-        'gstools>=1.4.1',
-        'matplotlib>=3.6.3',
-        'cartopy>=0.21.0'
+        'qutip>=4.7.1',
+        'matplotlib>=3.6.3'
     ]
 )
