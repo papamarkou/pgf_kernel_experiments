@@ -209,4 +209,118 @@ scores = runner.assess(
     ]
 )
 
+# %% Generate BlochDensity for PGF-GP predictions
+
+pgf_freqs_plot = np.empty_like(freqs)
+pgf_freqs_plot = pgf_freqs_plot.flatten()
+pgf_freqs_plot[train_ids] = np.nan
+pgf_freqs_plot[test_ids] = predictions[0].mean
+pgf_freqs_plot = pgf_freqs_plot.reshape(*(freqs.shape))
+
+pgf_freqs_plot_front = pgf_freqs_plot[:n_train_freqs, :]
+
+pgf_freqs_plot_back = pgf_freqs_plot[(n_train_freqs - 1):, :]
+
+bloch_pgf_data = BlochDensity(
+    phi_front, theta_front, x_front, y_front, z_front, pgf_freqs_plot_front,
+    phi_back, theta_back, x_back, y_back, z_back, pgf_freqs_plot_back,
+    alpha = 0.33
+)
+
+# %% Generate BlochDensity for RBF-GP predictions
+
+rbf_freqs_plot = np.empty_like(freqs)
+rbf_freqs_plot = rbf_freqs_plot.flatten()
+rbf_freqs_plot[train_ids] = np.nan
+rbf_freqs_plot[test_ids] = predictions[0].mean
+rbf_freqs_plot = rbf_freqs_plot.reshape(*(freqs.shape))
+
+rbf_freqs_plot_front = rbf_freqs_plot[:n_train_freqs, :]
+
+rbf_freqs_plot_back = rbf_freqs_plot[(n_train_freqs - 1):, :]
+
+bloch_rbf_data = BlochDensity(
+    phi_front, theta_front, x_front, y_front, z_front, rbf_freqs_plot_front,
+    phi_back, theta_back, x_back, y_back, z_back, rbf_freqs_plot_back,
+    alpha = 0.33
+)
+
+# %% Plot predictions
+
+fontsize = 18
+
+fig = plt.figure(figsize=[16, 8], constrained_layout=True)
+
+ax1 = fig.add_subplot(2, 4, 1, projection='3d')
+
+bloch_all_data.fig = fig
+bloch_all_data.axes = ax1
+
+bloch_all_data.xlpos = [1.55, -1.1]
+bloch_all_data.zlpos = [1.22, -1.35]
+
+bloch_all_data.render()
+
+ax1.set_box_aspect([1, 1, 1]) 
+
+ax1.set_title('All data', fontsize=fontsize)
+
+ax2 = fig.add_subplot(2, 4, 2, projection='3d')
+
+bloch_train_data.fig = fig
+bloch_train_data.axes = ax2
+
+bloch_train_data.xlpos = [1.55, -1.1]
+bloch_train_data.zlpos = [1.22, -1.35]
+
+bloch_train_data.render()
+
+ax2.set_box_aspect([1, 1, 1])
+
+ax2.set_title('Training data', fontsize=fontsize)
+
+ax3 = fig.add_subplot(2, 4, 3, projection='3d')
+
+bloch_test_data.fig = fig
+bloch_test_data.axes = ax3
+
+bloch_test_data.xlpos = [1.55, -1.1]
+bloch_test_data.zlpos = [1.22, -1.35]
+
+bloch_test_data.render()
+
+ax3.set_box_aspect([1, 1, 1])
+
+ax3.set_title('Test data', fontsize=fontsize)
+
+ax4 = fig.add_subplot(2, 4, 4, projection='3d')
+
+bloch_pgf_data.fig = fig
+bloch_pgf_data.axes = ax4
+
+bloch_pgf_data.xlpos = [1.55, -1.1]
+bloch_pgf_data.zlpos = [1.22, -1.35]
+
+bloch_pgf_data.render()
+
+ax4.set_box_aspect([1, 1, 1])
+
+ax4.set_title('PGF-GP predictions', fontsize=fontsize)
+
+ax5 = fig.add_subplot(2, 4, 5, projection='3d')
+
+bloch_rbf_data.fig = fig
+bloch_rbf_data.axes = ax5
+
+bloch_rbf_data.xlpos = [1.55, -1.1]
+bloch_rbf_data.zlpos = [1.22, -1.35]
+
+bloch_rbf_data.render()
+
+ax5.set_box_aspect([1, 1, 1])
+
+ax5.set_title('RBF-GP predictions', fontsize=fontsize)
+
+# plt.show()
+
 # %%
