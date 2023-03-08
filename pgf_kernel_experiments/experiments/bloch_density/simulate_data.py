@@ -7,7 +7,7 @@ from pgf_kernel_experiments.experiments.bloch_density.set_paths import data_path
 
 # %% Set seed
 
-np.random.seed(7)
+np.random.seed(8)
 
 # %% Function for generating uniform polar density
 

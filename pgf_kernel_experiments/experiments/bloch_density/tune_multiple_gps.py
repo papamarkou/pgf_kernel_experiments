@@ -17,20 +17,20 @@ from pgf_kernel_experiments.experiments.bloch_density.set_paths import data_path
 phi = np.loadtxt(data_path.joinpath('phi.csv'))
 theta = np.loadtxt(data_path.joinpath('theta.csv'))
 
-x = np.loadtxt(data_path.joinpath('x.csv'), delimiter=',')[:-1, :]
-y = np.loadtxt(data_path.joinpath('y.csv'), delimiter=',')[:-1, :]
-z = np.loadtxt(data_path.joinpath('z.csv'), delimiter=',')[:-1, :]
+x = np.loadtxt(data_path.joinpath('x.csv'), delimiter=',')
+y = np.loadtxt(data_path.joinpath('y.csv'), delimiter=',')
+z = np.loadtxt(data_path.joinpath('z.csv'), delimiter=',')
 
-freqs = np.loadtxt(data_path.joinpath('freqs.csv'), delimiter=',')[:-1, :]
+freqs = np.loadtxt(data_path.joinpath('freqs.csv'), delimiter=',')
 
 train_ids = np.loadtxt(data_path.joinpath('train_ids.csv'), dtype='int')
 test_ids = np.loadtxt(data_path.joinpath('test_ids.csv'), dtype='int')
 
-x_flat = x.flatten()
-y_flat = y.flatten()
-z_flat = z.flatten()
+x_flat = x[:-1, :].flatten()
+y_flat = y[:-1, :].flatten()
+z_flat = z[:-1, :].flatten()
 
-freqs_flat = freqs.flatten()
+freqs_flat = freqs[:-1, :].flatten()
 
 pos = np.column_stack((x_flat, y_flat, z_flat))
 
@@ -168,8 +168,8 @@ kernels = [
     GFKernel(width=[20, 20, 20]),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
-    gpytorch.kernels.PeriodicKernel(),
-    gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=3)
+    # gpytorch.kernels.PeriodicKernel(),
+    # gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=3)
 ]
 
 runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
