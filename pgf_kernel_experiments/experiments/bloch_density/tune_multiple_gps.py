@@ -168,7 +168,7 @@ kernels = [
     GFKernel(width=[20, 20, 20]),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
-    # gpytorch.kernels.PeriodicKernel(),
+    gpytorch.kernels.PeriodicKernel(),
     # gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=3)
 ]
 
