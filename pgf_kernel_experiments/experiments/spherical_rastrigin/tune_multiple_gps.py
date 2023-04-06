@@ -42,7 +42,7 @@ fontsize = 18
 
 fig = plt.figure(figsize=[16, 6], constrained_layout=True)
 
-ax1 = fig.add_subplot(1, 3, 1, projection='3d')
+ax1 = fig.add_subplot(1, 1, 1, projection='3d') #, aspect='equal')
 # ax1.set_aspect('equal')
 # ax1.set_axis_off()
 
@@ -51,7 +51,57 @@ norm = plt.Normalize()
 ax1.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=plt.cm.jet(norm(freqs)))
 # ax1.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=plt.cm.jet(freqs))
 
+# https://stackoverflow.com/questions/13685386/matplotlib-equal-unit-length-with-equal-aspect-ratio-z-axis-is-not-equal-to
+
+ax1.set_box_aspect([1, 1, 1])
+
+def _set_axes_radius(ax, origin, radius):
+    x, y, z = origin
+    ax.set_xlim3d([x - radius, x + radius])
+    ax.set_ylim3d([y - radius, y + radius])
+    ax.set_zlim3d([z - radius, z + radius])
+
+def set_axes_equal(ax: plt.Axes):
+    """Set 3D plot axes to equal scale.
+
+    Make axes of 3D plot have equal scale so that spheres appear as
+    spheres and cubes as cubes.  Required since `ax.axis('equal')`
+    and `ax.set_aspect('equal')` don't work on 3D.
+    """
+    limits = np.array([
+        ax.get_xlim3d(),
+        ax.get_ylim3d(),
+        ax.get_zlim3d(),
+    ])
+    origin = np.mean(limits, axis=1)
+    radius = 0.5 * np.max(np.abs(limits[:, 1] - limits[:, 0]))
+    _set_axes_radius(ax, origin, radius)
+
 # ax1.plot_surface(x, y, z, facecolors=plt.cm.jet(norm(freqs)))
+
+# https://www.tutorialspoint.com/differentiate-the-orthographic-and-perspective-projection-in-matplotlib
+
+# ax1.set_proj_type('ortho') # OPTIONAL - default is perspective (shown in image above)
+
+set_axes_equal(ax1)
+
+from matplotlib.colorbar import ColorbarBase, make_axes_gridspec
+
+# https://stackoverflow.com/questions/33569225/attaching-intensity-to-3d-plot
+
+cax, kw = make_axes_gridspec(ax1, shrink=0.6, aspect=15)
+cb = ColorbarBase(cax, cmap=plt.cm.jet, norm=norm)
+# cb.set_label('Value', fontsize='x-large')
+
+# https://www.tutorialspoint.com/how-do-i-change-the-font-size-of-ticks-of-matplotlib-pyplot-colorbar-colorbarbase
+
+cb.ax.tick_params(labelsize=12)
+
+# %%
+
+fig, ax = plt.subplots(1, 1, subplot_kw={'projection':'3d', 'aspect':'equal'})
+# ax.hold(True)
+ax.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=plt.cm.jet(norm(freqs)))
 
 # %% Set up training and test data
 
