@@ -111,30 +111,6 @@ test_pos = pos[test_ids, :]
 
 test_output = freqs_flat[test_ids]
 
-# %% Generate BlochDensity for all data
-
-n_train_freqs = int((freqs.shape[0] - 1) / 2)
-
-phi_front = phi[:n_train_freqs]
-theta_front = theta
-x_front = x[:n_train_freqs, :]
-y_front = y[:n_train_freqs, :]
-z_front = z[:n_train_freqs, :]
-freqs_front = freqs[:n_train_freqs, :]
-
-phi_back = phi[(n_train_freqs - 1):]
-theta_back = theta
-x_back = x[(n_train_freqs - 1):, :]
-y_back = y[(n_train_freqs - 1):, :]
-z_back = z[(n_train_freqs - 1):, :]
-freqs_back = freqs[(n_train_freqs - 1):, :]
-
-bloch_all_data = BlochDensity(
-    phi_front, theta_front, x_front, y_front, z_front, freqs_front,
-    phi_back, theta_back, x_back, y_back, z_back, freqs_back,
-    alpha = 0.33
-)
-
 # %% Generate BlochDensity for training data
 
 train_freqs_plot = freqs.copy()
@@ -142,32 +118,12 @@ train_freqs_plot = train_freqs_plot.flatten()
 train_freqs_plot[test_ids] = np.nan
 train_freqs_plot = train_freqs_plot.reshape(*(freqs.shape))
 
-train_freqs_plot_front = train_freqs_plot[:n_train_freqs, :]
-
-train_freqs_plot_back = train_freqs_plot[(n_train_freqs - 1):, :]
-
-bloch_train_data = BlochDensity(
-    phi_front, theta_front, x_front, y_front, z_front, train_freqs_plot_front,
-    phi_back, theta_back, x_back, y_back, z_back, train_freqs_plot_back,
-    alpha = 0.33
-)
-
 # %% Generate BlochDensity for test data
 
 test_freqs_plot = freqs.copy()
 test_freqs_plot = test_freqs_plot.flatten()
 test_freqs_plot[train_ids] = np.nan
 test_freqs_plot = test_freqs_plot.reshape(*(freqs.shape))
-
-test_freqs_plot_front = test_freqs_plot[:n_train_freqs, :]
-
-test_freqs_plot_back = test_freqs_plot[(n_train_freqs - 1):, :]
-
-bloch_test_data = BlochDensity(
-    phi_front, theta_front, x_front, y_front, z_front, test_freqs_plot_front,
-    phi_back, theta_back, x_back, y_back, z_back, test_freqs_plot_back,
-    alpha = 0.33
-)
 
 # %% Plot data
 
