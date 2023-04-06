@@ -40,7 +40,7 @@ pos = np.column_stack((x_flat, y_flat, z_flat))
 
 fontsize = 18
 
-fig = plt.figure(figsize=[16, 6], constrained_layout=True)
+fig = plt.figure(figsize=[8, 6], constrained_layout=True)
 
 ax1 = fig.add_subplot(1, 1, 1, projection='3d') #, aspect='equal')
 # ax1.set_aspect('equal')
@@ -85,23 +85,34 @@ def set_axes_equal(ax: plt.Axes):
 
 set_axes_equal(ax1)
 
+# https://www.tutorialspoint.com/how-to-hide-axes-and-gridlines-in-matplotlib
+
+ax1.grid(False)
+ax1.axis('off')
+
+# https://stackoverflow.com/questions/41225293/remove-white-spaces-in-axes3d-matplotlib
+
+xyz_lim = 0.63
+
+ax1.set_xlim(-xyz_lim, xyz_lim)
+ax1.set_ylim(-xyz_lim, xyz_lim)
+ax1.set_zlim(-xyz_lim, xyz_lim)
+
 from matplotlib.colorbar import ColorbarBase, make_axes_gridspec
 
 # https://stackoverflow.com/questions/33569225/attaching-intensity-to-3d-plot
 
-cax, kw = make_axes_gridspec(ax1, shrink=0.6, aspect=15)
+cax, kw = make_axes_gridspec(ax1, shrink=0.6, aspect=20)
 cb = ColorbarBase(cax, cmap=plt.cm.jet, norm=norm)
 # cb.set_label('Value', fontsize='x-large')
 
+# https://stackoverflow.com/questions/69435068/change-colorbar-limit-for-changing-scale-with-matplotlib-3-3
+
+cb.mappable.set_clim(0., 60.)
+
 # https://www.tutorialspoint.com/how-do-i-change-the-font-size-of-ticks-of-matplotlib-pyplot-colorbar-colorbarbase
 
-cb.ax.tick_params(labelsize=12)
-
-# %%
-
-fig, ax = plt.subplots(1, 1, subplot_kw={'projection':'3d', 'aspect':'equal'})
-# ax.hold(True)
-ax.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=plt.cm.jet(norm(freqs)))
+cb.ax.tick_params(labelsize=fontsize)
 
 # %% Set up training and test data
 
