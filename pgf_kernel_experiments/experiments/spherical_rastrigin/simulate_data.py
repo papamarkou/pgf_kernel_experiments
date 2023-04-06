@@ -58,7 +58,7 @@ n_samples = (freqs.shape[0] - 1) * freqs.shape[1]
 
 ids = np.arange(n_samples)
 
-n_train = int(0.7 * n_samples)
+n_train = int(0.5 * n_samples)
 
 train_ids = np.random.choice(ids, size=n_train, replace=False)
 

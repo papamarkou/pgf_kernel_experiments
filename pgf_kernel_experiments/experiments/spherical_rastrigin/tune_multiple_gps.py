@@ -62,7 +62,7 @@ ax1 = fig.add_subplot(1, 1, 1, projection='3d') #, aspect='equal')
 
 norm = plt.Normalize()
 
-ax1.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=plt.cm.jet(norm(freqs)))
+ax1.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=plt.cm.jet(norm(freqs)), edgecolor='none')
 
 # https://stackoverflow.com/questions/13685386/matplotlib-equal-unit-length-with-equal-aspect-ratio-z-axis-is-not-equal-to
 
@@ -111,23 +111,21 @@ test_pos = pos[test_ids, :]
 
 test_output = freqs_flat[test_ids]
 
-# %% Generate BlochDensity for training data
+# %% Generate  plot points for training data
 
 train_freqs_plot = freqs.copy()
 train_freqs_plot = train_freqs_plot.flatten()
 train_freqs_plot[test_ids] = np.nan
 train_freqs_plot = train_freqs_plot.reshape(*(freqs.shape))
 
-# %% Generate BlochDensity for test data
+# %% Generate plot points for test data
 
 test_freqs_plot = freqs.copy()
 test_freqs_plot = test_freqs_plot.flatten()
 test_freqs_plot[train_ids] = np.nan
 test_freqs_plot = test_freqs_plot.reshape(*(freqs.shape))
 
-# %% Plot data
-
-# https://qutip.org/docs/4.0.2/guide/guide-bloch.html
+# %% Plot data, including separate training and test data
 
 fontsize = 18
 
@@ -137,58 +135,67 @@ ax1 = fig.add_subplot(1, 3, 1, projection='3d')
 
 norm = plt.Normalize()
 
-ax1.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=plt.cm.jet(norm(freqs)))
-# ax1.plot_surface(x, y, z, facecolors=plt.cm.jet(norm(freqs)))
+# https://stackoverflow.com/questions/2578752/how-can-i-plot-nan-values-as-a-special-color-with-imshow-in-matplotlib
 
-# %% Plot data
+cmap = plt.cm.jet
+cmap.set_bad('white')
 
-# https://qutip.org/docs/4.0.2/guide/guide-bloch.html
-
-fontsize = 18
-
-fig = plt.figure(figsize=[16, 6], constrained_layout=True)
-
-ax1 = fig.add_subplot(1, 3, 1, projection='3d')
-
-bloch_all_data.fig = fig
-bloch_all_data.axes = ax1
-
-bloch_all_data.xlpos = [1.55, -1.1]
-bloch_all_data.zlpos = [1.22, -1.35]
-
-bloch_all_data.render()
-
-ax1.set_box_aspect([1, 1, 1]) 
+ax1.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(freqs)), edgecolor='none')
 
 ax1.set_title('All data', fontsize=fontsize)
 
+ax1.set_box_aspect([1, 1, 1])
+
+# ax1.set_proj_type('ortho') # default is perspective
+
+set_axes_equal(ax1)
+
+ax1.grid(False)
+ax1.axis('off')
+
+xyz_lim = 0.63
+
+ax1.set_xlim(-xyz_lim, xyz_lim)
+ax1.set_ylim(-xyz_lim, xyz_lim)
+ax1.set_zlim(-xyz_lim, xyz_lim)
+
 ax2 = fig.add_subplot(1, 3, 2, projection='3d')
 
-bloch_train_data.fig = fig
-bloch_train_data.axes = ax2
-
-bloch_train_data.xlpos = [1.55, -1.1]
-bloch_train_data.zlpos = [1.22, -1.35]
-
-bloch_train_data.render()
-
-ax2.set_box_aspect([1, 1, 1])
+ax2.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(train_freqs_plot)), edgecolor='none')
 
 ax2.set_title('Training data', fontsize=fontsize)
 
+ax2.set_box_aspect([1, 1, 1])
+
+# ax2.set_proj_type('ortho') # default is perspective
+
+set_axes_equal(ax2)
+
+ax2.grid(False)
+ax2.axis('off')
+
+ax2.set_xlim(-xyz_lim, xyz_lim)
+ax2.set_ylim(-xyz_lim, xyz_lim)
+ax2.set_zlim(-xyz_lim, xyz_lim)
+
 ax3 = fig.add_subplot(1, 3, 3, projection='3d')
 
-bloch_test_data.fig = fig
-bloch_test_data.axes = ax3
+ax3.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(test_freqs_plot)), edgecolor='none')
 
-bloch_test_data.xlpos = [1.55, -1.1]
-bloch_test_data.zlpos = [1.22, -1.35]
-
-bloch_test_data.render()
+ax3.set_title('Test data', fontsize=fontsize)
 
 ax3.set_box_aspect([1, 1, 1])
 
-ax3.set_title('Test data', fontsize=fontsize)
+# ax3.set_proj_type('ortho') # default is perspective
+
+set_axes_equal(ax3)
+
+ax3.grid(False)
+ax3.axis('off')
+
+ax3.set_xlim(-xyz_lim, xyz_lim)
+ax3.set_ylim(-xyz_lim, xyz_lim)
+ax3.set_zlim(-xyz_lim, xyz_lim)
 
 # plt.show()
 
