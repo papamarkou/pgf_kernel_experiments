@@ -6,6 +6,8 @@ import torch
 import matplotlib.pyplot as plt
 import numpy as np
 
+from matplotlib.colorbar import ColorbarBase, make_axes_gridspec
+
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 from pgfml.kernels import GFKernel
 
@@ -34,26 +36,9 @@ freqs_flat = freqs[:-1, :].flatten()
 
 pos = np.column_stack((x_flat, y_flat, z_flat))
 
-# %% Plot data
-
-# https://qutip.org/docs/4.0.2/guide/guide-bloch.html
-
-fontsize = 18
-
-fig = plt.figure(figsize=[8, 6], constrained_layout=True)
-
-ax1 = fig.add_subplot(1, 1, 1, projection='3d') #, aspect='equal')
-# ax1.set_aspect('equal')
-# ax1.set_axis_off()
-
-norm = plt.Normalize()
-
-ax1.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=plt.cm.jet(norm(freqs)))
-# ax1.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=plt.cm.jet(freqs))
+# %% Functions for setting up equal aspect ratio
 
 # https://stackoverflow.com/questions/13685386/matplotlib-equal-unit-length-with-equal-aspect-ratio-z-axis-is-not-equal-to
-
-ax1.set_box_aspect([1, 1, 1])
 
 def _set_axes_radius(ax, origin, radius):
     x, y, z = origin
@@ -62,26 +47,30 @@ def _set_axes_radius(ax, origin, radius):
     ax.set_zlim3d([z - radius, z + radius])
 
 def set_axes_equal(ax: plt.Axes):
-    """Set 3D plot axes to equal scale.
-
-    Make axes of 3D plot have equal scale so that spheres appear as
-    spheres and cubes as cubes.  Required since `ax.axis('equal')`
-    and `ax.set_aspect('equal')` don't work on 3D.
-    """
-    limits = np.array([
-        ax.get_xlim3d(),
-        ax.get_ylim3d(),
-        ax.get_zlim3d(),
-    ])
+    limits = np.array([ax.get_xlim3d(), ax.get_ylim3d(), ax.get_zlim3d()])
     origin = np.mean(limits, axis=1)
     radius = 0.5 * np.max(np.abs(limits[:, 1] - limits[:, 0]))
     _set_axes_radius(ax, origin, radius)
 
-# ax1.plot_surface(x, y, z, facecolors=plt.cm.jet(norm(freqs)))
+# %% Plot data
+
+fontsize = 18
+
+fig = plt.figure(figsize=[8, 6], constrained_layout=True)
+
+ax1 = fig.add_subplot(1, 1, 1, projection='3d') #, aspect='equal')
+
+norm = plt.Normalize()
+
+ax1.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=plt.cm.jet(norm(freqs)))
+
+# https://stackoverflow.com/questions/13685386/matplotlib-equal-unit-length-with-equal-aspect-ratio-z-axis-is-not-equal-to
+
+ax1.set_box_aspect([1, 1, 1])
 
 # https://www.tutorialspoint.com/differentiate-the-orthographic-and-perspective-projection-in-matplotlib
 
-# ax1.set_proj_type('ortho') # OPTIONAL - default is perspective (shown in image above)
+# ax1.set_proj_type('ortho') # default is perspective
 
 set_axes_equal(ax1)
 
@@ -97,8 +86,6 @@ xyz_lim = 0.63
 ax1.set_xlim(-xyz_lim, xyz_lim)
 ax1.set_ylim(-xyz_lim, xyz_lim)
 ax1.set_zlim(-xyz_lim, xyz_lim)
-
-from matplotlib.colorbar import ColorbarBase, make_axes_gridspec
 
 # https://stackoverflow.com/questions/33569225/attaching-intensity-to-3d-plot
 
