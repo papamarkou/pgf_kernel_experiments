@@ -140,6 +140,8 @@ norm = plt.Normalize()
 cmap = plt.cm.jet
 cmap.set_bad('white')
 
+# https://github.com/matplotlib/matplotlib/issues/14647
+
 ax1.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(freqs)), edgecolor='none')
 
 ax1.set_title('All data', fontsize=fontsize)
