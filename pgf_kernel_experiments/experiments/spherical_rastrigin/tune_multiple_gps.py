@@ -201,6 +201,170 @@ ax3.set_zlim(-xyz_lim, xyz_lim)
 
 # plt.show()
 
+# %% Plot data, including separate training and test data (adding color map)
+
+fontsize = 18
+
+# fig = plt.figure(figsize=[12, 6], constrained_layout=True)
+
+fig = plt.figure(figsize=[12, 6])
+
+# https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subplots_adjust.html
+# https://stackoverflow.com/questions/6541123/improve-subplot-size-spacing-with-many-subplots
+# https://www.geeksforgeeks.org/how-to-set-the-spacing-between-subplots-in-matplotlib-in-python/
+
+fig.subplots_adjust(
+    left=0.1,
+    #bottom=0.1,
+    right=0.9,
+    #top=0.9,
+    wspace=0.0,
+    hspace=0.2
+)
+
+ax1 = fig.add_subplot(2, 3, 1, projection='3d')
+
+norm = plt.Normalize()
+
+# https://stackoverflow.com/questions/2578752/how-can-i-plot-nan-values-as-a-special-color-with-imshow-in-matplotlib
+
+cmap = plt.cm.jet
+cmap.set_bad('white')
+
+# https://github.com/matplotlib/matplotlib/issues/14647
+
+ax1.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(freqs)), edgecolor='none')
+
+ax1.set_title('All data', fontsize=fontsize)
+
+ax1.set_box_aspect([1, 1, 1])
+
+# ax1.set_proj_type('ortho') # default is perspective
+
+set_axes_equal(ax1)
+
+ax1.grid(False)
+ax1.axis('off')
+
+xyz_lim = 0.63
+
+ax1.set_xlim(-xyz_lim, xyz_lim)
+ax1.set_ylim(-xyz_lim, xyz_lim)
+ax1.set_zlim(-xyz_lim, xyz_lim)
+
+ax2 = fig.add_subplot(2, 3, 2, projection='3d')
+
+ax2.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(train_freqs_plot)), edgecolor='none')
+
+ax2.set_title('Training data', fontsize=fontsize)
+
+ax2.set_box_aspect([1, 1, 1])
+
+# ax2.set_proj_type('ortho') # default is perspective
+
+set_axes_equal(ax2)
+
+ax2.grid(False)
+ax2.axis('off')
+
+ax2.set_xlim(-xyz_lim, xyz_lim)
+ax2.set_ylim(-xyz_lim, xyz_lim)
+ax2.set_zlim(-xyz_lim, xyz_lim)
+
+ax3 = fig.add_subplot(2, 3, 3, projection='3d')
+
+ax3.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(test_freqs_plot)), edgecolor='none')
+
+ax3.set_title('Test data', fontsize=fontsize)
+
+ax3.set_box_aspect([1, 1, 1])
+
+# ax3.set_proj_type('ortho') # default is perspective
+
+set_axes_equal(ax3)
+
+ax3.grid(False)
+ax3.axis('off')
+
+ax3.set_xlim(-xyz_lim, xyz_lim)
+ax3.set_ylim(-xyz_lim, xyz_lim)
+ax3.set_zlim(-xyz_lim, xyz_lim)
+
+ax4 = fig.add_subplot(2, 3, 4, projection='3d')
+
+ax4.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(test_freqs_plot)), edgecolor='none')
+
+ax4.set_title('Test data', fontsize=fontsize)
+
+ax4.set_box_aspect([1, 1, 1])
+
+# ax4.set_proj_type('ortho') # default is perspective
+
+set_axes_equal(ax4)
+
+ax4.grid(False)
+ax4.axis('off')
+
+ax4.set_xlim(-xyz_lim, xyz_lim)
+ax4.set_ylim(-xyz_lim, xyz_lim)
+ax4.set_zlim(-xyz_lim, xyz_lim)
+
+ax5 = fig.add_subplot(2, 3, 5, projection='3d')
+
+ax5.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(test_freqs_plot)), edgecolor='none')
+
+ax5.set_title('Test data', fontsize=fontsize)
+
+ax5.set_box_aspect([1, 1, 1])
+
+# ax5.set_proj_type('ortho') # default is perspective
+
+set_axes_equal(ax5)
+
+ax5.grid(False)
+ax5.axis('off')
+
+ax5.set_xlim(-xyz_lim, xyz_lim)
+ax5.set_ylim(-xyz_lim, xyz_lim)
+ax5.set_zlim(-xyz_lim, xyz_lim)
+
+ax6 = fig.add_subplot(2, 3, 6, projection='3d')
+
+ax6.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(test_freqs_plot)), edgecolor='none')
+
+ax6.set_title('Test data', fontsize=fontsize)
+
+ax6.set_box_aspect([1, 1, 1])
+
+# ax6.set_proj_type('ortho') # default is perspective
+
+set_axes_equal(ax6)
+
+ax6.grid(False)
+ax6.axis('off')
+
+ax6.set_xlim(-xyz_lim, xyz_lim)
+ax6.set_ylim(-xyz_lim, xyz_lim)
+ax6.set_zlim(-xyz_lim, xyz_lim)
+
+# https://stackoverflow.com/questions/33569225/attaching-intensity-to-3d-plot
+
+# https://stackoverflow.com/questions/13784201/how-to-have-one-colorbar-for-all-subplots
+
+cax, kw = make_axes_gridspec(ax1, shrink=0.6, aspect=20)
+cb = ColorbarBase(cax, cmap=plt.cm.jet, norm=norm)
+# cb.set_label('Value', fontsize='x-large')
+
+# https://stackoverflow.com/questions/69435068/change-colorbar-limit-for-changing-scale-with-matplotlib-3-3
+
+cb.mappable.set_clim(0., 60.)
+
+# https://www.tutorialspoint.com/how-do-i-change-the-font-size-of-ticks-of-matplotlib-pyplot-colorbar-colorbarbase
+
+cb.ax.tick_params(labelsize=fontsize)
+
+# plt.show()
+
 # %% Convert training and test data to PyTorch format
 
 train_x = torch.as_tensor(train_pos, dtype=torch.float64)
