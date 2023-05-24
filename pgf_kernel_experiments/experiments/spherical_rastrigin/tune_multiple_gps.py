@@ -330,7 +330,7 @@ ax5.set_zlim(-xyz_lim, xyz_lim)
 
 ax6 = fig.add_subplot(2, 3, 6, projection='3d')
 
-ax6.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(test_freqs_plot)), edgecolor='none')
+ss = ax6.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(test_freqs_plot)), edgecolor='none')
 
 ax6.set_title('Test data', fontsize=fontsize)
 
@@ -363,7 +363,49 @@ cb.mappable.set_clim(0., 60.)
 
 cb.ax.tick_params(labelsize=fontsize)
 
+fig.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
+
+# https://www.geeksforgeeks.org/set-matplotlib-colorbar-size-to-match-graph/
+
+cax2 = fig.add_axes([0.80, 0.1, 0.025, 0.8])
+
+import matplotlib as mpl
+
+cb = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=plt.cm.jet), cax=cax2, aspect=30)
+
+cb.mappable.set_clim(0., 60.)
+
+cb.ax.tick_params(labelsize=fontsize)
+
 # plt.show()
+
+# %%
+
+# https://jdhao.github.io/2017/06/11/mpl_multiplot_one_colorbar/
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(12, 6))
+
+for ax in axes.flat:
+    ax.set_axis_off()
+    im = ax.imshow(np.random.random((16, 16)), cmap='viridis',
+                   vmin=0, vmax=1)
+
+fig.subplots_adjust(bottom=0.1, top=0.9, left=0.1, right=0.8,
+                    wspace=0.02, hspace=0.02)
+
+# add an axes, lower left corner in [0.83, 0.1] measured in figure coordinate with axes width 0.02 and height 0.8
+
+cb_ax = fig.add_axes([0.83, 0.1, 0.02, 0.8])
+cbar = fig.colorbar(im, cax=cb_ax)
+
+# Set the colorbar ticks and tick labels
+cbar.set_ticks(np.arange(0, 1.1, 0.5))
+cbar.set_ticklabels(['low', 'medium', 'high'])
+
+plt.show()
 
 # %% Convert training and test data to PyTorch format
 
