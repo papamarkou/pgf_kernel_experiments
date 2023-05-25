@@ -3,6 +3,7 @@
 import gpytorch
 import torch
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -124,82 +125,6 @@ test_freqs_plot = freqs.copy()
 test_freqs_plot = test_freqs_plot.flatten()
 test_freqs_plot[train_ids] = np.nan
 test_freqs_plot = test_freqs_plot.reshape(*(freqs.shape))
-
-# %% Plot data, including separate training and test data
-
-fontsize = 18
-
-fig = plt.figure(figsize=[16, 6], constrained_layout=True)
-
-ax1 = fig.add_subplot(1, 3, 1, projection='3d')
-
-norm = plt.Normalize()
-
-# https://stackoverflow.com/questions/2578752/how-can-i-plot-nan-values-as-a-special-color-with-imshow-in-matplotlib
-
-cmap = plt.cm.jet
-cmap.set_bad('white')
-
-# https://github.com/matplotlib/matplotlib/issues/14647
-
-ax1.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(freqs)), edgecolor='none')
-
-ax1.set_title('All data', fontsize=fontsize)
-
-ax1.set_box_aspect([1, 1, 1])
-
-# ax1.set_proj_type('ortho') # default is perspective
-
-set_axes_equal(ax1)
-
-ax1.grid(False)
-ax1.axis('off')
-
-xyz_lim = 0.63
-
-ax1.set_xlim(-xyz_lim, xyz_lim)
-ax1.set_ylim(-xyz_lim, xyz_lim)
-ax1.set_zlim(-xyz_lim, xyz_lim)
-
-ax2 = fig.add_subplot(1, 3, 2, projection='3d')
-
-ax2.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(train_freqs_plot)), edgecolor='none')
-
-ax2.set_title('Training data', fontsize=fontsize)
-
-ax2.set_box_aspect([1, 1, 1])
-
-# ax2.set_proj_type('ortho') # default is perspective
-
-set_axes_equal(ax2)
-
-ax2.grid(False)
-ax2.axis('off')
-
-ax2.set_xlim(-xyz_lim, xyz_lim)
-ax2.set_ylim(-xyz_lim, xyz_lim)
-ax2.set_zlim(-xyz_lim, xyz_lim)
-
-ax3 = fig.add_subplot(1, 3, 3, projection='3d')
-
-ax3.plot_surface(x, y, z, cstride=1, rstride=1, facecolors=cmap(norm(test_freqs_plot)), edgecolor='none')
-
-ax3.set_title('Test data', fontsize=fontsize)
-
-ax3.set_box_aspect([1, 1, 1])
-
-# ax3.set_proj_type('ortho') # default is perspective
-
-set_axes_equal(ax3)
-
-ax3.grid(False)
-ax3.axis('off')
-
-ax3.set_xlim(-xyz_lim, xyz_lim)
-ax3.set_ylim(-xyz_lim, xyz_lim)
-ax3.set_zlim(-xyz_lim, xyz_lim)
-
-# plt.show()
 
 # %% Plot data, including separate training and test data (adding color map)
 
@@ -347,65 +272,32 @@ ax6.set_xlim(-xyz_lim, xyz_lim)
 ax6.set_ylim(-xyz_lim, xyz_lim)
 ax6.set_zlim(-xyz_lim, xyz_lim)
 
-# https://stackoverflow.com/questions/33569225/attaching-intensity-to-3d-plot
+# https://www.geeksforgeeks.org/set-matplotlib-colorbar-size-to-match-graph/
 
-# https://stackoverflow.com/questions/13784201/how-to-have-one-colorbar-for-all-subplots
+fig.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
 
-cax, kw = make_axes_gridspec(ax1, shrink=0.6, aspect=20)
-cb = ColorbarBase(cax, cmap=plt.cm.jet, norm=norm)
-# cb.set_label('Value', fontsize='x-large')
+cax = fig.add_axes([0.80, 0.1, 0.025, 0.8])
+
+# https://stackoverflow.com/questions/33443334/how-to-decrease-colorbar-width-in-matplotlib
+# https://matplotlib.org/stable/api/cm_api.html#matplotlib.cm.ScalarMappable
+
+cb = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=plt.cm.jet), cax=cax, aspect=30)
 
 # https://stackoverflow.com/questions/69435068/change-colorbar-limit-for-changing-scale-with-matplotlib-3-3
 
 cb.mappable.set_clim(0., 60.)
 
+# https://jdhao.github.io/2017/06/11/mpl_multiplot_one_colorbar/
+
+cb_tick_points = np.arange(0, 60+10, 10)
+cb.set_ticks(cb_tick_points)
+cb.set_ticklabels(cb_tick_points)
+
 # https://www.tutorialspoint.com/how-do-i-change-the-font-size-of-ticks-of-matplotlib-pyplot-colorbar-colorbarbase
 
 cb.ax.tick_params(labelsize=fontsize)
 
-fig.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
-
-# https://www.geeksforgeeks.org/set-matplotlib-colorbar-size-to-match-graph/
-
-cax2 = fig.add_axes([0.80, 0.1, 0.025, 0.8])
-
-import matplotlib as mpl
-
-cb = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=plt.cm.jet), cax=cax2, aspect=30)
-
-cb.mappable.set_clim(0., 60.)
-
-cb.ax.tick_params(labelsize=fontsize)
-
 # plt.show()
-
-# %%
-
-# https://jdhao.github.io/2017/06/11/mpl_multiplot_one_colorbar/
-
-import matplotlib.pyplot as plt
-import numpy as np
-
-fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(12, 6))
-
-for ax in axes.flat:
-    ax.set_axis_off()
-    im = ax.imshow(np.random.random((16, 16)), cmap='viridis',
-                   vmin=0, vmax=1)
-
-fig.subplots_adjust(bottom=0.1, top=0.9, left=0.1, right=0.8,
-                    wspace=0.02, hspace=0.02)
-
-# add an axes, lower left corner in [0.83, 0.1] measured in figure coordinate with axes width 0.02 and height 0.8
-
-cb_ax = fig.add_axes([0.83, 0.1, 0.02, 0.8])
-cbar = fig.colorbar(im, cax=cb_ax)
-
-# Set the colorbar ticks and tick labels
-cbar.set_ticks(np.arange(0, 1.1, 0.5))
-cbar.set_ticklabels(['low', 'medium', 'high'])
-
-plt.show()
 
 # %% Convert training and test data to PyTorch format
 
