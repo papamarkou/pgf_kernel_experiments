@@ -5,3 +5,4 @@ pgf_kernel_experiments/experiments/bloch_density/data
 pgf_kernel_experiments/experiments/earth_temperature/gistemp1200_GHCNv4_ERSSTv5.zarr
 pgf_kernel_experiments/experiments/earth_topography/sea_bed.tiff
 pgf_kernel_experiments/experiments/spherical_rastrigin/data
+pgf_kernel_experiments/experiments/spherical_rastrigin/output

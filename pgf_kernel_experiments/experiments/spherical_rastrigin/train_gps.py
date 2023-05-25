@@ -13,7 +13,12 @@ from pgf_kernel_experiments.runners import ExactMultiGPRunner
 from pgfml.kernels import GFKernel
 
 from pgf_kernel_experiments.experiments.bloch_density.bloch_density import BlochDensity
-from pgf_kernel_experiments.experiments.bloch_density.set_paths import data_path
+from pgf_kernel_experiments.experiments.bloch_density.set_paths import data_path, output_path
+
+# %% Create paths if they don't exist
+
+data_path.mkdir(parents=True, exist_ok=True)
+output_path.mkdir(parents=True, exist_ok=True)
 
 # %% Load data
 
@@ -130,21 +135,19 @@ test_freqs_plot = test_freqs_plot.reshape(*(freqs.shape))
 
 fontsize = 18
 
-# fig = plt.figure(figsize=[12, 6], constrained_layout=True)
-
-fig = plt.figure(figsize=[12, 6])
+fig = plt.figure(figsize=[14, 6])
 
 # https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subplots_adjust.html
 # https://stackoverflow.com/questions/6541123/improve-subplot-size-spacing-with-many-subplots
 # https://www.geeksforgeeks.org/how-to-set-the-spacing-between-subplots-in-matplotlib-in-python/
 
 fig.subplots_adjust(
-    left=0.1,
-    #bottom=0.1,
-    right=0.9,
-    #top=0.9,
-    wspace=0.0,
-    hspace=0.2
+    left=0.0,
+    bottom=0.0,
+    right=1.0,
+    top=1.0,
+    wspace=-0.65,
+    hspace=0.15
 )
 
 ax1 = fig.add_subplot(2, 3, 1, projection='3d')
@@ -274,14 +277,14 @@ ax6.set_zlim(-xyz_lim, xyz_lim)
 
 # https://www.geeksforgeeks.org/set-matplotlib-colorbar-size-to-match-graph/
 
-fig.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
+fig.subplots_adjust(bottom=0.0, right=0.97, top=1.0)
 
-cax = fig.add_axes([0.80, 0.1, 0.025, 0.8])
+cax = fig.add_axes([0.80, 0.1, 0.01, 0.8])
 
 # https://stackoverflow.com/questions/33443334/how-to-decrease-colorbar-width-in-matplotlib
 # https://matplotlib.org/stable/api/cm_api.html#matplotlib.cm.ScalarMappable
 
-cb = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=plt.cm.jet), cax=cax, aspect=30)
+cb = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=plt.cm.jet), cax=cax) # , aspect=30)
 
 # https://stackoverflow.com/questions/69435068/change-colorbar-limit-for-changing-scale-with-matplotlib-3-3
 
@@ -298,6 +301,19 @@ cb.set_ticklabels(cb_tick_points)
 cb.ax.tick_params(labelsize=fontsize)
 
 # plt.show()
+
+# %%
+
+fig.savefig(
+    output_path.joinpath('rastrigin_predictions.png'),
+    dpi=600,
+    pil_kwargs={'quality': 100},
+    transparent=True,
+    bbox_inches='tight',
+    pad_inches=0.1
+)
+
+plt.close()
 
 # %% Convert training and test data to PyTorch format
 
