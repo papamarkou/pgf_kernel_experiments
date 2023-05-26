@@ -6,3 +6,5 @@ pgf_kernel_experiments/experiments/earth_temperature/gistemp1200_GHCNv4_ERSSTv5.
 pgf_kernel_experiments/experiments/earth_topography/sea_bed.tiff
 pgf_kernel_experiments/experiments/spherical_rastrigin/data
 pgf_kernel_experiments/experiments/spherical_rastrigin/output
+pgf_kernel_experiments/experiments/von_mises/setting01/data
+pgf_kernel_experiments/experiments/von_mises/setting01/output
