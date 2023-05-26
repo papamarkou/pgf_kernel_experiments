@@ -47,11 +47,13 @@ n_test = n_samples - n_train
 
 # %% Save data
 
-np.savetxt(data_path.joinpath('theta.csv'), theta)
-
-np.savetxt(data_path.joinpath('x.csv'), x, delimiter=',')
-np.savetxt(data_path.joinpath('y.csv'), y, delimiter=',')
-np.savetxt(data_path.joinpath('z.csv'), z, delimiter=',')
+np.savetxt(
+    data_path.joinpath('data.csv'),
+    np.column_stack([theta, x, y, z]),
+    delimiter=',',
+    header='theta,x,y,z',
+    comments=''
+)
 
 np.savetxt(data_path.joinpath('train_ids.csv'), train_ids, fmt='%i')
 np.savetxt(data_path.joinpath('test_ids.csv'), test_ids, fmt='%i')
