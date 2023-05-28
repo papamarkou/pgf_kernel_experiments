@@ -122,7 +122,7 @@ optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.1)
 
 num_iters = 50
 
-# %% Train GP models to find optimal hyperparameters
+# %% Train GP model to find optimal hyperparameters
 
 losses = runner.train(train_x, train_y, optimizer, num_iters)
 
