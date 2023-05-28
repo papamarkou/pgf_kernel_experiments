@@ -7,7 +7,6 @@ from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.se
 
 # %% Create paths if they don't exist
 
-data_path.mkdir(parents=True, exist_ok=True)
 output_path.mkdir(parents=True, exist_ok=True)
 
 # %% Load data

@@ -12,7 +12,6 @@ from pgf_kernel_experiments.runners import ExactSingleGPRunner
 
 # %% Create paths if they don't exist
 
-data_path.mkdir(parents=True, exist_ok=True)
 output_path.mkdir(parents=True, exist_ok=True)
 
 # %% Load data
