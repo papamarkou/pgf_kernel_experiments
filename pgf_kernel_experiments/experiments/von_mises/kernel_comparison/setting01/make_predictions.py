@@ -26,13 +26,24 @@ x = data[:, 1]
 y = data[:, 2]
 z = data[:, 3]
 
+train_ids = np.loadtxt(data_path.joinpath('train_ids.csv'), dtype='int')
+
 test_ids = np.loadtxt(data_path.joinpath('test_ids.csv'), dtype='int')
+
+# %% Get training data
+
+train_pos = grid[train_ids, :]
+train_output = z[train_ids]
 
 # %% Get test data
 
 test_pos = grid[test_ids, :]
-
 test_output = z[test_ids]
+
+# %% Convert training data to PyTorch format
+
+train_x = torch.as_tensor(train_pos, dtype=torch.float64)
+train_y = torch.as_tensor(train_output.T, dtype=torch.float64)
 
 # %% Convert test data to PyTorch format
 
@@ -51,7 +62,7 @@ kernels = [
 
 kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
 
-runner = ExactMultiGPRunner.generator(None, None, kernels)
+runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
 
 # %% Set the models in double mode
 

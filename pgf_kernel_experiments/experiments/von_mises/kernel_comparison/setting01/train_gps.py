@@ -31,7 +31,6 @@ train_ids = np.loadtxt(data_path.joinpath('train_ids.csv'), dtype='int')
 # %% Get training data
 
 train_pos = grid[train_ids, :]
-
 train_output = z[train_ids]
 
 # %% Convert training data to PyTorch format
@@ -66,7 +65,7 @@ optimizers = []
 for i in range(runner.num_gps()):
     optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=0.1))
 
-num_iters = 10 # 50
+num_iters = 50
 
 # %% Train GP models to find optimal hyperparameters
 
