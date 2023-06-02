@@ -91,6 +91,16 @@ scores = runner.assess(
     ]
 )
 
+# %% Save predictions
+
+np.savetxt(
+    output_path.joinpath('predictions.csv'),
+    torch.stack([predictions[i].mean for i in range(runner.num_gps())], dim=0).t().detach().numpy(),
+    delimiter=',',
+    header=','.join(kernel_names),
+    comments=''
+)
+
 # %% Save error metrics
 
 np.savetxt(
