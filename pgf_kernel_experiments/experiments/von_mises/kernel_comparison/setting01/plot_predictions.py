@@ -66,9 +66,10 @@ line_width = 2
 # https://matplotlib.org/stable/tutorials/colors/colors.html
 
 pdf_line_col = '#069AF3' # azure
-train_line_col = '#F97306' # orange
-test_line_col = '#C20078' # magenta
-pred_line_col = '#E50000' # red
+
+train_point_col = '#F97306' # orange
+test_point_col = '#C20078' # magenta
+pred_point_col = '#E50000' # red
 
 # https://matplotlib.org/stable/api/markers_api.html
 
@@ -82,70 +83,77 @@ ax[0, 1].scatter(
     train_pos[:, 0],
     train_pos[:, 1],
     train_output,
-    color=train_line_col,
+    color=train_point_col,
     marker=point_marker,
     s=point_size
 )
+
 ax[0, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
 ax[0, 2].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
     test_output,
-    color=test_line_col,
+    color=test_point_col,
     marker=point_marker,
     s=point_size
 )
+
 ax[0, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
 ax[0, 3].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
     predictions[:, 0],
-    color=pred_line_col,
+    color=pred_point_col,
     marker=point_marker,
     s=point_size
 )
+
 ax[0, 3].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
 ax[1, 0].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
     predictions[:, 1],
-    color=pred_line_col,
+    color=pred_point_col,
     marker=point_marker,
     s=point_size
 )
+
 ax[1, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
 ax[1, 1].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
     predictions[:, 2],
-    color=pred_line_col,
+    color=pred_point_col,
     marker=point_marker,
     s=point_size
 )
+
 ax[1, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
 ax[1, 2].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
     predictions[:, 3],
-    color=pred_line_col,
+    color=pred_point_col,
     marker=point_marker,
     s=point_size
 )
+
 ax[1, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
 ax[1, 3].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
     predictions[:, 4],
-    color=pred_line_col,
+    color=pred_point_col,
     marker=point_marker,
     s=point_size
 )
+
 ax[1, 3].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
 for i in range(2):
