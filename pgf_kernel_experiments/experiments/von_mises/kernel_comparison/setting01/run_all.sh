@@ -5,6 +5,7 @@ declare -a files=(
     "train_gps.py"
     "make_predictions.py"
     "plot_data.py"
+    "plot_predictions.py"
 )
 
 for file in "${files[@]}"

@@ -42,14 +42,13 @@ predictions = np.loadtxt(
 
 # %% Plot predictions
 
-fontsize = 11
+title_fontsize = 15
+axis_fontsize = 11
 
 titles = [
     ['von Mises density', 'Training data', 'Test data', 'PGF kernel'],
     ['RBF kernel', 'Matern kernel', 'Periodic kernel', 'Spectral kernel']
 ]
-
-cols = ['green', 'orange', 'brown', 'red', 'blue']
 
 fig, ax = plt.subplots(2, 4, figsize=[14, 6], subplot_kw={'projection': '3d'})
 
@@ -63,31 +62,91 @@ fig.subplots_adjust(
 )
 
 line_width = 2
-line_col = 'blue'
-point_size = 10
 
-ax[0, 0].plot(x, y, z, color=cols[4], lw=2)
+# https://matplotlib.org/stable/tutorials/colors/colors.html
 
-ax[0, 1].scatter(train_pos[:, 0], train_pos[:, 1], train_output, color=cols[1], s=10)
-ax[0, 1].plot(x, y, z, color=cols[4], lw=2)
+pdf_line_col = '#069AF3' # azure
+train_line_col = '#F97306' # orange
+test_line_col = '#C20078' # magenta
+pred_line_col = '#E50000' # red
 
-ax[0, 2].scatter(test_pos[:, 0], test_pos[:, 1], test_output, color=cols[2], s=10)
-ax[0, 2].plot(x, y, z, color=cols[4], lw=2)
+# https://matplotlib.org/stable/api/markers_api.html
 
-ax[0, 3].scatter(test_pos[:, 0], test_pos[:, 1], predictions[:, 0], color=cols[3], s=10)
-ax[0, 3].plot(x, y, z, color=cols[4], lw=2)
+point_marker = 'o'
 
-ax[1, 0].scatter(test_pos[:, 0], test_pos[:, 1], predictions[:, 1], color=cols[3], s=10)
-ax[1, 0].plot(x, y, z, color=cols[4], lw=2)
+point_size = 8
 
-ax[1, 1].scatter(test_pos[:, 0], test_pos[:, 1], predictions[:, 2], color=cols[3], s=10)
-ax[1, 1].plot(x, y, z, color=cols[4], lw=2)
+ax[0, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
-ax[1, 2].scatter(test_pos[:, 0], test_pos[:, 1], predictions[:, 3], color=cols[3], s=10)
-ax[1, 2].plot(x, y, z, color=cols[4], lw=2)
+ax[0, 1].scatter(
+    train_pos[:, 0],
+    train_pos[:, 1],
+    train_output,
+    color=train_line_col,
+    marker=point_marker,
+    s=point_size
+)
+ax[0, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
-ax[1, 3].scatter(test_pos[:, 0], test_pos[:, 1], predictions[:, 4], color=cols[3], s=10)
-ax[1, 3].plot(x, y, z, color=cols[4], lw=2)
+ax[0, 2].scatter(
+    test_pos[:, 0],
+    test_pos[:, 1],
+    test_output,
+    color=test_line_col,
+    marker=point_marker,
+    s=point_size
+)
+ax[0, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
+
+ax[0, 3].scatter(
+    test_pos[:, 0],
+    test_pos[:, 1],
+    predictions[:, 0],
+    color=pred_line_col,
+    marker=point_marker,
+    s=point_size
+)
+ax[0, 3].plot(x, y, z, color=pdf_line_col, lw=line_width)
+
+ax[1, 0].scatter(
+    test_pos[:, 0],
+    test_pos[:, 1],
+    predictions[:, 1],
+    color=pred_line_col,
+    marker=point_marker,
+    s=point_size
+)
+ax[1, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
+
+ax[1, 1].scatter(
+    test_pos[:, 0],
+    test_pos[:, 1],
+    predictions[:, 2],
+    color=pred_line_col,
+    marker=point_marker,
+    s=point_size
+)
+ax[1, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
+
+ax[1, 2].scatter(
+    test_pos[:, 0],
+    test_pos[:, 1],
+    predictions[:, 3],
+    color=pred_line_col,
+    marker=point_marker,
+    s=point_size
+)
+ax[1, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
+
+ax[1, 3].scatter(
+    test_pos[:, 0],
+    test_pos[:, 1],
+    predictions[:, 4],
+    color=pred_line_col,
+    marker=point_marker,
+    s=point_size
+)
+ax[1, 3].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
 for i in range(2):
     for j in range(4):
@@ -103,15 +162,15 @@ for i in range(2):
         ax[i, j].set_ylim((-1, 1))
         ax[i, j].set_zlim((0, 11))
 
-        ax[i, j].set_title(titles[i][j], fontsize=fontsize, pad=-1.5)
+        ax[i, j].set_title(titles[i][j], fontsize=title_fontsize, pad=-1.5)
 
-        ax[i, j].set_xlabel('x', fontsize=fontsize, labelpad=-3)
-        ax[i, j].set_ylabel('y', fontsize=fontsize, labelpad=-3)
-        ax[i, j].set_zlabel('z', fontsize=fontsize, labelpad=-27)
+        ax[i, j].set_xlabel('x', fontsize=axis_fontsize, labelpad=-3)
+        ax[i, j].set_ylabel('y', fontsize=axis_fontsize, labelpad=-3)
+        ax[i, j].set_zlabel('z', fontsize=axis_fontsize, labelpad=-27)
 
-        ax[i, j].set_xticks([-1, 0, 1], fontsize=fontsize)
-        ax[i, j].set_yticks([-1, 0, 1], fontsize=fontsize)
-        ax[i, j].set_zticks([0, 5., 10.], fontsize=fontsize)
+        ax[i, j].set_xticks([-1, 0, 1], fontsize=axis_fontsize)
+        ax[i, j].set_yticks([-1, 0, 1], fontsize=axis_fontsize)
+        ax[i, j].set_zticks([0, 5., 10.], fontsize=axis_fontsize)
 
         ax[i, j].zaxis.set_rotate_label(False)
 
@@ -127,17 +186,3 @@ plt.savefig(
 )
 
 plt.close()
-
-# %%
-
-plt.plot(test_output - predictions[:, 0], color='red')
-plt.plot(test_output - predictions[:, 3], color='green')
-plt.plot(test_output - predictions[:, 4], color='orange')
-
-# %%
-
-markerline, stemline, baseline, = plt.stem(test_output - predictions[:, 0])
-
-plt.setp(markerline, markersize=3)
-
-# %%
