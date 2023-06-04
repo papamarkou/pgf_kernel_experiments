@@ -44,8 +44,6 @@ axis_fontsize = 11
 
 titles = ['von Mises density', 'Training data', 'Test data']
 
-cols = ['green', 'orange', 'brown']
-
 fig, ax = plt.subplots(1, 3, figsize=[12, 3], subplot_kw={'projection': '3d'})
 
 fig.subplots_adjust(
@@ -62,6 +60,7 @@ line_width = 2
 # https://matplotlib.org/stable/tutorials/colors/colors.html
 
 pdf_line_col = '#069AF3' # azure
+circle_line_col = 'black'
 
 train_point_col = '#F97306' # orange
 test_point_col = '#C20078' # magenta
@@ -99,7 +98,7 @@ ax[2].plot(x, y, z, color=pdf_line_col, lw=line_width)
 for i in range(3):
     ax[i].set_proj_type('ortho')
 
-    ax[i].plot(x, y, 0, color='black', lw=2, zorder=0)
+    ax[i].plot(x, y, 0, color=circle_line_col, lw=line_width, zorder=0)
 
     ax[i].grid(False)
 

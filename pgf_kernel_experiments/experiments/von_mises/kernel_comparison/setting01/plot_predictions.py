@@ -66,6 +66,7 @@ line_width = 2
 # https://matplotlib.org/stable/tutorials/colors/colors.html
 
 pdf_line_col = '#069AF3' # azure
+circle_line_col = 'black'
 
 train_point_col = '#F97306' # orange
 test_point_col = '#C20078' # magenta
@@ -160,7 +161,7 @@ for i in range(2):
     for j in range(4):
         ax[i, j].set_proj_type('ortho')
 
-        ax[i, j].plot(x, y, 0, color='black', lw=2, zorder=0)
+        ax[i, j].plot(x, y, 0, color=circle_line_col, lw=line_width, zorder=0)
 
         ax[i, j].grid(False)
 
