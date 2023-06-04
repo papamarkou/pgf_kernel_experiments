@@ -16,7 +16,8 @@ data = np.loadtxt(
 grid = data[:, 1:3]
 x = data[:, 1]
 y = data[:, 2]
-z = data[:, 3]
+z_signal = data[:, 3]
+z = data[:, 5]
 
 train_ids = np.loadtxt(data_path.joinpath('train_ids.csv'), dtype='int')
 
@@ -66,6 +67,7 @@ line_width = 2
 # https://matplotlib.org/stable/tutorials/colors/colors.html
 
 pdf_line_col = '#069AF3' # azure
+circle_line_col = 'black'
 
 train_point_col = '#F97306' # orange
 test_point_col = '#C20078' # magenta
@@ -77,7 +79,7 @@ point_marker = 'o'
 
 point_size = 8
 
-ax[0, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[0, 0].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[0, 1].scatter(
     train_pos[:, 0],
@@ -88,7 +90,7 @@ ax[0, 1].scatter(
     s=point_size
 )
 
-ax[0, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[0, 1].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[0, 2].scatter(
     test_pos[:, 0],
@@ -99,7 +101,7 @@ ax[0, 2].scatter(
     s=point_size
 )
 
-ax[0, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[0, 2].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[0, 3].scatter(
     test_pos[:, 0],
@@ -110,7 +112,7 @@ ax[0, 3].scatter(
     s=point_size
 )
 
-ax[0, 3].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[0, 3].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[1, 0].scatter(
     test_pos[:, 0],
@@ -121,7 +123,7 @@ ax[1, 0].scatter(
     s=point_size
 )
 
-ax[1, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[1, 0].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[1, 1].scatter(
     test_pos[:, 0],
@@ -132,7 +134,7 @@ ax[1, 1].scatter(
     s=point_size
 )
 
-ax[1, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[1, 1].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[1, 2].scatter(
     test_pos[:, 0],
@@ -143,7 +145,7 @@ ax[1, 2].scatter(
     s=point_size
 )
 
-ax[1, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[1, 2].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[1, 3].scatter(
     test_pos[:, 0],
@@ -154,13 +156,13 @@ ax[1, 3].scatter(
     s=point_size
 )
 
-ax[1, 3].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[1, 3].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 for i in range(2):
     for j in range(4):
         ax[i, j].set_proj_type('ortho')
 
-        ax[i, j].plot(x, y, 0, color='black', lw=2, zorder=0)
+        ax[i, j].plot(x, y, 0, color=circle_line_col, lw=line_width, zorder=0)
 
         ax[i, j].grid(False)
 

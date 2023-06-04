@@ -13,7 +13,7 @@ data_path.mkdir(parents=True, exist_ok=True)
 
 # %% Set seed
 
-torch.manual_seed(1)
+torch.manual_seed(2)
 
 # %% Generate data
 
@@ -25,7 +25,11 @@ x = np.cos(theta)
 
 y = np.sin(theta)
 
-z = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
+z_signal = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
+
+z_noise = np.random.default_rng().normal(loc=0.0, scale=1.0, size=num_samples)
+
+z = z_signal + z_noise
 
 # %% Generate training data
 
@@ -47,9 +51,9 @@ test_ids.sort()
 
 np.savetxt(
     data_path.joinpath('data.csv'),
-    np.column_stack([theta, x, y, z]),
+    np.column_stack([theta, x, y, z_signal, z_noise, z]),
     delimiter=',',
-    header='theta,x,y,z',
+    header='theta,x,y,z_signal,z_noise,z',
     comments=''
 )
 
