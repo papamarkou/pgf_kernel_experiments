@@ -8,3 +8,5 @@ pgf_kernel_experiments/experiments/spherical_rastrigin/data
 pgf_kernel_experiments/experiments/spherical_rastrigin/output
 pgf_kernel_experiments/experiments/von_mises/kernel_comparison/setting01/data
 pgf_kernel_experiments/experiments/von_mises/kernel_comparison/setting01/output
+pgf_kernel_experiments/experiments/von_mises/kernel_comparison/setting02/data
+pgf_kernel_experiments/experiments/von_mises/kernel_comparison/setting02/output
