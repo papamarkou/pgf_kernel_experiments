@@ -17,9 +17,9 @@ torch.manual_seed(1)
 
 # %% Generate data
 
-n_samples = 1000
+num_samples = 1000
 
-theta = np.linspace(-np.pi, np.pi, num=n_samples, endpoint=False)
+theta = np.linspace(-np.pi, np.pi, num=num_samples, endpoint=False)
 
 x = np.cos(theta)
 
@@ -29,11 +29,11 @@ z = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
 
 # %% Generate training data
 
-ids = np.arange(n_samples)
+ids = np.arange(num_samples)
 
-n_train = int(0.5 * n_samples)
+num_train = int(0.5 * num_samples)
 
-train_ids = np.random.choice(ids, size=n_train, replace=False)
+train_ids = np.random.choice(ids, size=num_train, replace=False)
 
 train_ids.sort()
 
@@ -42,8 +42,6 @@ train_ids.sort()
 test_ids = np.array(list(set(ids).difference(set(train_ids))))
 
 test_ids.sort()
-
-n_test = n_samples - n_train
 
 # %% Save data
 
