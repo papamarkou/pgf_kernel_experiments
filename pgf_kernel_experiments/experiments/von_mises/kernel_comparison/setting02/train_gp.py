@@ -7,7 +7,7 @@ import torch
 
 # from pgfml.kernels import GFKernel
 
-from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_paths import data_path, output_path
+from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting02.set_paths import data_path, output_path
 from pgf_kernel_experiments.runners import ExactSingleGPRunner
 
 # %% Create paths if they don't exist
