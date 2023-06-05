@@ -69,7 +69,7 @@ optimizers = []
 for i in range(runner.num_gps()):
     optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=0.1))
 
-num_iters = 10
+num_iters = 150
 
 # %% Train GP models to find optimal hyperparameters
 
