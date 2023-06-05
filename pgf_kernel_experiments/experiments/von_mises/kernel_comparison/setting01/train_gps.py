@@ -6,12 +6,16 @@ import torch
 
 from pgfml.kernels import GFKernel
 
-from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_paths import data_path, output_path
+from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_env import data_path, output_path, seed
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
 # %% Create paths if they don't exist
 
 output_path.mkdir(parents=True, exist_ok=True)
+
+# %% Set seed
+
+torch.manual_seed(seed)
 
 # %% Load data
 
@@ -65,7 +69,7 @@ optimizers = []
 for i in range(runner.num_gps()):
     optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=0.1))
 
-num_iters = 50
+num_iters = 10
 
 # %% Train GP models to find optimal hyperparameters
 
@@ -78,3 +82,13 @@ for i in range(runner.num_gps()):
         runner.single_runners[i].model.state_dict(),
         output_path.joinpath(kernel_names[i]+'_gp_state.pth')
     )
+
+# %% Save losses
+
+np.savetxt(
+    output_path.joinpath('losses.csv'),
+    losses.detach().numpy(),
+    delimiter=',',
+    header=','.join(kernel_names),
+    comments=''
+)

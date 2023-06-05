@@ -1,11 +1,10 @@
 # %% Import packages
 
 import numpy as np
-import torch
 
 from scipy.stats import vonmises
 
-from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_paths import data_path
+from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_env import data_path, seed
 
 # %% Create paths if they don't exist
 
@@ -13,7 +12,7 @@ data_path.mkdir(parents=True, exist_ok=True)
 
 # %% Set seed
 
-torch.manual_seed(1)
+np.random.seed(seed)
 
 # %% Generate data
 
@@ -31,7 +30,7 @@ z = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
 
 ids = np.arange(num_samples)
 
-num_train = int(0.5 * num_samples)
+num_train = int(0.4 * num_samples)
 
 train_ids = np.random.choice(ids, size=num_train, replace=False)
 
