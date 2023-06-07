@@ -3,6 +3,7 @@
 declare -a files=(
     "plot_data.py"
     "plot_predictions.py"
+    "plot_losses.py"
 )
 
 for file in "${files[@]}"
