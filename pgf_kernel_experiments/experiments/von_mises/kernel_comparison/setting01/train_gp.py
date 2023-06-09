@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
-# from pgfml.kernels import GFKernel
+from pgfml.kernels import GFKernel
 
 from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_env import data_path
 from pgf_kernel_experiments.runners import ExactSingleGPRunner
@@ -131,11 +131,11 @@ test_y = torch.as_tensor(test_output.T, dtype=torch.float64)
 
 # %% Set up ExactSingleGPRunner
 
-# kernel = GFKernel(width=[20, 20, 20])
+# kernel = GFKernel(width=[20, 20, 20]) # lr=0.5
 kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel())
 # kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5))
 # kernel = gpytorch.kernels.PeriodicKernel()
-# kernel = gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2)
+# kernel = gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2) # lr=0.1
 
 runner = ExactSingleGPRunner(train_x, train_y, kernel)
 
@@ -148,7 +148,7 @@ runner.model.likelihood.double()
 
 optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.1)
 
-num_iters = 50
+num_iters = 500
 
 # %% Train GP model to find optimal hyperparameters
 
@@ -246,3 +246,5 @@ for i in range(4):
     ax[i].set_zticks([0, 5., 10.], fontsize=axis_fontsize)
 
     ax[i].zaxis.set_rotate_label(False)
+
+# %%

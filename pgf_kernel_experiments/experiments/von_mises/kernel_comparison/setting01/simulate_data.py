@@ -30,7 +30,7 @@ z = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
 
 ids = np.arange(num_samples)
 
-num_train = int(0.4 * num_samples)
+num_train = int(0.5 * num_samples)
 
 train_ids = np.random.choice(ids, size=num_train, replace=False)
 
