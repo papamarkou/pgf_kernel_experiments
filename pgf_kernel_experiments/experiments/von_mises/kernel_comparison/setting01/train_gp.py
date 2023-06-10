@@ -131,10 +131,10 @@ test_y = torch.as_tensor(test_output.T, dtype=torch.float64)
 
 # %% Set up ExactSingleGPRunner
 
-# kernel = GFKernel(width=[20, 20, 20]) # lr=0.5
-kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel())
-# kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5))
-# kernel = gpytorch.kernels.PeriodicKernel()
+kernel = GFKernel(width=[20, 20, 20]) # lr=0.5
+# kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()) # lr=0.5
+# kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)) # lr=0.5
+# kernel = gpytorch.kernels.PeriodicKernel() # lr=0.075
 # kernel = gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2) # lr=0.1
 
 runner = ExactSingleGPRunner(train_x, train_y, kernel)
@@ -146,7 +146,7 @@ runner.model.likelihood.double()
 
 # %% Configurate training setup for GP model
 
-optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.1)
+optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.5)
 
 num_iters = 500
 
@@ -246,5 +246,3 @@ for i in range(4):
     ax[i].set_zticks([0, 5., 10.], fontsize=axis_fontsize)
 
     ax[i].zaxis.set_rotate_label(False)
-
-# %%
