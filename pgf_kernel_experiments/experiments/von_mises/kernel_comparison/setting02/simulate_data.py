@@ -27,7 +27,7 @@ y = np.sin(theta)
 
 z_signal = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
 
-z_noise = np.random.default_rng().normal(loc=0.0, scale=1.0, size=num_samples)
+z_noise = np.random.default_rng().normal(loc=0.0, scale=0.5, size=num_samples)
 
 z = z_signal + z_noise
 

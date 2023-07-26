@@ -131,7 +131,7 @@ test_y = torch.as_tensor(test_output.T, dtype=torch.float64)
 
 # %% Set up ExactSingleGPRunner
 
-kernel = GFKernel(width=[20, 20, 20]) # lr=0.5
+kernel = GFKernel(width=[30, 30, 30]) # lr=0.5
 # kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()) # lr=0.5
 # kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)) # lr=0.5
 # kernel = gpytorch.kernels.PeriodicKernel() # lr=0.075
@@ -146,13 +146,31 @@ runner.model.likelihood.double()
 
 # %% Configurate training setup for GP model
 
-optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.5)
+# list(runner.model.named_parameters())
 
-num_iters = 500
+# optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.7)
+
+# optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.7, betas=(0.9, 0.99))
+
+optimizer = torch.optim.Adam([
+    {"params": runner.model.likelihood.noise_covar.raw_noise, "lr": 0.7},
+    {"params": runner.model.mean_module.raw_constant, "lr": 0.5},
+    {"params": runner.model.covar_module.pars0, "lr": 0.3},
+    {"params": runner.model.covar_module.pars1, "lr": 0.3},
+    {"params": runner.model.covar_module.pars2, "lr": 0.3}
+])
+
+# scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=20, T_mult=1, eta_min=1e-2)
+
+scheduler = None
+
+num_iters = 100
 
 # %% Train GP model to find optimal hyperparameters
 
-losses = runner.train(train_x, train_y, optimizer, num_iters)
+losses = runner.train(train_x, train_y, optimizer, num_iters, scheduler=scheduler)
+
+list(runner.model.named_parameters())
 
 # %% Make predictions
 

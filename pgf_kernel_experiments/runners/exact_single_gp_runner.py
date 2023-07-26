@@ -21,7 +21,7 @@ class ExactSingleGPRunner:
 
         return loss
 
-    def train(self, train_x, train_y, optimizer, num_iters, verbose=True):
+    def train(self, train_x, train_y, optimizer, num_iters, scheduler=None, verbose=True):
         self.model.setup('train')
 
         losses = torch.empty([num_iters], dtype=train_x.dtype, device=train_x.device)
@@ -32,6 +32,9 @@ class ExactSingleGPRunner:
 
         for i in range(num_iters):
             losses[i] = self.step(train_x, train_y, optimizer).item()
+
+            if scheduler is not None:
+                scheduler.step()
 
             if verbose:
                 print(msg.format(i + 1, num_iters, losses[i]))

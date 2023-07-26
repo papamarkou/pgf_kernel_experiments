@@ -45,7 +45,7 @@ train_y = torch.as_tensor(train_output.T, dtype=torch.float64)
 # %% Set up ExactMultiGPRunner
 
 kernels = [
-    GFKernel(width=[20, 20, 20]),
+    GFKernel(width=[30, 30, 30]),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
     gpytorch.kernels.PeriodicKernel(),
@@ -64,16 +64,41 @@ for i in range(runner.num_gps()):
 
 # %% Configurate training setup for GP models
 
+# list(runner.single_runners[0].model.named_parameters())
+
+lrs = [[0.8, 0.5, 0.9, 0.9, 0.9], 0.5, 0.5, 0.075, 0.5]
+# lrs = [0.7, 0.5, 0.5, 0.075, 0.1]
+
 optimizers = []
 
-for i in range(runner.num_gps()):
-    optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=0.1))
+schedulers = []
 
-num_iters = 150
+optimizers.append(torch.optim.Adam([
+    {"params": runner.single_runners[0].model.likelihood.noise_covar.raw_noise, "lr": lrs[0][0]},
+    {"params": runner.single_runners[0].model.mean_module.raw_constant, "lr": lrs[0][1]},
+    {"params": runner.single_runners[0].model.covar_module.pars0, "lr": lrs[0][2]},
+    {"params": runner.single_runners[0].model.covar_module.pars1, "lr": lrs[0][3]},
+    {"params": runner.single_runners[0].model.covar_module.pars2, "lr": lrs[0][4]}
+]))
+
+schedulers.append(torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[0], T_0=20, T_mult=1, eta_min=0.05))
+
+for i in range(1, runner.num_gps()):
+    optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=lrs[i]))
+    schedulers.append(torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=20, T_mult=1, eta_min=0.05))
+    # schedulers.append(None)
+
+# for i in range(runner.num_gps()):
+#     optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=lrs[i]))
+#     schedulers.append(torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=20, T_mult=1, eta_min=0.05))
+
+num_iters = 500
 
 # %% Train GP models to find optimal hyperparameters
 
-losses = runner.train(train_x, train_y, optimizers, num_iters)
+losses = runner.train(train_x, train_y, optimizers, num_iters, schedulers=schedulers)
+
+# list(runner.single_runners[0].model.named_parameters())
 
 # %% Save model states
 

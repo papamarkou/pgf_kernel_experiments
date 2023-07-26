@@ -27,7 +27,10 @@ class ExactMultiGPRunner:
 
         return losses
 
-    def train(self, train_x, train_y, optimizers, num_iters, verbose=True):
+    def train(self, train_x, train_y, optimizers, num_iters, schedulers=None, verbose=True):
+        if schedulers is None:
+            schedulers = [None for i in range(self.num_gps())]
+
         for i in range(self.num_gps()):
             self.single_runners[i].model.setup('train')
 
@@ -41,6 +44,10 @@ class ExactMultiGPRunner:
 
         for i in range(num_iters):
             losses[i, :] = self.step(train_x, train_y, optimizers)
+
+            for j in range(self.num_gps()):
+                if schedulers[j] is not None:
+                    schedulers[j].step()
 
             if verbose:
                 print(msg.format(i + 1, num_iters, *(losses[i, :])))

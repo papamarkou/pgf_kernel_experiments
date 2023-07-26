@@ -78,3 +78,13 @@ for i in range(runner.num_gps()):
         runner.single_runners[i].model.state_dict(),
         output_path.joinpath(kernel_names[i]+'_gp_state.pth')
     )
+
+# %% Save losses
+
+np.savetxt(
+    output_path.joinpath('losses.csv'),
+    losses.detach().numpy(),
+    delimiter=',',
+    header=','.join(kernel_names),
+    comments=''
+)
