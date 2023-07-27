@@ -87,7 +87,7 @@ scores = runner.assess(
     metrics=[
         gpytorch.metrics.mean_absolute_error,
         gpytorch.metrics.mean_squared_error,
-        lambda predictions, y : -gpytorch.metrics.negative_log_predictive_density(predictions, y)
+        lambda predictions, y : gpytorch.metrics.negative_log_predictive_density(predictions, y)
     ]
 )
 

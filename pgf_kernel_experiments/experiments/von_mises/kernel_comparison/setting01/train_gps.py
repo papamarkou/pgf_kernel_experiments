@@ -62,35 +62,45 @@ for i in range(runner.num_gps()):
     runner.single_runners[i].model.double()
     runner.single_runners[i].model.likelihood.double()
 
-# %% Configurate training setup for GP models
+# %% Configure training setup for GP models
 
 # list(runner.single_runners[0].model.named_parameters())
-
-lrs = [[0.8, 0.5, 0.9, 0.9, 0.9], 0.5, 0.5, 0.075, 0.5]
-# lrs = [0.7, 0.5, 0.5, 0.075, 0.1]
 
 optimizers = []
 
 schedulers = []
 
-optimizers.append(torch.optim.Adam([
-    {"params": runner.single_runners[0].model.likelihood.noise_covar.raw_noise, "lr": lrs[0][0]},
-    {"params": runner.single_runners[0].model.mean_module.raw_constant, "lr": lrs[0][1]},
-    {"params": runner.single_runners[0].model.covar_module.pars0, "lr": lrs[0][2]},
-    {"params": runner.single_runners[0].model.covar_module.pars1, "lr": lrs[0][3]},
-    {"params": runner.single_runners[0].model.covar_module.pars2, "lr": lrs[0][4]}
-]))
+pgf_optim_per_group = True
 
-schedulers.append(torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[0], T_0=20, T_mult=1, eta_min=0.05))
+if pgf_optim_per_group:
+    lrs = [[0.8, 0.5, 0.9, 0.9, 0.9], 0.5, 0.5, 0.075, 0.5]
 
-for i in range(1, runner.num_gps()):
-    optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=lrs[i]))
-    schedulers.append(torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=20, T_mult=1, eta_min=0.05))
-    # schedulers.append(None)
+    optimizers.append(torch.optim.Adam([
+        {"params": runner.single_runners[0].model.likelihood.noise_covar.raw_noise, "lr": lrs[0][0]},
+        {"params": runner.single_runners[0].model.mean_module.raw_constant, "lr": lrs[0][1]},
+        {"params": runner.single_runners[0].model.covar_module.pars0, "lr": lrs[0][2]},
+        {"params": runner.single_runners[0].model.covar_module.pars1, "lr": lrs[0][3]},
+        {"params": runner.single_runners[0].model.covar_module.pars2, "lr": lrs[0][4]}
+    ]))
 
-# for i in range(runner.num_gps()):
-#     optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=lrs[i]))
-#     schedulers.append(torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=20, T_mult=1, eta_min=0.05))
+    schedulers.append(torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[0], T_0=20, T_mult=1, eta_min=0.05))
+
+    for i in range(1, runner.num_gps()):
+        optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=lrs[i]))
+
+        schedulers.append(
+            torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=20, T_mult=1, eta_min=0.05)
+        )
+        # schedulers.append(None)
+else:
+    lrs = [0.7, 0.5, 0.5, 0.075, 0.5]
+
+    for i in range(runner.num_gps()):
+        optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=lrs[i]))
+
+        schedulers.append(
+            torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=20, T_mult=1, eta_min=0.05)
+        )
 
 num_iters = 500
 

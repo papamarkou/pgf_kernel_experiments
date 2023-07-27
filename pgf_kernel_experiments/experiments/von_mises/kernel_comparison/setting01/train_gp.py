@@ -144,7 +144,7 @@ runner = ExactSingleGPRunner(train_x, train_y, kernel)
 runner.model.double()
 runner.model.likelihood.double()
 
-# %% Configurate training setup for GP model
+# %% Configure training setup for GP model
 
 # list(runner.model.named_parameters())
 
@@ -153,16 +153,16 @@ runner.model.likelihood.double()
 # optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.7, betas=(0.9, 0.99))
 
 optimizer = torch.optim.Adam([
-    {"params": runner.model.likelihood.noise_covar.raw_noise, "lr": 0.7},
+    {"params": runner.model.likelihood.noise_covar.raw_noise, "lr": 0.8},
     {"params": runner.model.mean_module.raw_constant, "lr": 0.5},
-    {"params": runner.model.covar_module.pars0, "lr": 0.3},
-    {"params": runner.model.covar_module.pars1, "lr": 0.3},
-    {"params": runner.model.covar_module.pars2, "lr": 0.3}
+    {"params": runner.model.covar_module.pars0, "lr": 0.9},
+    {"params": runner.model.covar_module.pars1, "lr": 0.9},
+    {"params": runner.model.covar_module.pars2, "lr": 0.9}
 ])
 
-# scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=20, T_mult=1, eta_min=1e-2)
+scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=20, T_mult=1, eta_min=0.05)
 
-scheduler = None
+# scheduler = None
 
 num_iters = 100
 
@@ -184,7 +184,7 @@ scores = runner.assess(
     metrics=[
         gpytorch.metrics.mean_absolute_error,
         gpytorch.metrics.mean_squared_error,
-        lambda predictions, y : -gpytorch.metrics.negative_log_predictive_density(predictions, y)
+        lambda predictions, y : gpytorch.metrics.negative_log_predictive_density(predictions, y)
     ]
 )
 
