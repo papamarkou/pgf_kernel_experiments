@@ -170,7 +170,7 @@ for i in range(2):
         
         ax[i, j].set_xlim((-1, 1))
         ax[i, j].set_ylim((-1, 1))
-        ax[i, j].set_zlim((0, 11))
+        ax[i, j].set_zlim((-2, 12))
 
         ax[i, j].set_title(titles[i][j], fontsize=title_fontsize, pad=-1.5)
 
@@ -180,7 +180,7 @@ for i in range(2):
 
         ax[i, j].set_xticks([-1, 0, 1], fontsize=axis_fontsize)
         ax[i, j].set_yticks([-1, 0, 1], fontsize=axis_fontsize)
-        ax[i, j].set_zticks([0, 5., 10.], fontsize=axis_fontsize)
+        ax[i, j].set_zticks([-2, 5., 12.], fontsize=axis_fontsize)
 
         ax[i, j].zaxis.set_rotate_label(False)
 
