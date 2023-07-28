@@ -9,4 +9,4 @@ output_path = Path('output')
 
 # %% Set seed
 
-seed = 1
+seed = 3

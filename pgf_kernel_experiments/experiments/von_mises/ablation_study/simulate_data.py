@@ -4,7 +4,7 @@ import numpy as np
 
 from scipy.stats import vonmises
 
-from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_env import data_path, seed
+from pgf_kernel_experiments.experiments.von_mises.ablation_study.set_env import data_path, seed
 
 # %% Create paths if they don't exist
 
