@@ -6,3 +6,7 @@ from pathlib import Path
 
 data_path = Path('data')
 output_path = Path('output')
+
+# %% Set seed
+
+seed = 2

@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting02.set_paths import data_path, output_path
+from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting02.set_env import data_path, output_path
 
 # %% Load data
 

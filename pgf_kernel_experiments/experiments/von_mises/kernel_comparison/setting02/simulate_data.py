@@ -5,7 +5,7 @@ import torch
 
 from scipy.stats import vonmises
 
-from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting02.set_paths import data_path
+from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting02.set_env import data_path
 
 # %% Create paths if they don't exist
 

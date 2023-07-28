@@ -6,7 +6,7 @@ import torch
 
 from pgfml.kernels import GFKernel
 
-from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting02.set_paths import data_path, output_path
+from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting02.set_env import data_path, output_path
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
 # %% Create paths if they don't exist
@@ -53,7 +53,7 @@ test_y = torch.as_tensor(test_output.T, dtype=torch.float64)
 # %% Set up ExactMultiGPRunner
 
 kernels = [
-    GFKernel(width=[20, 20, 20]),
+    GFKernel(width=[30, 30, 30]),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
     gpytorch.kernels.PeriodicKernel(),
@@ -87,7 +87,7 @@ scores = runner.assess(
     metrics=[
         gpytorch.metrics.mean_absolute_error,
         gpytorch.metrics.mean_squared_error,
-        lambda predictions, y : -gpytorch.metrics.negative_log_predictive_density(predictions, y)
+        lambda predictions, y : gpytorch.metrics.negative_log_predictive_density(predictions, y)
     ]
 )
 
