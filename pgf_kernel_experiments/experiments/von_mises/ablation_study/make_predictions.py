@@ -61,7 +61,7 @@ kernels = [
     GFKernel(width=[20, 20, 20]),
 ]
 
-kernel_names = ['5', '20', '20, 5', '20, 20', '20, 20, 5', '20, 20, 20']
+kernel_names = ['5', '20', '20_5', '20_20', '20_20_5', '20_20_20']
 
 runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
 
