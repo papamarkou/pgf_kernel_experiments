@@ -17,7 +17,7 @@ num_iters, num_kernels = losses.shape
 
 # %% Plot losses
 
-labels = ['PGF kernel','RBF kernel', 'Matern kernel', 'Periodic kernel', 'Spectral kernel']
+labels = ['5', '20', '20, 5', '20, 20', '20, 20, 5', '20, 20, 20']
 
 label_fontsize = 11
 axis_fontsize = 11

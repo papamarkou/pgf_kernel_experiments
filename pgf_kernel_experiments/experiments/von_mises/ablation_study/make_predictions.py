@@ -53,14 +53,15 @@ test_y = torch.as_tensor(test_output.T, dtype=torch.float64)
 # %% Set up ExactMultiGPRunner
 
 kernels = [
-    GFKernel(width=[30, 30, 30]),
-    gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
-    gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
-    gpytorch.kernels.PeriodicKernel(),
-    gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2)
+    GFKernel(width=[5]),
+    GFKernel(width=[20]),
+    GFKernel(width=[20, 5]),
+    GFKernel(width=[20, 20]),
+    GFKernel(width=[20, 20, 5]),
+    GFKernel(width=[20, 20, 20]),
 ]
 
-kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
+kernel_names = ['5', '20', '20, 5', '20, 20', '20, 20, 5', '20, 20, 20']
 
 runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
 

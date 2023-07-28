@@ -1,6 +1,5 @@
 # %% Import packages
 
-import gpytorch
 import numpy as np
 import torch
 
@@ -45,14 +44,15 @@ train_y = torch.as_tensor(train_output.T, dtype=torch.float64)
 # %% Set up ExactMultiGPRunner
 
 kernels = [
-    GFKernel(width=[30, 30, 30]),
-    gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
-    gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
-    gpytorch.kernels.PeriodicKernel(),
-    gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2)
+    GFKernel(width=[5]),
+    GFKernel(width=[20]),
+    GFKernel(width=[20, 5]),
+    GFKernel(width=[20, 20]),
+    GFKernel(width=[20, 20, 5]),
+    GFKernel(width=[20, 20, 20]),
 ]
 
-kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
+kernel_names = ['5', '20', '20, 5', '20, 20', '20, 20, 5', '20, 20, 20']
 
 runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
 
@@ -70,39 +70,55 @@ optimizers = []
 
 schedulers = []
 
-pgf_optim_per_group = True
+lrs = [0.8, 0.5, 0.9, 0.9, 0.9]
 
-if pgf_optim_per_group:
-    lrs = [[0.8, 0.5, 0.9, 0.9, 0.9], 0.5, 0.5, 0.075, 0.5]
+optimizers.append(torch.optim.Adam([
+    {"params": runner.single_runners[0].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
+    {"params": runner.single_runners[0].model.mean_module.raw_constant, "lr": lrs[1]},
+    {"params": runner.single_runners[0].model.covar_module.pars0, "lr": lrs[2]}
+]))
 
-    optimizers.append(torch.optim.Adam([
-        {"params": runner.single_runners[0].model.likelihood.noise_covar.raw_noise, "lr": lrs[0][0]},
-        {"params": runner.single_runners[0].model.mean_module.raw_constant, "lr": lrs[0][1]},
-        {"params": runner.single_runners[0].model.covar_module.pars0, "lr": lrs[0][2]},
-        {"params": runner.single_runners[0].model.covar_module.pars1, "lr": lrs[0][3]},
-        {"params": runner.single_runners[0].model.covar_module.pars2, "lr": lrs[0][4]}
-    ]))
+optimizers.append(torch.optim.Adam([
+    {"params": runner.single_runners[1].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
+    {"params": runner.single_runners[1].model.mean_module.raw_constant, "lr": lrs[1]},
+    {"params": runner.single_runners[1].model.covar_module.pars0, "lr": lrs[2]}
+]))
 
+optimizers.append(torch.optim.Adam([
+    {"params": runner.single_runners[2].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
+    {"params": runner.single_runners[2].model.mean_module.raw_constant, "lr": lrs[1]},
+    {"params": runner.single_runners[2].model.covar_module.pars0, "lr": lrs[2]},
+    {"params": runner.single_runners[2].model.covar_module.pars1, "lr": lrs[3]}
+]))
+
+optimizers.append(torch.optim.Adam([
+    {"params": runner.single_runners[3].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
+    {"params": runner.single_runners[3].model.mean_module.raw_constant, "lr": lrs[1]},
+    {"params": runner.single_runners[3].model.covar_module.pars0, "lr": lrs[2]},
+    {"params": runner.single_runners[3].model.covar_module.pars1, "lr": lrs[3]}
+]))
+
+optimizers.append(torch.optim.Adam([
+    {"params": runner.single_runners[4].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
+    {"params": runner.single_runners[4].model.mean_module.raw_constant, "lr": lrs[1]},
+    {"params": runner.single_runners[4].model.covar_module.pars0, "lr": lrs[2]},
+    {"params": runner.single_runners[4].model.covar_module.pars1, "lr": lrs[3]},
+    {"params": runner.single_runners[4].model.covar_module.pars2, "lr": lrs[4]}
+]))
+
+optimizers.append(torch.optim.Adam([
+    {"params": runner.single_runners[5].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
+    {"params": runner.single_runners[5].model.mean_module.raw_constant, "lr": lrs[1]},
+    {"params": runner.single_runners[5].model.covar_module.pars0, "lr": lrs[2]},
+    {"params": runner.single_runners[5].model.covar_module.pars1, "lr": lrs[3]},
+    {"params": runner.single_runners[5].model.covar_module.pars2, "lr": lrs[4]}
+]))
+
+for i in range(runner.num_gps()):
     schedulers.append(torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[0], T_0=20, T_mult=1, eta_min=0.05))
 
-    for i in range(1, runner.num_gps()):
-        optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=lrs[i]))
-
-        schedulers.append(
-            torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=20, T_mult=1, eta_min=0.05)
-        )
-        # schedulers.append(None)
-else:
-    lrs = [0.7, 0.5, 0.5, 0.075, 0.5]
-
-    for i in range(runner.num_gps()):
-        optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=lrs[i]))
-
-        schedulers.append(
-            torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=20, T_mult=1, eta_min=0.05)
-        )
-
-num_iters = 500
+num_iters = 100
+# num_iters = 500
 
 # %% Train GP models to find optimal hyperparameters
 

@@ -46,8 +46,8 @@ title_fontsize = 15
 axis_fontsize = 11
 
 titles = [
-    ['von Mises density', 'Training data', 'Test data', 'PGF kernel'],
-    ['RBF kernel', 'Matern kernel', 'Periodic kernel', 'Spectral kernel']
+    ['Training data', 'Test data', '5', '20'],
+    ['20, 5', '20, 20', '20, 20, 5', '20, 20, 20']
 ]
 
 fig, ax = plt.subplots(2, 4, figsize=[14, 6], subplot_kw={'projection': '3d'})
@@ -80,7 +80,7 @@ point_size = 8
 
 ax[0, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
-ax[0, 1].scatter(
+ax[0, 0].scatter(
     train_pos[:, 0],
     train_pos[:, 1],
     train_output,
@@ -91,11 +91,22 @@ ax[0, 1].scatter(
 
 ax[0, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
-ax[0, 2].scatter(
+ax[0, 1].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
     test_output,
     color=test_point_col,
+    marker=point_marker,
+    s=point_size
+)
+
+ax[0, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
+
+ax[0, 2].scatter(
+    test_pos[:, 0],
+    test_pos[:, 1],
+    predictions[:, 0],
+    color=pred_point_col,
     marker=point_marker,
     s=point_size
 )
@@ -105,7 +116,7 @@ ax[0, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
 ax[0, 3].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
-    predictions[:, 0],
+    predictions[:, 1],
     color=pred_point_col,
     marker=point_marker,
     s=point_size
@@ -116,7 +127,7 @@ ax[0, 3].plot(x, y, z, color=pdf_line_col, lw=line_width)
 ax[1, 0].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
-    predictions[:, 1],
+    predictions[:, 2],
     color=pred_point_col,
     marker=point_marker,
     s=point_size
@@ -127,7 +138,7 @@ ax[1, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
 ax[1, 1].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
-    predictions[:, 2],
+    predictions[:, 3],
     color=pred_point_col,
     marker=point_marker,
     s=point_size
@@ -138,7 +149,7 @@ ax[1, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
 ax[1, 2].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
-    predictions[:, 3],
+    predictions[:, 4],
     color=pred_point_col,
     marker=point_marker,
     s=point_size
@@ -149,7 +160,7 @@ ax[1, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
 ax[1, 3].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
-    predictions[:, 4],
+    predictions[:, 5],
     color=pred_point_col,
     marker=point_marker,
     s=point_size
