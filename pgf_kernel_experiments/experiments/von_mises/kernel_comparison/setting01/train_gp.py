@@ -131,11 +131,11 @@ test_y = torch.as_tensor(test_output.T, dtype=torch.float64)
 
 # %% Set up ExactSingleGPRunner
 
-kernel = GFKernel(width=[30, 30, 30]) # lr=0.5
-# kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()) # lr=0.5
-# kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)) # lr=0.5
-# kernel = gpytorch.kernels.PeriodicKernel() # lr=0.075
-# kernel = gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2) # lr=0.1
+kernel = GFKernel(width=[30, 30, 30])
+# kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel())
+# kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5))
+# kernel = gpytorch.kernels.PeriodicKernel()
+# kernel = gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2)
 
 runner = ExactSingleGPRunner(train_x, train_y, kernel)
 

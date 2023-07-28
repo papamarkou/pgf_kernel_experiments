@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
-# from pgfml.kernels import GFKernel
+from pgfml.kernels import GFKernel
 
 from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting02.set_env import data_path
 from pgf_kernel_experiments.runners import ExactSingleGPRunner
@@ -132,8 +132,8 @@ test_y = torch.as_tensor(test_output.T, dtype=torch.float64)
 
 # %% Set up ExactSingleGPRunner
 
-# kernel = GFKernel(width=[20, 20, 20])
-kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel())
+kernel = GFKernel(width=[30, 30, 30])
+# kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel())
 # kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5))
 # kernel = gpytorch.kernels.PeriodicKernel()
 # kernel = gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2)
@@ -145,15 +145,33 @@ runner = ExactSingleGPRunner(train_x, train_y, kernel)
 runner.model.double()
 runner.model.likelihood.double()
 
-# %% Configurate training setup for GP model
+# %% Configure training setup for GP model
 
-optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.1)
+# list(runner.model.named_parameters())
 
-num_iters = 50
+# optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.7)
+
+# optimizer = torch.optim.Adam(runner.model.parameters(), lr=0.7, betas=(0.9, 0.99))
+
+optimizer = torch.optim.Adam([
+    {"params": runner.model.likelihood.noise_covar.raw_noise, "lr": 0.8},
+    {"params": runner.model.mean_module.raw_constant, "lr": 0.5},
+    {"params": runner.model.covar_module.pars0, "lr": 0.9},
+    {"params": runner.model.covar_module.pars1, "lr": 0.9},
+    {"params": runner.model.covar_module.pars2, "lr": 0.9}
+])
+
+scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=20, T_mult=1, eta_min=0.05)
+
+# scheduler = None
+
+num_iters = 100
 
 # %% Train GP model to find optimal hyperparameters
 
-losses = runner.train(train_x, train_y, optimizer, num_iters)
+losses = runner.train(train_x, train_y, optimizer, num_iters, scheduler=scheduler)
+
+list(runner.model.named_parameters())
 
 # %% Make predictions
 
@@ -167,7 +185,7 @@ scores = runner.assess(
     metrics=[
         gpytorch.metrics.mean_absolute_error,
         gpytorch.metrics.mean_squared_error,
-        lambda predictions, y : -gpytorch.metrics.negative_log_predictive_density(predictions, y)
+        lambda predictions, y : gpytorch.metrics.negative_log_predictive_density(predictions, y)
     ]
 )
 

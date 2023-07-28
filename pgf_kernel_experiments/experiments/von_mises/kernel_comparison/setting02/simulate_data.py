@@ -1,11 +1,10 @@
 # %% Import packages
 
 import numpy as np
-import torch
 
 from scipy.stats import vonmises
 
-from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting02.set_env import data_path
+from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting02.set_env import data_path, seed
 
 # %% Create paths if they don't exist
 
@@ -13,7 +12,7 @@ data_path.mkdir(parents=True, exist_ok=True)
 
 # %% Set seed
 
-torch.manual_seed(2)
+np.random.seed(seed)
 
 # %% Generate data
 
