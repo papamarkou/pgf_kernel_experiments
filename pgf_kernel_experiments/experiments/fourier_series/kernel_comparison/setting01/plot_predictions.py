@@ -46,7 +46,7 @@ title_fontsize = 15
 axis_fontsize = 11
 
 titles = [
-    ['von Mises density', 'Training data', 'Test data', 'PGF kernel'],
+    ['Fourier series', 'Training data', 'Test data', 'PGF kernel'],
     ['RBF kernel', 'Matern kernel', 'Periodic kernel', 'Spectral kernel']
 ]
 
@@ -57,7 +57,7 @@ fig.subplots_adjust(
     bottom=0.0,
     right=1.0,
     top=1.0,
-    wspace=-0.4,
+    wspace=-0.35,
     hspace=0.15
 )
 
@@ -164,12 +164,14 @@ for i in range(2):
         ax[i, j].plot(x, y, 0, color=circle_line_col, lw=line_width, zorder=0)
 
         ax[i, j].grid(False)
-
-        ax[i, j].tick_params(pad=-1.5)
         
+        ax[i, j].tick_params(pad=-1.5, axis='x')
+        ax[i, j].tick_params(pad=-1.5, axis='y')
+        ax[i, j].tick_params(pad=2.5, axis='z')
+
         ax[i, j].set_xlim((-1, 1))
         ax[i, j].set_ylim((-1, 1))
-        ax[i, j].set_zlim((-1, 1))
+        ax[i, j].set_zlim((-0.4, 0.8))
 
         ax[i, j].set_title(titles[i][j], fontsize=title_fontsize, pad=-1.5)
 
@@ -179,7 +181,7 @@ for i in range(2):
 
         ax[i, j].set_xticks([-1, 0, 1], fontsize=axis_fontsize)
         ax[i, j].set_yticks([-1, 0, 1], fontsize=axis_fontsize)
-        ax[i, j].set_zticks([-1, 0, 1], fontsize=axis_fontsize)
+        ax[i, j].set_zticks([-0.4, 0, 0.4, 0.8], fontsize=axis_fontsize)
 
         ax[i, j].zaxis.set_rotate_label(False)
 
