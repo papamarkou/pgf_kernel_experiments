@@ -75,7 +75,6 @@ schedulers = []
 pgf_optim_per_group = True
 
 if pgf_optim_per_group:
-    # lrs = [[0.8, 0.5, 0.9, 0.9, 0.9], 0.5, 0.5, 0.075, 0.5]
     lrs = [[0.8, 0.5, 0.9, 0.9, 0.9], 0.075, 0.075, 0.075, 0.075]
 
     optimizers.append(torch.optim.Adam([

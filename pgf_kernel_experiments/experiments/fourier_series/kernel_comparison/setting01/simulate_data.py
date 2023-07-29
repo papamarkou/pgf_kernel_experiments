@@ -16,7 +16,6 @@ np.random.seed(seed)
 # %% Generate data
 
 num_samples = 500
-# num_samples = 1000
 
 theta = np.linspace(-np.pi, np.pi, num=num_samples, endpoint=False)
 

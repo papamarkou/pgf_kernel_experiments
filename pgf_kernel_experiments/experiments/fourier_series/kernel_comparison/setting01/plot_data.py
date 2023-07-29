@@ -102,7 +102,9 @@ for i in range(3):
 
     ax[i].grid(False)
 
-    ax[i].tick_params(pad=-1.5)
+    ax[i].tick_params(pad=-1.5, axis='x')
+    ax[i].tick_params(pad=-1.5, axis='y')
+    ax[i].tick_params(pad=2.5, axis='z')
 
     ax[i].set_xlim((-1, 1))
     ax[i].set_ylim((-1, 1))
