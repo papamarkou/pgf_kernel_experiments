@@ -118,7 +118,6 @@ for i in range(runner.num_gps()):
     schedulers.append(torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[0], T_0=20, T_mult=1, eta_min=0.05))
 
 num_iters = 100
-# num_iters = 500
 
 # %% Train GP models to find optimal hyperparameters
 

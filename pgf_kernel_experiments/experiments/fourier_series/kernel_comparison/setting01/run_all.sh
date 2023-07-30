@@ -1,13 +1,12 @@
 #!/bin/bash
 
 declare -a files=(
-    "plot_data.py"
-    "plot_predictions.py"
-    "plot_losses.py"
+    "run_numerics.sh"
+    "run_plots.sh"
 )
 
 for file in "${files[@]}"
 do
    echo "Executing $file..."
-   python $file
+   ./$file
 done
