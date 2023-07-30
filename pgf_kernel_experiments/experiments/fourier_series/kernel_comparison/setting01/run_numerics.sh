@@ -3,6 +3,7 @@
 declare -a files=(
     "simulate_data.sh"
     "train_set_run_numerics.sh"
+    "train_subset4_run_numerics.sh"
 )
 
 for file in "${files[@]}"
