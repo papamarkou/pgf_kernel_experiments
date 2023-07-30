@@ -1,8 +1,8 @@
 #!/bin/bash
 
 declare -a files=(
-    "train_subset4_train_gps.py"
-    "train_subset4_make_predictions.py"
+    "train_subset3_train_gps.py"
+    "train_subset3_make_predictions.py"
 )
 
 for file in "${files[@]}"

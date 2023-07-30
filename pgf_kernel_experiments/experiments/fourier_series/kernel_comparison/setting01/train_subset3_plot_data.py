@@ -22,7 +22,7 @@ x = data[:, 1]
 y = data[:, 2]
 z = data[:, 3]
 
-train_ids = np.loadtxt(data_path.joinpath('train_subset4_ids.csv'), dtype='int')
+train_ids = np.loadtxt(data_path.joinpath('train_subset3_ids.csv'), dtype='int')
 test_ids = np.loadtxt(data_path.joinpath('test_ids.csv'), dtype='int')
 
 # %% Get training data
@@ -125,7 +125,7 @@ for i in range(3):
 # %% Save plot
 
 plt.savefig(
-    output_path.joinpath('train_subset4_data.png'),
+    output_path.joinpath('train_subset3_data.png'),
     dpi=600,
     pil_kwargs={'quality': 100},
     transparent=True,

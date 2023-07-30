@@ -26,7 +26,7 @@ x = data[:, 1]
 y = data[:, 2]
 z = data[:, 3]
 
-train_ids = np.loadtxt(data_path.joinpath('train_subset4_ids.csv'), dtype='int')
+train_ids = np.loadtxt(data_path.joinpath('train_subset2_ids.csv'), dtype='int')
 
 test_ids = np.loadtxt(data_path.joinpath('test_ids.csv'), dtype='int')
 
@@ -74,7 +74,7 @@ for i in range(runner.num_gps()):
 
 for i in range(runner.num_gps()):
     runner.single_runners[i].model.load_state_dict(
-        torch.load(output_path.joinpath('train_subset4_'+kernel_names[i]+'_gp_state.pth'))
+        torch.load(output_path.joinpath('train_subset2_'+kernel_names[i]+'_gp_state.pth'))
     )
 
 # %% Make predictions
@@ -96,7 +96,7 @@ scores = runner.assess(
 # %% Save predictions
 
 np.savetxt(
-    output_path.joinpath('train_subset4_predictions.csv'),
+    output_path.joinpath('train_subset2_predictions.csv'),
     torch.stack([predictions[i].mean for i in range(runner.num_gps())], dim=0).t().detach().numpy(),
     delimiter=',',
     header=','.join(kernel_names),
@@ -106,7 +106,7 @@ np.savetxt(
 # %% Save error metrics
 
 np.savetxt(
-    output_path.joinpath('train_subset4_error_metrics.csv'),
+    output_path.joinpath('train_subset2_error_metrics.csv'),
     scores.detach().numpy(),
     delimiter=',',
     header='mean_abs_error,mean_sq_error,loss',

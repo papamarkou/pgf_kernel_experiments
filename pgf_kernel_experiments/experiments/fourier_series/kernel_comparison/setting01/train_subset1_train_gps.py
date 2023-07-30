@@ -7,7 +7,7 @@ import torch
 from pgfml.kernels import GFKernel
 
 from pgf_kernel_experiments.experiments.fourier_series.kernel_comparison.setting01.set_env import (
-    data_path, output_path, train_subset4_seed
+    data_path, output_path, train_subset1_seed
 )
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
@@ -17,7 +17,7 @@ output_path.mkdir(parents=True, exist_ok=True)
 
 # %% Set seed
 
-torch.manual_seed(train_subset4_seed)
+torch.manual_seed(train_subset1_seed)
 
 # %% Load data
 
@@ -32,7 +32,7 @@ x = data[:, 1]
 y = data[:, 2]
 z = data[:, 3]
 
-train_ids = np.loadtxt(data_path.joinpath('train_subset4_ids.csv'), dtype='int')
+train_ids = np.loadtxt(data_path.joinpath('train_subset1_ids.csv'), dtype='int')
 
 # %% Get training data
 
@@ -117,13 +117,13 @@ losses = runner.train(train_x, train_y, optimizers, num_iters, schedulers=schedu
 for i in range(runner.num_gps()):
     torch.save(
         runner.single_runners[i].model.state_dict(),
-        output_path.joinpath('train_subset4_'+kernel_names[i]+'_gp_state.pth')
+        output_path.joinpath('train_subset1_'+kernel_names[i]+'_gp_state.pth')
     )
 
 # %% Save losses
 
 np.savetxt(
-    output_path.joinpath('train_subset4_losses.csv'),
+    output_path.joinpath('train_subset1_losses.csv'),
     losses.detach().numpy(),
     delimiter=',',
     header=','.join(kernel_names),
