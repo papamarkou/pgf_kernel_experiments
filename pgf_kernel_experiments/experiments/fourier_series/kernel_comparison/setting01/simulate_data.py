@@ -34,7 +34,7 @@ z = fourier_series(
 
 ids = np.arange(num_samples)
 
-num_train = int(500)
+num_train = int(800)
 
 train_ids = np.random.choice(ids, size=num_train, replace=False)
 
@@ -42,10 +42,10 @@ train_ids.sort()
 
 # %% Generate training subsets
 
-train_subset1_ids = np.random.choice(train_ids, size=400, replace=False)
+train_subset1_ids = np.random.choice(train_ids, size=600, replace=False)
 train_subset1_ids.sort()
 
-train_subset2_ids = np.random.choice(train_subset1_ids, size=300, replace=False)
+train_subset2_ids = np.random.choice(train_subset1_ids, size=400, replace=False)
 train_subset2_ids.sort()
 
 train_subset3_ids = np.random.choice(train_subset2_ids, size=200, replace=False)
