@@ -3,7 +3,7 @@
 import numpy as np
 
 from pgf_kernel_experiments.experiments.fourier_series.fourier_series import fourier_series
-from pgf_kernel_experiments.experiments.fourier_series.kernel_comparison.setting01.set_env import data_path, seed
+from pgf_kernel_experiments.experiments.fourier_series.kernel_comparison.setting02.set_env import data_path, seed
 
 # %% Create paths if they don't exist
 

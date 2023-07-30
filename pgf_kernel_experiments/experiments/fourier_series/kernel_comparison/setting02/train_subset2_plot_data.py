@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from pgf_kernel_experiments.experiments.fourier_series.kernel_comparison.setting01.set_env import data_path, output_path
+from pgf_kernel_experiments.experiments.fourier_series.kernel_comparison.setting02.set_env import data_path, output_path
 
 # %% Create paths if they don't exist
 
