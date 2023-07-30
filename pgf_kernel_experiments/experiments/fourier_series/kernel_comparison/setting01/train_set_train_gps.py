@@ -118,13 +118,13 @@ losses = runner.train(train_x, train_y, optimizers, num_iters, schedulers=schedu
 for i in range(runner.num_gps()):
     torch.save(
         runner.single_runners[i].model.state_dict(),
-        output_path.joinpath(kernel_names[i]+'_gp_state.pth')
+        output_path.joinpath('train_set_'+kernel_names[i]+'_gp_state.pth')
     )
 
 # %% Save losses
 
 np.savetxt(
-    output_path.joinpath('losses.csv'),
+    output_path.joinpath('train_set_losses.csv'),
     losses.detach().numpy(),
     delimiter=',',
     header=','.join(kernel_names),

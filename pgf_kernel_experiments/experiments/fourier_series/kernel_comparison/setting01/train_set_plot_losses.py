@@ -8,7 +8,7 @@ from pgf_kernel_experiments.experiments.fourier_series.kernel_comparison.setting
 # %% Load predictions
 
 losses = np.loadtxt(
-    output_path.joinpath('losses.csv'),
+    output_path.joinpath('train_set_losses.csv'),
     delimiter=',',
     skiprows=1
 )
@@ -54,7 +54,7 @@ plt.legend(
 # %% Save plot
 
 plt.savefig(
-    output_path.joinpath('losses.png'),
+    output_path.joinpath('train_set_losses.png'),
     dpi=600,
     pil_kwargs={'quality': 100},
     transparent=True,

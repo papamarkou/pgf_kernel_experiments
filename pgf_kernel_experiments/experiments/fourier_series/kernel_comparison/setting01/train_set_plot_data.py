@@ -125,7 +125,7 @@ for i in range(3):
 # %% Save plot
 
 plt.savefig(
-    output_path.joinpath('data.png'),
+    output_path.joinpath('train_set_data.png'),
     dpi=600,
     pil_kwargs={'quality': 100},
     transparent=True,

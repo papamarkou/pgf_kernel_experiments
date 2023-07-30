@@ -2,8 +2,7 @@
 
 declare -a files=(
     "simulate_data.py"
-    "train_gps.py"
-    "make_predictions.py"
+    "train_set_run_numerics.py"
 )
 
 for file in "${files[@]}"

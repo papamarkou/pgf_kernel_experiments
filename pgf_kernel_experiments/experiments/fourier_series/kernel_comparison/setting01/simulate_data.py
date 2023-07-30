@@ -15,7 +15,7 @@ np.random.seed(seed)
 
 # %% Generate data
 
-num_samples = 500
+num_samples = 1000
 
 theta = np.linspace(-np.pi, np.pi, num=num_samples, endpoint=False)
 
@@ -34,11 +34,25 @@ z = fourier_series(
 
 ids = np.arange(num_samples)
 
-num_train = int(0.2 * num_samples)
+num_train = int(500)
 
 train_ids = np.random.choice(ids, size=num_train, replace=False)
 
 train_ids.sort()
+
+# %% Generate training subsets
+
+train_subset1_ids = np.random.choice(train_ids, size=400, replace=False)
+train_subset1_ids.sort()
+
+train_subset2_ids = np.random.choice(train_subset1_ids, size=300, replace=False)
+train_subset2_ids.sort()
+
+train_subset3_ids = np.random.choice(train_subset2_ids, size=200, replace=False)
+train_subset3_ids.sort()
+
+train_subset4_ids = np.random.choice(train_subset3_ids, size=100, replace=False)
+train_subset4_ids.sort()
 
 # %% Generate test data
 
@@ -57,4 +71,10 @@ np.savetxt(
 )
 
 np.savetxt(data_path.joinpath('train_ids.csv'), train_ids, fmt='%i')
+
+np.savetxt(data_path.joinpath('train_subset1_ids.csv'), train_subset1_ids, fmt='%i')
+np.savetxt(data_path.joinpath('train_subset2_ids.csv'), train_subset2_ids, fmt='%i')
+np.savetxt(data_path.joinpath('train_subset3_ids.csv'), train_subset3_ids, fmt='%i')
+np.savetxt(data_path.joinpath('train_subset4_ids.csv'), train_subset4_ids, fmt='%i')
+
 np.savetxt(data_path.joinpath('test_ids.csv'), test_ids, fmt='%i')

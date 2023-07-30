@@ -1,7 +1,9 @@
 #!/bin/bash
 
 declare -a files=(
-    "train_set_run_plots.py"
+    "train_set_plot_data.py"
+    "train_set_plot_predictions.py"
+    "train_set_plot_losses.py"
 )
 
 for file in "${files[@]}"
