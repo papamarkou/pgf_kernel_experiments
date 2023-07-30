@@ -35,7 +35,7 @@ test_output = z[test_ids]
 # %% Load predictions
 
 predictions = np.loadtxt(
-    output_path.joinpath('predictions.csv'),
+    output_path.joinpath('train_set_predictions.csv'),
     delimiter=',',
     skiprows=1
 )
@@ -188,7 +188,7 @@ for i in range(2):
 # %% Save plot
 
 plt.savefig(
-    output_path.joinpath('predictions.png'),
+    output_path.joinpath('train_set_predictions.png'),
     dpi=600,
     pil_kwargs={'quality': 100},
     transparent=True,

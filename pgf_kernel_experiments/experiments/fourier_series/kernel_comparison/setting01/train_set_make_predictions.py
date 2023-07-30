@@ -73,7 +73,7 @@ for i in range(runner.num_gps()):
 # %% Load model states
 
 for i in range(runner.num_gps()):
-    runner.single_runners[i].model.load_state_dict(torch.load(output_path.joinpath(kernel_names[i]+'_gp_state.pth')))
+    runner.single_runners[i].model.load_state_dict(torch.load(output_path.joinpath('train_set_'+kernel_names[i]+'_gp_state.pth')))
 
 # %% Make predictions
 
