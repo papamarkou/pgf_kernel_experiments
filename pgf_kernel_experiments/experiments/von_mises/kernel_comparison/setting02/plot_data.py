@@ -36,7 +36,7 @@ train_output = z[train_ids]
 
 test_pos = grid[test_ids, :]
 
-test_output = z[test_ids]
+test_output = z_signal[test_ids]
 
 # %% Plot training and test data
 
