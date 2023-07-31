@@ -30,7 +30,7 @@ data = np.loadtxt(
 grid = data[:, 1:3]
 x = data[:, 1]
 y = data[:, 2]
-z = data[:, 3]
+z = data[:, 5]
 
 train_ids = np.loadtxt(data_path.joinpath('train_subset4_ids.csv'), dtype='int')
 

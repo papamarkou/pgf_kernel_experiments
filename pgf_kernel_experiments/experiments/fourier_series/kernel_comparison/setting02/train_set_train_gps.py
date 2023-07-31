@@ -104,8 +104,7 @@ else:
             torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=20, T_mult=1, eta_min=0.05)
         )
 
-num_iters = 10
-# num_iters = 500
+num_iters = 500
 
 # %% Train GP models to find optimal hyperparameters
 

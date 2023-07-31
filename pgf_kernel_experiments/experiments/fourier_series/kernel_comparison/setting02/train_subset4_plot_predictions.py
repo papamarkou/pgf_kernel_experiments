@@ -16,7 +16,8 @@ data = np.loadtxt(
 grid = data[:, 1:3]
 x = data[:, 1]
 y = data[:, 2]
-z = data[:, 3]
+z_signal = data[:, 3]
+z = data[:, 5]
 
 train_ids = np.loadtxt(data_path.joinpath('train_subset4_ids.csv'), dtype='int')
 
@@ -30,7 +31,7 @@ train_output = z[train_ids]
 # %% Get test data
 
 test_pos = grid[test_ids, :]
-test_output = z[test_ids]
+test_output = z_signal[test_ids]
 
 # %% Load predictions
 
@@ -78,7 +79,7 @@ point_marker = 'o'
 
 point_size = 8
 
-ax[0, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[0, 0].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[0, 1].scatter(
     train_pos[:, 0],
@@ -89,7 +90,7 @@ ax[0, 1].scatter(
     s=point_size
 )
 
-ax[0, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[0, 1].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[0, 2].scatter(
     test_pos[:, 0],
@@ -100,7 +101,7 @@ ax[0, 2].scatter(
     s=point_size
 )
 
-ax[0, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[0, 2].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[0, 3].scatter(
     test_pos[:, 0],
@@ -111,7 +112,7 @@ ax[0, 3].scatter(
     s=point_size
 )
 
-ax[0, 3].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[0, 3].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[1, 0].scatter(
     test_pos[:, 0],
@@ -122,7 +123,7 @@ ax[1, 0].scatter(
     s=point_size
 )
 
-ax[1, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[1, 0].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[1, 1].scatter(
     test_pos[:, 0],
@@ -133,7 +134,7 @@ ax[1, 1].scatter(
     s=point_size
 )
 
-ax[1, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[1, 1].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[1, 2].scatter(
     test_pos[:, 0],
@@ -144,7 +145,7 @@ ax[1, 2].scatter(
     s=point_size
 )
 
-ax[1, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[1, 2].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[1, 3].scatter(
     test_pos[:, 0],
@@ -155,7 +156,7 @@ ax[1, 3].scatter(
     s=point_size
 )
 
-ax[1, 3].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[1, 3].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 for i in range(2):
     for j in range(4):
