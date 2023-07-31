@@ -2,9 +2,8 @@
 
 import numpy as np
 
-from scipy.stats import vonmises
-
 from pgf_kernel_experiments.experiments.spherical_rastrigin.kernel_comparison.setting01.set_env import data_path, seed
+from pgf_kernel_experiments.experiments.spherical_rastrigin.spherical_rastrigin import gen_spherical_rastrigin_data
 
 # %% Create paths if they don't exist
 
@@ -16,15 +15,23 @@ np.random.seed(seed)
 
 # %% Generate data
 
-num_samples = 1000
+num_incl = 100
 
-theta = np.linspace(-np.pi, np.pi, num=num_samples, endpoint=False)
+# Inclination theta and azimuth phi
+# phi = np.linspace(-np.pi, np.pi, num=2 * num_incl + 1, endpoint=True)
+phi = np.linspace(-np.pi, np.pi, num=2*num_incl, endpoint=False)
+theta = np.tile(np.linspace(0, np.pi, num=num_incl, endpoint=True), 2)
 
-x = np.cos(theta)
+a = 10.
+b = [0.01, 0.02]
 
-y = np.sin(theta)
+x, y, z, v = gen_spherical_rastrigin_data(phi, theta, a, b)
 
-z = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
+# v[-1] = v[0]
+
+# z.reshape(2, 2, order='C')
+
+num_samples = np.size(v)
 
 # %% Generate training data
 
@@ -46,9 +53,16 @@ test_ids.sort()
 
 np.savetxt(
     data_path.joinpath('data.csv'),
-    np.column_stack([theta, x, y, z]),
+    np.column_stack([
+        np.outer(phi, np.ones(np.size(theta))).flatten(),
+        np.outer(np.ones(np.size(phi)), theta).flatten(),
+        x.flatten(),
+        y.flatten(),
+        z.flatten(),
+        v.flatten()
+    ]),
     delimiter=',',
-    header='theta,x,y,z',
+    header='phi,theta,x,y,z,v',
     comments=''
 )
 

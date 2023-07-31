@@ -6,7 +6,9 @@ import torch
 
 from pgfml.kernels import GFKernel
 
-from pgf_kernel_experiments.experiments.spherical_rastrigin.kernel_comparison.setting01.set_env import data_path, output_path, seed
+from pgf_kernel_experiments.experiments.spherical_rastrigin.kernel_comparison.setting01.set_env import (
+    data_path, output_path, seed
+)
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
 # %% Create paths if they don't exist
@@ -25,17 +27,18 @@ data = np.loadtxt(
     skiprows=1
 )
 
-grid = data[:, 1:3]
-x = data[:, 1]
-y = data[:, 2]
-z = data[:, 3]
+grid = data[:, 2:5]
+x = data[:, 2]
+y = data[:, 3]
+z = data[:, 4]
+v = data[:, 5]
 
 train_ids = np.loadtxt(data_path.joinpath('train_ids.csv'), dtype='int')
 
 # %% Get training data
 
 train_pos = grid[train_ids, :]
-train_output = z[train_ids]
+train_output = v[train_ids]
 
 # %% Convert training data to PyTorch format
 
@@ -49,7 +52,7 @@ kernels = [
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
     gpytorch.kernels.PeriodicKernel(),
-    gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2)
+    gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=3)
 ]
 
 kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
@@ -102,7 +105,8 @@ else:
             torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=20, T_mult=1, eta_min=0.05)
         )
 
-num_iters = 500
+num_iters = 5
+# num_iters = 500
 
 # %% Train GP models to find optimal hyperparameters
 
