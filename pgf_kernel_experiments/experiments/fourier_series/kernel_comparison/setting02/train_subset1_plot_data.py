@@ -20,7 +20,8 @@ data = np.loadtxt(
 grid = data[:, 1:3]
 x = data[:, 1]
 y = data[:, 2]
-z = data[:, 3]
+z_signal = data[:, 3]
+z = data[:, 5]
 
 train_ids = np.loadtxt(data_path.joinpath('train_subset1_ids.csv'), dtype='int')
 test_ids = np.loadtxt(data_path.joinpath('test_ids.csv'), dtype='int')
@@ -71,7 +72,7 @@ point_marker = 'o'
 
 point_size = 8
 
-ax[0].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[0].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[1].scatter(
     train_pos[:, 0],
@@ -82,7 +83,7 @@ ax[1].scatter(
     s=point_size
 )
 
-ax[1].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[1].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[2].scatter(
     test_pos[:, 0],
@@ -93,7 +94,7 @@ ax[2].scatter(
     s=point_size
 )
 
-ax[2].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[2].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 for i in range(3):
     ax[i].set_proj_type('ortho')

@@ -24,7 +24,8 @@ data = np.loadtxt(
 grid = data[:, 1:3]
 x = data[:, 1]
 y = data[:, 2]
-z = data[:, 3]
+z_signal = data[:, 3]
+z = data[:, 5]
 
 train_ids = np.loadtxt(data_path.joinpath('train_subset3_ids.csv'), dtype='int')
 
@@ -38,7 +39,7 @@ train_output = z[train_ids]
 # %% Get test data
 
 test_pos = grid[test_ids, :]
-test_output = z[test_ids]
+test_output = z_signal[test_ids]
 
 # %% Convert training data to PyTorch format
 
