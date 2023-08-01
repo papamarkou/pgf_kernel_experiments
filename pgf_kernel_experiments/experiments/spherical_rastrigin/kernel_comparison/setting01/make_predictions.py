@@ -21,10 +21,11 @@ data = np.loadtxt(
     skiprows=1
 )
 
-grid = data[:, 1:3]
-x = data[:, 1]
-y = data[:, 2]
-z = data[:, 3]
+grid = data[:, 2:5]
+x = data[:, 2]
+y = data[:, 3]
+z = data[:, 4]
+v = data[:, 5]
 
 train_ids = np.loadtxt(data_path.joinpath('train_ids.csv'), dtype='int')
 
@@ -33,12 +34,12 @@ test_ids = np.loadtxt(data_path.joinpath('test_ids.csv'), dtype='int')
 # %% Get training data
 
 train_pos = grid[train_ids, :]
-train_output = z[train_ids]
+train_output = v[train_ids]
 
 # %% Get test data
 
 test_pos = grid[test_ids, :]
-test_output = z[test_ids]
+test_output = v[test_ids]
 
 # %% Convert training data to PyTorch format
 
@@ -57,7 +58,7 @@ kernels = [
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
     gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
     gpytorch.kernels.PeriodicKernel(),
-    gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2)
+    gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=3)
 ]
 
 kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
