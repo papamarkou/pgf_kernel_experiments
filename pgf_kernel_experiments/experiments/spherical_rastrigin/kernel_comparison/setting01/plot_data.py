@@ -171,19 +171,23 @@ cb = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=plt.cm.jet), cax=cax) # 
 
 # https://stackoverflow.com/questions/69435068/change-colorbar-limit-for-changing-scale-with-matplotlib-3-3
 
-cb.mappable.set_clim(0., 60.)
+# cb.mappable.set_clim(0., 60.)
 
 # https://jdhao.github.io/2017/06/11/mpl_multiplot_one_colorbar/
 
-cb_tick_points = np.arange(0, 60+10, 10)
-cb.set_ticks(cb_tick_points)
-cb.set_ticklabels(cb_tick_points)
+# cb_tick_points = np.arange(0, 60+10, 10)
+# cb.set_ticks(cb_tick_points)
+# cb.set_ticklabels(cb_tick_points)
 
 # https://www.tutorialspoint.com/how-do-i-change-the-font-size-of-ticks-of-matplotlib-pyplot-colorbar-colorbarbase
 
 cb.ax.tick_params(labelsize=colorbar_fontsize)
 
 # plt.show()
+
+# %% Plot a histogram of spherical Rastrigin function values
+
+plt.hist(v_plot.flatten(), bins=100, density=True)
 
 # %% Save plot
 

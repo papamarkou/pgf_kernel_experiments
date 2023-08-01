@@ -15,15 +15,17 @@ np.random.seed(seed)
 
 # %% Generate data
 
-num_incl = 100
+num_incl = 50
 
 # Inclination theta and azimuth phi
 # phi = np.linspace(-np.pi, np.pi, num=2 * num_incl + 1, endpoint=True)
 phi = np.linspace(-np.pi, np.pi, num=2*num_incl, endpoint=False)
 theta = np.tile(np.linspace(0, np.pi, num=num_incl, endpoint=True), 2)
 
+# a = 10.
+# b = [0.01, 0.02]
 a = 10.
-b = [0.01, 0.02]
+b = [0.01, 0.1]
 
 x, y, z, v = gen_spherical_rastrigin_data(phi, theta, a, b)
 
@@ -32,6 +34,8 @@ x, y, z, v = gen_spherical_rastrigin_data(phi, theta, a, b)
 # z.reshape(2, 2, order='C')
 
 num_samples = np.size(v)
+
+print(v.max())
 
 # %% Generate training data
 
@@ -70,3 +74,5 @@ np.savetxt(data_path.joinpath('dims.csv'), np.array([np.size(phi), np.size(theta
 
 np.savetxt(data_path.joinpath('train_ids.csv'), train_ids, fmt='%i')
 np.savetxt(data_path.joinpath('test_ids.csv'), test_ids, fmt='%i')
+
+# %%

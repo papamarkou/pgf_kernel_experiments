@@ -5,10 +5,11 @@ import numpy as np
 # %% Function for computing spherical Rastrigin function given input in polar coordinates
 
 def spherical_rastrigin_function(phi, theta, a, b):
-    result = 2 * a
+    # result = 2 * a
     # result = result + ((phi / b[0]) ** 2) - a * np.cos(2 * np.pi * phi / b[0])
     # result = result + ((theta / b[1]) ** 2) - a * np.cos(2 * np.pi * theta / b[1])
-    result = result + (phi ** 2) - a * np.cos(2 * np.pi * phi / b[0])
+    result = (phi ** 2) - a * np.cos(2 * np.pi * phi / b[0])
+    # result = result + (phi ** 2) - a * np.cos(2 * np.pi * phi / b[0])
     result = result + (theta ** 2) - a * np.cos(2 * np.pi * theta / b[1])
 
     return result
