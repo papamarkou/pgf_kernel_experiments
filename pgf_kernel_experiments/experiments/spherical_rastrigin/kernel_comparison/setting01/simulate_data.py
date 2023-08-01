@@ -66,5 +66,7 @@ np.savetxt(
     comments=''
 )
 
+np.savetxt(data_path.joinpath('dims.csv'), np.array([np.size(phi), np.size(theta)]), fmt='%i')
+
 np.savetxt(data_path.joinpath('train_ids.csv'), train_ids, fmt='%i')
 np.savetxt(data_path.joinpath('test_ids.csv'), test_ids, fmt='%i')
