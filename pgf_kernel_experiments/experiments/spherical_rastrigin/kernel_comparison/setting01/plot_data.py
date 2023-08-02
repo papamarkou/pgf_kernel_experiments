@@ -58,17 +58,36 @@ v_plot = np.vstack([v_plot, v_plot[0, :]])
 
 # %% Generate  plot points for training data
 
-train_v_plot = v_plot.copy()
-train_v_plot = train_v_plot.flatten()
-train_v_plot[test_ids] = np.nan
-train_v_plot = train_v_plot.reshape(*(v_plot.shape))
+num_samples = dims[0] * dims[1]
+ids = np.arange(num_samples)
+
+non_train_ids = np.array(list(set(ids).difference(set(train_ids))))
+non_train_ids.sort()
+
+train_v_plot = v.flatten()
+train_v_plot[non_train_ids] = np.nan
+train_v_plot = train_v_plot.reshape(dims[0], dims[1], order='C')
+train_v_plot = np.vstack([train_v_plot, train_v_plot[0, :]])
+
+# train_v_plot = v_plot.copy()
+# train_v_plot = train_v_plot.flatten()
+# train_v_plot[test_ids] = np.nan
+# train_v_plot = train_v_plot.reshape(*(v_plot.shape))
 
 # %% Generate plot points for test data
 
-test_v_plot = v_plot.copy()
-test_v_plot = test_v_plot.flatten()
-test_v_plot[train_ids] = np.nan
-test_v_plot = test_v_plot.reshape(*(v_plot.shape))
+non_test_ids = np.array(list(set(ids).difference(set(test_ids))))
+non_test_ids.sort()
+
+test_v_plot = v.flatten()
+test_v_plot[non_test_ids] = np.nan
+test_v_plot = test_v_plot.reshape(dims[0], dims[1], order='C')
+test_v_plot = np.vstack([test_v_plot, test_v_plot[0, :]])
+
+# test_v_plot = v_plot.copy()
+# test_v_plot = test_v_plot.flatten()
+# test_v_plot[train_ids] = np.nan
+# test_v_plot = test_v_plot.reshape(*(v_plot.shape))
 
 # %% Plot data, including separate training and test data (adding color map)
 
@@ -99,6 +118,9 @@ norm = plt.Normalize()
 cmap = plt.cm.jet
 cmap.set_bad('white')
 
+# ax1.view_init(elev=30, azim=-60, roll=10) # default
+ax1.view_init(elev=30, azim=-50, roll=10)
+
 # https://github.com/matplotlib/matplotlib/issues/14647
 
 ax1.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(v_plot)), edgecolor='none')
@@ -122,6 +144,9 @@ ax1.set_zlim(-xyz_lim, xyz_lim)
 
 ax2 = fig.add_subplot(1, 3, 2, projection='3d')
 
+# ax2.view_init(elev=30, azim=-60, roll=10) # default
+ax2.view_init(elev=30, azim=-50, roll=10)
+
 ax2.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(train_v_plot)), edgecolor='none')
 
 ax2.set_title('Training data', fontsize=title_fontsize)
@@ -140,6 +165,9 @@ ax2.set_ylim(-xyz_lim, xyz_lim)
 ax2.set_zlim(-xyz_lim, xyz_lim)
 
 ax3 = fig.add_subplot(1, 3, 3, projection='3d')
+
+# ax3.view_init(elev=30, azim=-60, roll=10) # default
+ax3.view_init(elev=30, azim=-50, roll=10)
 
 ax3.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(test_v_plot)), edgecolor='none')
 
