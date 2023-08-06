@@ -15,7 +15,8 @@ np.random.seed(seed)
 
 # %% Generate data
 
-num_incl = 200
+num_incl = 100
+# num_incl = 200
 
 # Inclination theta and azimuth phi
 phi = np.linspace(-np.pi, np.pi, num=2*num_incl, endpoint=False)
@@ -47,6 +48,7 @@ train_ids.sort()
 # %% Generate test data
 
 test_ids = np.array(list(set(ids).difference(set(train_ids))))
+# test_ids = np.random.choice(test_ids, size=10000, replace=False)
 test_ids = np.random.choice(test_ids, size=10000, replace=False)
 
 test_ids.sort()

@@ -26,6 +26,6 @@ def gen_spherical_rastrigin_data(phi, theta, a, b, c):
     for i in range(n_rows):
         for j in range(n_cols):
             # v[i, j] = spherical_rastrigin_function(phi[i], theta[j], a, b, c)
-            v[i, j] = np.cos(np.cosh(8 * x[i, j] * z[i, j]) - 11 * y[i, j])
+            v[i, j] = np.cos(np.cosh(5 * x[i, j] * z[i, j]) - 10 * y[i, j])
 
     return x, y, z, v

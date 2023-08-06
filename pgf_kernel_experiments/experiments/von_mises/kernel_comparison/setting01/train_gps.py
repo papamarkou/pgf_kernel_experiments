@@ -6,16 +6,34 @@ import torch
 
 from pgfml.kernels import GFKernel
 
-from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_env import data_path, output_path, seed
+from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_env import (
+    data_paths, num_runs, output_path, train_seed
+)
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
 # %% Create paths if they don't exist
 
 output_path.mkdir(parents=True, exist_ok=True)
 
-# %% Set seed
+# %% Run training and save model states
 
-torch.manual_seed(seed)
+i = 0
+
+seed = train_seed - 1
+successful_seeds
+
+while i < num_runs:
+    # Set seed
+
+    seed  = seed + 1
+    torch.manual_seed(seed)
+
+    try:
+        # Load data
+
+        i = i + 1
+    except:
+        pass
 
 # %% Load data
 

@@ -17,7 +17,7 @@ output_path.mkdir(parents=True, exist_ok=True)
 
 # %% Set seed
 
-torch.manual_seed(seed)
+torch.manual_seed(seed+20)
 
 # %% Load data
 
@@ -75,8 +75,13 @@ schedulers = []
 
 pgf_optim_per_group = True
 
+num_iters = 100
+# num_iters = 500
+
 if pgf_optim_per_group:
-    lrs = [[0.8, 0.5, 0.9, 0.9, 0.9], 0.5, 0.5, 0.075, 0.5]
+    # lrs = [[0.1, 0.1, 0.9, 0.9, 0.9], 0.05, 0.05, 0.05, 0.05]
+    lrs = [[0.8, 0.5, 0.9, 0.9, 0.9], 0.1, 0.1, 0.1, 0.1]
+    # lrs = [[0.9, 0.9, 0.9], 0.1, 0.1, 0.1, 0.1]
 
     optimizers.append(torch.optim.Adam([
         {"params": runner.single_runners[0].model.likelihood.noise_covar.raw_noise, "lr": lrs[0][0]},
@@ -86,15 +91,28 @@ if pgf_optim_per_group:
         {"params": runner.single_runners[0].model.covar_module.pars2, "lr": lrs[0][4]}
     ]))
 
-    schedulers.append(torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[0], T_0=20, T_mult=1, eta_min=0.05))
+    # schedulers.append(torch.optim.lr_scheduler.CosineAnnealingLR(optimizers[0], T_max=num_iters, eta_min=0.1))
+    schedulers.append(torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[0], T_0=20, T_mult=1, eta_min=0.1))
 
-    for i in range(1, runner.num_gps()):
-        optimizers.append(torch.optim.Adam(runner.single_runners[i].model.parameters(), lr=lrs[i]))
+    optimizers.append(torch.optim.Adam([
+        {"params": runner.single_runners[1].model.likelihood.noise_covar.raw_noise, "lr": 0.8},
+        {"params": runner.single_runners[1].model.mean_module.raw_constant, "lr": 0.5},
+        {"params": runner.single_runners[1].model.covar_module.raw_outputscale, "lr": 0.1},
+        {"params": runner.single_runners[1].model.covar_module.base_kernel.raw_lengthscale, "lr": 0.1},
+    ]))
 
-        schedulers.append(
-            torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=20, T_mult=1, eta_min=0.05)
-        )
-        # schedulers.append(None)
+    schedulers.append(None)
+
+    # for i in range(1, runner.num_gps()):
+    for i in range(2, runner.num_gps()):
+        optimizers.append(torch.optim.Adam(
+            runner.single_runners[i].model.parameters(), lr=lrs[i]
+        ))
+
+        # schedulers.append(
+        #     torch.optim.lr_scheduler.CosineAnnealingLR(optimizers[i], T_max=num_iters, eta_min=0.01)
+        # )
+        schedulers.append(None)
 else:
     lrs = [0.7, 0.5, 0.5, 0.075, 0.5]
 
@@ -104,9 +122,6 @@ else:
         schedulers.append(
             torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=20, T_mult=1, eta_min=0.05)
         )
-
-num_iters = 5
-# num_iters = 500
 
 # %% Train GP models to find optimal hyperparameters
 
