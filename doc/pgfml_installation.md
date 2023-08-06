@@ -77,7 +77,10 @@ conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvi
 
 conda install -c gpytorch gpytorch
 
-conda install -c conda-forge xarray matplotlib seaborn ipykernel # xarray required by dedalus (pip version)
+conda install -c conda-forge matplotlib seaborn ipykernel
+
+conda install -c conda-forge xarray # xarray required by dedalus (pip version)
+conda install -c conda-forge h5py # h5py used in one of the dedalus examples
 
 conda install -c conda-forge qutip # Related to Bloch density example
 
