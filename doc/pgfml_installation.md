@@ -1,13 +1,13 @@
 ```
+# https://gist.github.com/verazuo/19f381e4e2e546a9edcf66fc103d24a4
+# https://gist.github.com/ksopyla/bf74e8ce2683460d8de6e0dc389fc7f5
+
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get dist-upgrade
 
 sudo apt-get --purge remove
 sudo apt-get --purge autoremove
-
-# https://gist.github.com/verazuo/19f381e4e2e546a9edcf66fc103d24a4
-# https://gist.github.com/ksopyla/bf74e8ce2683460d8de6e0dc389fc7f5
 
 sudo apt-get purge nvidia*
 sudo apt remove nvidia-*
@@ -57,20 +57,17 @@ conda config --set auto_activate_base false
 conda update conda
 conda update --all
 
-conda create -n aistats python=3.10
+conda create -n pgfml python=3.10
 
-conda activate aistats
+conda activate pgfml
 
-# Related to shell convection and shallow water examples
+conda env config vars set OMP_NUM_THREADS=1 # Related to shell convection and shallow water examples (dedalus)
+conda env config vars set NUMEXPR_MAX_THREADS=1 # Related to shell convection and shallow water examples (dedalus)
 
-conda env config vars set OMP_NUM_THREADS=1
-conda env config vars set NUMEXPR_MAX_THREADS=1
+conda deactivate
+conda activate pgfml
 
 conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
-
-# conda install -c conda-forge numpy pytorch-cpu torchvision gpytorch
-
-conda install -c conda-forge scipy pandas scikit-learn matplotlib seaborn ipykernel
 
 # python
 # import torch
@@ -78,15 +75,13 @@ conda install -c conda-forge scipy pandas scikit-learn matplotlib seaborn ipyker
 # torch.cuda.device_count()
 # torch.cuda.get_device_name(0)
 
-# Related to Bloch density example
+conda install -c gpytorch gpytorch
 
-conda install -c conda-forge qutip
+conda install -c conda-forge xarray matplotlib seaborn ipykernel # xarray required by dedalus (pip version)
 
-# Related to earth topography example
+conda install -c conda-forge qutip # Related to Bloch density example
 
-conda install -c conda-forge geotiff
-
-# Related to shell convection and shallow water examples
+conda install -c conda-forge geotiff # Related to earth topography example
 
 conda install -c conda-forge dedalus c-compiler "h5py=*=mpi*"
 
