@@ -18,8 +18,6 @@ sudo rm -rf /usr/local/cuda*
 sudo apt-get update
 sudo apt-get upgrade
 
-sudo apt-get install g++ freeglut3-dev build-essential libx11-dev libxmu-dev libxi-dev libglu1-mesa libglu1-mesa-dev
-
 sudo add-apt-repository ppa:graphics-drivers/ppa
 sudo apt-get update
 
@@ -49,9 +47,10 @@ sudo cp -P cudnn-linux-x86_64-8.5.0.96_cuda11-archive/lib/libcudnn* /usr/local/c
 sudo chmod a+r /usr/local/cuda-11.7/lib64/libcudnn*
 
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-mkdir -p /home/theodore/opt/continuum/miniconda/miniconda3
+mkdir -p /home/theodore/opt/continuum/miniconda
 chmod u+x Miniconda3-latest-Linux-x86_64.sh
 ./Miniconda3-latest-Linux-x86_64.sh
+# /home/theodore/opt/continuum/miniconda/miniconda3
 
 conda config --set auto_activate_base false
 
@@ -82,6 +81,10 @@ conda install -c conda-forge scipy pandas scikit-learn matplotlib seaborn ipyker
 # Related to Bloch density example
 
 conda install -c conda-forge qutip
+
+# Related to earth topography example
+
+conda install -c conda-forge geotiff
 
 # Related to shell convection and shallow water examples
 
