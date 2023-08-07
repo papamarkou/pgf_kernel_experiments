@@ -19,6 +19,10 @@ output_path.mkdir(parents=True, exist_ok=True)
 
 torch.manual_seed(seed+20)
 
+# %% Indicate whereas to use GPUs or CPUs
+
+use_cuda = True
+
 # %% Load data
 
 data = np.loadtxt(
@@ -44,6 +48,10 @@ train_output = v[train_ids]
 
 train_x = torch.as_tensor(train_pos, dtype=torch.float64)
 train_y = torch.as_tensor(train_output.T, dtype=torch.float64)
+
+if use_cuda:
+    train_x = train_x.cuda()
+    train_y = train_y.cuda()
 
 # %% Set up ExactMultiGPRunner
 
@@ -75,7 +83,8 @@ schedulers = []
 
 pgf_optim_per_group = True
 
-num_iters = 100
+num_iters = 5
+# num_iters = 100
 # num_iters = 500
 
 if pgf_optim_per_group:
@@ -141,7 +150,7 @@ for i in range(runner.num_gps()):
 
 np.savetxt(
     output_path.joinpath('losses.csv'),
-    losses.detach().numpy(),
+    losses.cpu().detach().numpy(),
     delimiter=',',
     header=','.join(kernel_names),
     comments=''

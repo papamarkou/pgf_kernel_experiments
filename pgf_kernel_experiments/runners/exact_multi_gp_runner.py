@@ -87,13 +87,15 @@ class ExactMultiGPRunner:
         return predictions
 
     @classmethod
-    def generator(selfclass, train_x, train_y, kernels, likelihoods=None):
+    def generator(selfclass, train_x, train_y, kernels, likelihoods=None, use_cuda=True):
         if likelihoods is None:
             likelihoods = [gpytorch.likelihoods.GaussianLikelihood() for _ in range(len(kernels))]
 
         single_runners = []
 
         for i in range(len(kernels)):
-            single_runners.append(ExactSingleGPRunner(train_x, train_y, kernels[i], likelihood=likelihoods[i]))
+            single_runners.append(ExactSingleGPRunner(
+                train_x, train_y, kernels[i], likelihood=likelihoods[i], use_cuda=use_cuda
+            ))
 
         return selfclass(single_runners)
