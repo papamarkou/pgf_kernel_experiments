@@ -13,6 +13,10 @@ from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
 output_path.mkdir(parents=True, exist_ok=True)
 
+# %% Indicate whereas to use GPUs or CPUs
+
+use_cuda = True
+
 # %% Load data
 
 data = np.loadtxt(
@@ -46,10 +50,18 @@ test_output = v[test_ids]
 train_x = torch.as_tensor(train_pos, dtype=torch.float64)
 train_y = torch.as_tensor(train_output.T, dtype=torch.float64)
 
+if use_cuda:
+    train_x = train_x.cuda()
+    train_y = train_y.cuda()
+
 # %% Convert test data to PyTorch format
 
 test_x = torch.as_tensor(test_pos, dtype=torch.float64)
 test_y = torch.as_tensor(test_output.T, dtype=torch.float64)
+
+if use_cuda:
+    test_x = test_x.cuda()
+    test_y = test_y.cuda()
 
 # %% Set up ExactMultiGPRunner
 
@@ -87,8 +99,8 @@ scores = runner.assess(
     test_y,
     metrics=[
         gpytorch.metrics.mean_absolute_error,
-        gpytorch.metrics.mean_squared_error,
-        lambda predictions, y : gpytorch.metrics.negative_log_predictive_density(predictions, y)
+        gpytorch.metrics.mean_squared_error # ,
+        # lambda predictions, y : gpytorch.metrics.negative_log_predictive_density(predictions, y)
     ]
 )
 
@@ -96,7 +108,7 @@ scores = runner.assess(
 
 np.savetxt(
     output_path.joinpath('predictions.csv'),
-    torch.stack([predictions[i].mean for i in range(runner.num_gps())], dim=0).t().detach().numpy(),
+    torch.stack([predictions[i].mean for i in range(runner.num_gps())], dim=0).t().cpu().detach().numpy(),
     delimiter=',',
     header=','.join(kernel_names),
     comments=''
@@ -106,8 +118,8 @@ np.savetxt(
 
 np.savetxt(
     output_path.joinpath('error_metrics.csv'),
-    scores.detach().numpy(),
+    scores.cpu().detach().numpy(),
     delimiter=',',
-    header='mean_abs_error,mean_sq_error,loss',
+    header='mean_abs_error,mean_sq_error', # ,loss',
     comments=''
 )

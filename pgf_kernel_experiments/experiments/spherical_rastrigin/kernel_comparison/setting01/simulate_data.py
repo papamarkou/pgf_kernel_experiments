@@ -49,7 +49,7 @@ train_ids.sort()
 
 test_ids = np.array(list(set(ids).difference(set(train_ids))))
 # test_ids = np.random.choice(test_ids, size=10000, replace=False)
-test_ids = np.random.choice(test_ids, size=10000, replace=False)
+test_ids = np.random.choice(test_ids, size=100, replace=False)
 
 test_ids.sort()
 
