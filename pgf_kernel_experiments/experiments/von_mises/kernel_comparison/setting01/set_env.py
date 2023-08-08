@@ -12,7 +12,7 @@ use_cuda = False
 # %% Set number of runs
 
 # num_runs = 10
-num_runs = 5
+num_runs = 4
 
 # %% Set seeds
 

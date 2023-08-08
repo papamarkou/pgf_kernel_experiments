@@ -23,7 +23,7 @@ tot_count = 0
 
 pgf_optim_per_group = True
 
-num_iters = 5
+num_iters = 2
 # num_iters = 500
 
 verbose = True
@@ -176,10 +176,12 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
 np.savetxt(
     output_basepath.joinpath('successful_seeds.csv'),
-    np.array(successful_seeds)
+    np.array(successful_seeds),
+    fmt='%i'
 )
 
 np.savetxt(
     output_basepath.joinpath('failed_seeds.csv'),
-    np.array(failed_seeds)
+    np.array(failed_seeds),
+    fmt='%i'
 )
