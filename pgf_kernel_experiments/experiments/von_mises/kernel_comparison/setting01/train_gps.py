@@ -7,13 +7,20 @@ import torch
 from pgfml.kernels import GFKernel
 
 from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_env import (
-    data_paths, num_runs, output_path, train_seed
+    data_paths, init_train_seed, num_runs, num_train_seeds, output_paths, train_seed
 )
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
 # %% Create paths if they don't exist
 
-output_path.mkdir(parents=True, exist_ok=True)
+for i in range(num_runs):
+    output_paths[i].mkdir(parents=True, exist_ok=True)
+
+# %% Set seeds
+
+torch.manual_seed(init_train_seed)
+
+train_seeds = torch.randint(low=0, 10*num_train_seeds, num_train_seeds)
 
 # %% Run training and save model states
 
