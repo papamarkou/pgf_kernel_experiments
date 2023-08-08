@@ -7,11 +7,13 @@ import torch
 from pgfml.kernels import GFKernel
 
 from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_env import (
-    data_paths, num_runs, output_paths, use_cuda
+    data_paths, num_runs, output_basepath, output_paths, use_cuda
 )
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
-# %% Make and save predictions
+# %% Make and save predictions and error metrics per run
+
+all_scores = []
 
 verbose = True
 if verbose:
@@ -107,6 +109,8 @@ for run_count in range(num_runs):
         ]
     )
 
+    all_scores.append(scores)
+
     # Save predictions
 
     np.savetxt(
@@ -131,3 +135,29 @@ for run_count in range(num_runs):
 
     if verbose:
         print(msg.format(run_count+1, num_runs))
+
+# %% Compute error metric summaries across runs
+
+all_scores = torch.stack(all_scores)
+
+means = all_scores.mean(dim=0)
+
+stds = all_scores.std(dim=0)
+
+# %% Save error metric summaries across runs
+
+np.savetxt(
+    output_basepath.joinpath('error_metric_means.csv'),
+    means.cpu().detach().numpy(),
+    delimiter=',',
+    header='mean_abs_error,mean_sq_error,loss',
+    comments=''
+)
+
+np.savetxt(
+    output_basepath.joinpath('error_metric_stds.csv'),
+    stds.cpu().detach().numpy(),
+    delimiter=',',
+    header='mean_abs_error,mean_sq_error,loss',
+    comments=''
+)
