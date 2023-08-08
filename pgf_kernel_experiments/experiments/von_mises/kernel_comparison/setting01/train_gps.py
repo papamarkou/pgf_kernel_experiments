@@ -23,17 +23,18 @@ tot_count = 0
 
 pgf_optim_per_group = True
 
-num_iters = 500
+num_iters = 5
+# num_iters = 500
 
 verbose = True
 if verbose:
     num_train_seed_digits = len(str(num_train_seeds))
-    msg = 'Run {:'+str(num_train_seed_digits)+'d} of {:'+str(num_train_seed_digits)+'d} {}'
+    msg = 'Run {:'+str(num_train_seed_digits)+'d} {}'
 
 successful_seeds = []
 failed_seeds = []
 
-while (success_count < num_runs) and (tot_count < num_train_seeds):
+while ((success_count < num_runs) and (tot_count < num_train_seeds)):
     # Set seed
 
     torch.manual_seed(train_seeds[tot_count])
@@ -80,7 +81,7 @@ while (success_count < num_runs) and (tot_count < num_train_seeds):
 
         kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
 
-        runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
+        runner = ExactMultiGPRunner.generator(train_x, train_y, kernels, use_cuda=use_cuda)
 
         # Set the models in double mode
 
@@ -157,16 +158,19 @@ while (success_count < num_runs) and (tot_count < num_train_seeds):
         success_count = success_count + 1
 
         if verbose:
-            print(msg.format(tot_count, num_train_seeds, 'succeeded'))
+            success = True
     except:
-        # Failed seed updates
+        # Housekeeping updates
 
         failed_seeds.append(train_seeds[tot_count])
+
+        if verbose:
+            success = False
 
     tot_count = tot_count + 1
 
     if verbose:
-        print(msg.format(tot_count, num_train_seeds, 'failed'))
+        print(msg.format(tot_count, 'succeeded' if success else 'failed'))
 
 # %% Save successful and failed seeds
 
