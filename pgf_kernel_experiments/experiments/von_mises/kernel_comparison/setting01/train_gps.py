@@ -26,13 +26,13 @@ pgf_optim_per_group = True
 num_iters = 2
 # num_iters = 500
 
+successful_seeds = []
+failed_seeds = []
+
 verbose = True
 if verbose:
     num_train_seed_digits = len(str(num_train_seeds))
     msg = 'Run {:'+str(num_train_seed_digits)+'d} {}'
-
-successful_seeds = []
-failed_seeds = []
 
 while ((success_count < num_runs) and (tot_count < num_train_seeds)):
     # Set seed

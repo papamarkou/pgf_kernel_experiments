@@ -15,6 +15,8 @@ from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
 all_scores = []
 
+kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
+
 verbose = True
 if verbose:
     num_run_digits = len(str(num_runs))
@@ -75,8 +77,6 @@ for run_count in range(num_runs):
         gpytorch.kernels.PeriodicKernel(),
         gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2)
     ]
-
-    kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
 
     runner = ExactMultiGPRunner.generator(train_x, train_y, kernels, use_cuda=use_cuda)
 
