@@ -1,3 +1,4 @@
+.vscode
 __pycache__
 pgf_kernel_experiments.egg-info
 pgf_kernel_experiments/experiments/air_passengers/passenger_numbers.csv
