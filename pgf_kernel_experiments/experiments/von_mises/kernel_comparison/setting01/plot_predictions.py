@@ -12,7 +12,7 @@ from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.se
 verbose = True
 if verbose:
     num_run_digits = len(str(num_runs))
-    msg = 'Plotting predictions of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}'
+    msg = 'Plotting predictions of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
 
 title_fontsize = 15
 axis_fontsize = 11

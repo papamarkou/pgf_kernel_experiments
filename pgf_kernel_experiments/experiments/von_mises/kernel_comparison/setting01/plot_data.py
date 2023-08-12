@@ -17,7 +17,7 @@ for i in range(num_runs):
 verbose = True
 if verbose:
     num_run_digits = len(str(num_runs))
-    msg = 'Plotting dataset {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}'
+    msg = 'Plotting dataset {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
 
 title_fontsize = 15
 axis_fontsize = 11

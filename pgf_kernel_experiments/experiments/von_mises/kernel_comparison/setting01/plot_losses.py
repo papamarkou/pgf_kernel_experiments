@@ -14,7 +14,7 @@ all_losses = 0.
 verbose = True
 if verbose:
     num_run_digits = len(str(num_runs))
-    msg = 'Plotting losses of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}'
+    msg = 'Plotting losses of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
 
 manual_ylim = True
 if manual_ylim:
