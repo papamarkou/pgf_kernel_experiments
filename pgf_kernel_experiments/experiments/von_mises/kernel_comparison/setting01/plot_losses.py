@@ -97,7 +97,7 @@ all_losses = all_losses / num_runs
 # Plot loss means
 
 if verbose:
-    print('Plotting loss means')
+    print('Plotting loss means...')
 
 plt.figure(figsize=[7, 4])
 

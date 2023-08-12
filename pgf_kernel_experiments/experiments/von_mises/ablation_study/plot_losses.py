@@ -5,7 +5,7 @@ import numpy as np
 
 from pgf_kernel_experiments.experiments.von_mises.ablation_study.set_env import output_path
 
-# %% Load predictions
+# %% Load losses
 
 losses = np.loadtxt(
     output_path.joinpath('losses.csv'),
