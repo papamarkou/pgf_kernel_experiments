@@ -39,10 +39,10 @@ test_output = z[test_ids]
 
 # %% Plot training and test data
 
-title_fontsize = 15
-axis_fontsize = 11
-
 titles = ['von Mises density', 'Training data', 'Test data']
+
+title_fontsize = 13
+axis_fontsize = 11
 
 fig, ax = plt.subplots(1, 3, figsize=[12, 3], subplot_kw={'projection': '3d'})
 

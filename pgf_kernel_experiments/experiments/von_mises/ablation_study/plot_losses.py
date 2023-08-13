@@ -17,7 +17,14 @@ num_iters, num_kernels = losses.shape
 
 # %% Plot losses
 
-labels = ['5', '20', '20, 5', '20, 20', '20, 20, 5', '20, 20, 20']
+labels = [
+    r'$m_1 = 5$',
+    r'$m_1 = 20$',
+    r'$m_1 = 20, m_2 = 5$',
+    r'$m_1 = 20, m_2 = 20$',
+    r'$m_1 = 20, m_2 = 20, m_3 = 5$',
+    r'$m_1 = 20, m_2 = 20, m_3 = 20$'
+]
 
 label_fontsize = 11
 axis_fontsize = 11

@@ -42,13 +42,18 @@ predictions = np.loadtxt(
 
 # %% Plot predictions
 
-title_fontsize = 15
-axis_fontsize = 11
-
 titles = [
-    ['Training data', 'Test data', '5', '20'],
-    ['20, 5', '20, 20', '20, 20, 5', '20, 20, 20']
+    ['Training data', 'Test data', r'$m_1 = 5$', r'$m_1 = 20$'],
+    [
+        r'$m_1 = 20, m_2 = 5$',
+        r'$m_1 = 20, m_2 = 20$',
+        r'$m_1 = 20, m_2 = 20, m_3 = 5$',
+        r'$m_1 = 20, m_2 = 20, m_3 = 20$'
+    ]
 ]
+
+title_fontsize = 13
+axis_fontsize = 11
 
 fig, ax = plt.subplots(2, 4, figsize=[14, 6], subplot_kw={'projection': '3d'})
 
