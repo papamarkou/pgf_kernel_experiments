@@ -70,11 +70,11 @@ for i in range(runner.num_gps()):
 
 # list(runner.single_runners[0].model.named_parameters())
 
+lrs = [0.8, 0.5, 2., 2., 2.]
+
 optimizers = []
 
 schedulers = []
-
-lrs = [0.8, 0.5, 0.9, 0.9, 0.9]
 
 optimizers.append(torch.optim.Adam([
     {"params": runner.single_runners[0].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
