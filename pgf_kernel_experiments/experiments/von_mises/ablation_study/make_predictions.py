@@ -6,7 +6,7 @@ import torch
 
 from pgfml.kernels import GFKernel
 
-from pgf_kernel_experiments.experiments.von_mises.ablation_study.set_env import data_path, output_path
+from pgf_kernel_experiments.experiments.von_mises.ablation_study.set_env import data_path, output_path, use_cuda
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
 # %% Create paths if they don't exist
@@ -45,10 +45,18 @@ test_output = z[test_ids]
 train_x = torch.as_tensor(train_pos, dtype=torch.float64)
 train_y = torch.as_tensor(train_output.T, dtype=torch.float64)
 
+if use_cuda:
+    train_x = train_x.cuda()
+    train_y = train_y.cuda()
+
 # %% Convert test data to PyTorch format
 
 test_x = torch.as_tensor(test_pos, dtype=torch.float64)
 test_y = torch.as_tensor(test_output.T, dtype=torch.float64)
+
+if use_cuda:
+    test_x = test_x.cuda()
+    test_y = test_y.cuda()
 
 # %% Set up ExactMultiGPRunner
 
@@ -63,7 +71,7 @@ kernels = [
 
 kernel_names = ['5', '20', '20_5', '20_20', '20_20_5', '20_20_20']
 
-runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
+runner = ExactMultiGPRunner.generator(train_x, train_y, kernels, use_cuda=use_cuda)
 
 # %% Set the models in double mode
 
@@ -96,7 +104,7 @@ scores = runner.assess(
 
 np.savetxt(
     output_path.joinpath('predictions.csv'),
-    torch.stack([predictions[i].mean for i in range(runner.num_gps())], dim=0).t().detach().numpy(),
+    torch.stack([predictions[i].mean for i in range(runner.num_gps())], dim=0).t().cpu().detach().numpy(),
     delimiter=',',
     header=','.join(kernel_names),
     comments=''
@@ -106,7 +114,7 @@ np.savetxt(
 
 np.savetxt(
     output_path.joinpath('error_metrics.csv'),
-    scores.detach().numpy(),
+    scores.cpu().detach().numpy(),
     delimiter=',',
     header='mean_abs_error,mean_sq_error,loss',
     comments=''

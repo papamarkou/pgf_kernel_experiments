@@ -1,6 +1,9 @@
 # %% Import packages
 
 from pathlib import Path
+# %% Indicate whereas to use GPUs or CPUs
+
+use_cuda = True
 
 # %% Set paths
 
@@ -9,4 +12,5 @@ output_path = Path('output')
 
 # %% Set seed
 
-seed = 3
+data_seed = 2000
+train_seed = 102000

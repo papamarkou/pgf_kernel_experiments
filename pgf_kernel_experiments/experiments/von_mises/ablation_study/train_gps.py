@@ -5,7 +5,7 @@ import torch
 
 from pgfml.kernels import GFKernel
 
-from pgf_kernel_experiments.experiments.von_mises.ablation_study.set_env import data_path, output_path, seed
+from pgf_kernel_experiments.experiments.von_mises.ablation_study.set_env import data_path, output_path, train_seed, use_cuda
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
 # %% Create paths if they don't exist
@@ -14,7 +14,7 @@ output_path.mkdir(parents=True, exist_ok=True)
 
 # %% Set seed
 
-torch.manual_seed(seed)
+torch.manual_seed(train_seed)
 
 # %% Load data
 
@@ -41,6 +41,10 @@ train_output = z[train_ids]
 train_x = torch.as_tensor(train_pos, dtype=torch.float64)
 train_y = torch.as_tensor(train_output.T, dtype=torch.float64)
 
+if use_cuda:
+    train_x = train_x.cuda()
+    train_y = train_y.cuda()
+
 # %% Set up ExactMultiGPRunner
 
 kernels = [
@@ -54,7 +58,7 @@ kernels = [
 
 kernel_names = ['5', '20', '20_5', '20_20', '20_20_5', '20_20_20']
 
-runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
+runner = ExactMultiGPRunner.generator(train_x, train_y, kernels, use_cuda=use_cuda)
 
 # %% Set the models in double mode
 
@@ -137,7 +141,7 @@ for i in range(runner.num_gps()):
 
 np.savetxt(
     output_path.joinpath('losses.csv'),
-    losses.detach().numpy(),
+    losses.cpu().detach().numpy(),
     delimiter=',',
     header=','.join(kernel_names),
     comments=''

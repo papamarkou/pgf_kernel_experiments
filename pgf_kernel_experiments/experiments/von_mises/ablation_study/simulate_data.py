@@ -4,15 +4,15 @@ import numpy as np
 
 from scipy.stats import vonmises
 
-from pgf_kernel_experiments.experiments.von_mises.ablation_study.set_env import data_path, seed
+from pgf_kernel_experiments.experiments.von_mises.ablation_study.set_env import data_path, data_seed
 
 # %% Create paths if they don't exist
 
 data_path.mkdir(parents=True, exist_ok=True)
 
-# %% Set seed
+# %% Set seeds
 
-np.random.seed(seed)
+np.random.seed(data_seed)
 
 # %% Generate data
 
