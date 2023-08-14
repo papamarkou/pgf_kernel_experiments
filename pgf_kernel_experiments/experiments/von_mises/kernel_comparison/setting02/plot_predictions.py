@@ -3,45 +3,16 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting02.set_env import data_path, output_path
-
-# %% Load data
-
-data = np.loadtxt(
-    data_path.joinpath('data.csv'),
-    delimiter=',',
-    skiprows=1
+from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting02.set_env import (
+    data_paths, num_runs, output_paths
 )
 
-grid = data[:, 1:3]
-x = data[:, 1]
-y = data[:, 2]
-z_signal = data[:, 3]
-z = data[:, 5]
+# %% Generate and save plots of predictions
 
-train_ids = np.loadtxt(data_path.joinpath('train_ids.csv'), dtype='int')
-
-test_ids = np.loadtxt(data_path.joinpath('test_ids.csv'), dtype='int')
-
-# %% Get training data
-
-train_pos = grid[train_ids, :]
-train_output = z[train_ids]
-
-# %% Get test data
-
-test_pos = grid[test_ids, :]
-test_output = z_signal[test_ids]
-
-# %% Load predictions
-
-predictions = np.loadtxt(
-    output_path.joinpath('predictions.csv'),
-    delimiter=',',
-    skiprows=1
-)
-
-# %% Plot predictions
+verbose = True
+if verbose:
+    num_run_digits = len(str(num_runs))
+    msg = 'Plotting predictions of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
 
 title_fontsize = 15
 axis_fontsize = 11
@@ -50,17 +21,6 @@ titles = [
     ['von Mises density', 'Training data', 'Test data', 'PGF kernel'],
     ['RBF kernel', 'Matern kernel', 'Periodic kernel', 'Spectral kernel']
 ]
-
-fig, ax = plt.subplots(2, 4, figsize=[14, 6], subplot_kw={'projection': '3d'})
-
-fig.subplots_adjust(
-    left=0.0,
-    bottom=0.0,
-    right=1.0,
-    top=1.0,
-    wspace=-0.4,
-    hspace=0.15
-)
 
 line_width = 2
 
@@ -79,120 +39,175 @@ point_marker = 'o'
 
 point_size = 8
 
-ax[0, 0].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+for i in range(num_runs):
+    # If verbose, state run number
 
-ax[0, 1].scatter(
-    train_pos[:, 0],
-    train_pos[:, 1],
-    train_output,
-    color=train_point_col,
-    marker=point_marker,
-    s=point_size
-)
+    if verbose:
+        print(msg.format(i+1, num_runs))
 
-ax[0, 1].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    # Load data
 
-ax[0, 2].scatter(
-    test_pos[:, 0],
-    test_pos[:, 1],
-    test_output,
-    color=test_point_col,
-    marker=point_marker,
-    s=point_size
-)
+    data = np.loadtxt(
+        data_paths[i].joinpath('data.csv'),
+        delimiter=',',
+        skiprows=1
+    )
 
-ax[0, 2].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    grid = data[:, 1:3]
+    x = data[:, 1]
+    y = data[:, 2]
+    z_signal = data[:, 3]
+    z = data[:, 5]
 
-ax[0, 3].scatter(
-    test_pos[:, 0],
-    test_pos[:, 1],
-    predictions[:, 0],
-    color=pred_point_col,
-    marker=point_marker,
-    s=point_size
-)
+    train_ids = np.loadtxt(data_paths[i].joinpath('train_ids.csv'), dtype='int')
 
-ax[0, 3].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    test_ids = np.loadtxt(data_paths[i].joinpath('test_ids.csv'), dtype='int')
 
-ax[1, 0].scatter(
-    test_pos[:, 0],
-    test_pos[:, 1],
-    predictions[:, 1],
-    color=pred_point_col,
-    marker=point_marker,
-    s=point_size
-)
+    # Get training data
 
-ax[1, 0].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    train_pos = grid[train_ids, :]
+    train_output = z[train_ids]
 
-ax[1, 1].scatter(
-    test_pos[:, 0],
-    test_pos[:, 1],
-    predictions[:, 2],
-    color=pred_point_col,
-    marker=point_marker,
-    s=point_size
-)
+    # Get test data
 
-ax[1, 1].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    test_pos = grid[test_ids, :]
+    test_output = z_signal[test_ids]
 
-ax[1, 2].scatter(
-    test_pos[:, 0],
-    test_pos[:, 1],
-    predictions[:, 3],
-    color=pred_point_col,
-    marker=point_marker,
-    s=point_size
-)
+    # Load predictions
 
-ax[1, 2].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    predictions = np.loadtxt(
+        output_paths[i].joinpath('predictions.csv'),
+        delimiter=',',
+        skiprows=1
+    )
 
-ax[1, 3].scatter(
-    test_pos[:, 0],
-    test_pos[:, 1],
-    predictions[:, 4],
-    color=pred_point_col,
-    marker=point_marker,
-    s=point_size
-)
+    # Plot predictions
 
-ax[1, 3].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    fig, ax = plt.subplots(2, 4, figsize=[14, 6], subplot_kw={'projection': '3d'})
 
-for i in range(2):
-    for j in range(4):
-        ax[i, j].set_proj_type('ortho')
+    fig.subplots_adjust(
+        left=0.0,
+        bottom=0.0,
+        right=1.0,
+        top=1.0,
+        wspace=-0.4,
+        hspace=0.15
+    )
 
-        ax[i, j].plot(x, y, 0, color=circle_line_col, lw=line_width, zorder=0)
+    ax[0, 0].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
-        ax[i, j].grid(False)
+    ax[0, 1].scatter(
+        train_pos[:, 0],
+        train_pos[:, 1],
+        train_output,
+        color=train_point_col,
+        marker=point_marker,
+        s=point_size
+    )
 
-        ax[i, j].tick_params(pad=-1.5)
-        
-        ax[i, j].set_xlim((-1, 1))
-        ax[i, j].set_ylim((-1, 1))
-        ax[i, j].set_zlim((-2, 12))
+    ax[0, 1].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
-        ax[i, j].set_title(titles[i][j], fontsize=title_fontsize, pad=-1.5)
+    ax[0, 2].scatter(
+        test_pos[:, 0],
+        test_pos[:, 1],
+        test_output,
+        color=test_point_col,
+        marker=point_marker,
+        s=point_size
+    )
 
-        ax[i, j].set_xlabel('x', fontsize=axis_fontsize, labelpad=-3)
-        ax[i, j].set_ylabel('y', fontsize=axis_fontsize, labelpad=-3)
-        ax[i, j].set_zlabel('z', fontsize=axis_fontsize, labelpad=-27)
+    ax[0, 2].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
-        ax[i, j].set_xticks([-1, 0, 1], fontsize=axis_fontsize)
-        ax[i, j].set_yticks([-1, 0, 1], fontsize=axis_fontsize)
-        ax[i, j].set_zticks([-2, 5., 12.], fontsize=axis_fontsize)
+    ax[0, 3].scatter(
+        test_pos[:, 0],
+        test_pos[:, 1],
+        predictions[:, 0],
+        color=pred_point_col,
+        marker=point_marker,
+        s=point_size
+    )
 
-        ax[i, j].zaxis.set_rotate_label(False)
+    ax[0, 3].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
-# %% Save plot
+    ax[1, 0].scatter(
+        test_pos[:, 0],
+        test_pos[:, 1],
+        predictions[:, 1],
+        color=pred_point_col,
+        marker=point_marker,
+        s=point_size
+    )
 
-plt.savefig(
-    output_path.joinpath('predictions.png'),
-    dpi=600,
-    pil_kwargs={'quality': 100},
-    transparent=True,
-    bbox_inches='tight',
-    pad_inches=0.1
-)
+    ax[1, 0].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
-plt.close()
+    ax[1, 1].scatter(
+        test_pos[:, 0],
+        test_pos[:, 1],
+        predictions[:, 2],
+        color=pred_point_col,
+        marker=point_marker,
+        s=point_size
+    )
+
+    ax[1, 1].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+
+    ax[1, 2].scatter(
+        test_pos[:, 0],
+        test_pos[:, 1],
+        predictions[:, 3],
+        color=pred_point_col,
+        marker=point_marker,
+        s=point_size
+    )
+
+    ax[1, 2].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+
+    ax[1, 3].scatter(
+        test_pos[:, 0],
+        test_pos[:, 1],
+        predictions[:, 4],
+        color=pred_point_col,
+        marker=point_marker,
+        s=point_size
+    )
+
+    ax[1, 3].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+
+    for j in range(2):
+        for k in range(4):
+            ax[j, k].set_proj_type('ortho')
+
+            ax[j, k].plot(x, y, 0, color=circle_line_col, lw=line_width, zorder=0)
+
+            ax[j, k].grid(False)
+
+            ax[j, k].tick_params(pad=-1.5)
+            
+            ax[j, k].set_xlim((-1, 1))
+            ax[j, k].set_ylim((-1, 1))
+            ax[j, k].set_zlim((-2, 12))
+
+            ax[j, k].set_title(titles[j][k], fontsize=title_fontsize, pad=-1.5)
+
+            ax[j, k].set_xlabel('x', fontsize=axis_fontsize, labelpad=-3)
+            ax[j, k].set_ylabel('y', fontsize=axis_fontsize, labelpad=-3)
+            ax[j, k].set_zlabel('z', fontsize=axis_fontsize, labelpad=-27)
+
+            ax[j, k].set_xticks([-1, 0, 1], fontsize=axis_fontsize)
+            ax[j, k].set_yticks([-1, 0, 1], fontsize=axis_fontsize)
+            ax[j, k].set_zticks([-2, 5, 12], fontsize=axis_fontsize)
+
+            ax[j, k].zaxis.set_rotate_label(False)
+
+    # Save plot
+
+    plt.savefig(
+        output_paths[i].joinpath('predictions.png'),
+        dpi=600,
+        pil_kwargs={'quality': 100},
+        transparent=True,
+        bbox_inches='tight',
+        pad_inches=0.1
+    )
+
+    plt.close()
