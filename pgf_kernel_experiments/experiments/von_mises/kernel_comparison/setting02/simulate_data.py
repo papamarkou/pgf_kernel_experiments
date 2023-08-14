@@ -54,9 +54,9 @@ for i in range(num_runs):
 
     np.savetxt(
         data_paths[i].joinpath('data.csv'),
-        np.column_stack([theta, x, y, z]),
+        np.column_stack([theta, x, y, z_signal, z_noise, z]),
         delimiter=',',
-        header='theta,x,y,z',
+        header='theta,x,y,z_signal,z_noise,z',
         comments=''
     )
 
