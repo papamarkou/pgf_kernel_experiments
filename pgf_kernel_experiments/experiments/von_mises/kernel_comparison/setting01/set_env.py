@@ -6,13 +6,13 @@ from pathlib import Path
 
 # %% Indicate whereas to use GPUs or CPUs
 
-# use_cuda = True
-use_cuda = False
+use_cuda = True
+# use_cuda = False
 
 # %% Set number of runs
 
 # num_runs = 10
-num_runs = 4
+num_runs = 1
 
 # %% Set seeds
 
