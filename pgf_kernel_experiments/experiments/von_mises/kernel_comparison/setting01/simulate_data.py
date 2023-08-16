@@ -5,7 +5,7 @@ import numpy as np
 from scipy.stats import vonmises
 
 from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_env import (
-    data_paths, data_seed, num_runs, num_samples, perc_training
+    data_paths, data_seed, num_runs, num_samples, perc_train
 )
 
 # %% Create paths if they don't exist
@@ -34,7 +34,7 @@ for i in range(num_runs):
 
     ids = np.arange(num_samples)
 
-    num_train = int(perc_training * num_samples)
+    num_train = int(perc_train * num_samples)
 
     train_ids = np.random.choice(ids, size=num_train, replace=False)
 

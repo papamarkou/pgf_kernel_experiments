@@ -7,7 +7,7 @@ import torch
 from pgfml.kernels import GFKernel
 
 from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_env import (
-    data_paths, num_runs, num_train_seeds, output_basepath, output_paths, train_seeds, use_cuda
+    data_paths, num_runs, num_train_iters, num_train_seeds, output_basepath, output_paths, train_seeds, use_cuda
 )
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
@@ -20,14 +20,6 @@ for i in range(num_runs):
 
 success_count = 0
 tot_count = 0
-
-pgf_optim_per_group = True
-
-num_iters = 2
-# num_iters = 500
-
-milestones = [1, ]
-# milestones = [400, 450]
 
 successful_seeds = []
 failed_seeds = []
@@ -94,23 +86,25 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Configure training setup for GP models
 
-        for i in range(runner.num_gps()):
-            print("Parameter names of runner {}".format(i))
-            print(list(runner.single_runners[i].model.named_parameters()))
+        # for i in range(runner.num_gps()):
+        #     print("Parameter names of runner {}".format(i))
+        #     print(list(runner.single_runners[i].model.named_parameters()))
+
+        ## Set optimizers
 
         optimizers = []
 
-        # Set optimizer for GFKernel
+        ### Set optimizer for GFKernel
 
         optimizers.append(torch.optim.Adam([
             {"params": runner.single_runners[0].model.likelihood.noise_covar.raw_noise, "lr": 0.8},
             {"params": runner.single_runners[0].model.mean_module.raw_constant, "lr": 0.5},
-            {"params": runner.single_runners[0].model.covar_module.pars0, "lr": 0.9},
-            {"params": runner.single_runners[0].model.covar_module.pars1, "lr": 0.9},
-            {"params": runner.single_runners[0].model.covar_module.pars2, "lr": 0.9}
+            {"params": runner.single_runners[0].model.covar_module.pars0, "lr": 5.0},
+            {"params": runner.single_runners[0].model.covar_module.pars1, "lr": 5.0},
+            {"params": runner.single_runners[0].model.covar_module.pars2, "lr": 5.0}
         ]))
 
-        # Set optimizer for RBFKernel
+        ### Set optimizer for RBFKernel
 
         optimizers.append(torch.optim.Adam([
             {"params": runner.single_runners[1].model.likelihood.noise_covar.raw_noise, "lr": 0.8},
@@ -119,7 +113,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
             {"params": runner.single_runners[1].model.covar_module.base_kernel.raw_lengthscale, "lr": 0.5}
         ]))
 
-        # Set optimizer for MaternKernel
+        ### Set optimizer for MaternKernel
 
         optimizers.append(torch.optim.Adam([
             {"params": runner.single_runners[2].model.likelihood.noise_covar.raw_noise, "lr": 0.8},
@@ -128,7 +122,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
             {"params": runner.single_runners[2].model.covar_module.base_kernel.raw_lengthscale, "lr": 0.5}
         ]))
 
-        # Set optimizer for PeriodicKernel
+        ### Set optimizer for PeriodicKernel
 
         optimizers.append(torch.optim.Adam([
             {"params": runner.single_runners[3].model.likelihood.noise_covar.raw_noise, "lr": 0.8},
@@ -137,7 +131,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
             {"params": runner.single_runners[3].model.covar_module.raw_period_length, "lr": 0.075}
         ]))
 
-        # Set optimizer for SpectralMixtureKernel
+        ### Set optimizer for SpectralMixtureKernel
 
         optimizers.append(torch.optim.Adam([
             {"params": runner.single_runners[4].model.likelihood.noise_covar.raw_noise, "lr": 0.8},
@@ -147,18 +141,20 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
             {"params": runner.single_runners[4].model.covar_module.raw_mixture_scales, "lr": 0.5}
         ]))
 
+        ## Set schedulers
+
         schedulers = []
 
         for i in range(runner.num_gps()):
             schedulers.append(
-                torch.optim.lr_scheduler.MultiStepLR(optimizers[i], milestones=milestones, gamma=0.5)
-                # torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=20, T_mult=1, eta_min=0.05)
+                torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=20, T_mult=1, eta_min=0.05)
+                # torch.optim.lr_scheduler.MultiStepLR(optimizers[i], milestones=[400, 470], gamma=0.5)
                 # None
             )
 
         # Train GP models to find optimal hyperparameters
 
-        losses = runner.train(train_x, train_y, optimizers, num_iters, schedulers=schedulers)
+        losses = runner.train(train_x, train_y, optimizers, num_train_iters, schedulers=schedulers)
 
         # Save model states
 
