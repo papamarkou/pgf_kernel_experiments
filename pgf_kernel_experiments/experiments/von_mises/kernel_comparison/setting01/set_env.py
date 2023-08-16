@@ -29,7 +29,7 @@ perc_train = 0.5
 
 # %% Training setup
 
-num_train_iters = 200
+num_train_iters = 500
 
 # %% Set paths
 
