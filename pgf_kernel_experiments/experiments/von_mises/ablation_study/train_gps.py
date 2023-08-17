@@ -12,6 +12,10 @@ from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
 output_path.mkdir(parents=True, exist_ok=True)
 
+# %% Training setup
+
+num_train_iters = 1000
+
 # %% Set seed
 
 torch.manual_seed(train_seed)
@@ -121,11 +125,9 @@ optimizers.append(torch.optim.Adam([
 for i in range(runner.num_gps()):
     schedulers.append(torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[0], T_0=20, T_mult=1, eta_min=0.05))
 
-num_iters = 100
-
 # %% Train GP models to find optimal hyperparameters
 
-losses = runner.train(train_x, train_y, optimizers, num_iters, schedulers=schedulers)
+losses = runner.train(train_x, train_y, optimizers, num_train_iters, schedulers=schedulers)
 
 # list(runner.single_runners[0].model.named_parameters())
 

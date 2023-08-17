@@ -10,13 +10,17 @@ from pgf_kernel_experiments.experiments.von_mises.ablation_study.set_env import 
 
 data_path.mkdir(parents=True, exist_ok=True)
 
+# %% Data simulation setup
+
+num_samples = 1000
+
+perc_train = 0.5
+
 # %% Set seeds
 
 np.random.seed(data_seed)
 
 # %% Generate data
-
-num_samples = 1000
 
 theta = np.linspace(-np.pi, np.pi, num=num_samples, endpoint=False)
 
@@ -30,7 +34,7 @@ z = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
 
 ids = np.arange(num_samples)
 
-num_train = int(0.5 * num_samples)
+num_train = int(perc_train * num_samples)
 
 train_ids = np.random.choice(ids, size=num_train, replace=False)
 

@@ -4,14 +4,18 @@ import numpy as np
 
 from scipy.stats import vonmises
 
-from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_env import (
-    data_paths, data_seed, num_runs, num_samples, perc_train
-)
+from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_env import data_paths, data_seed, num_runs
 
 # %% Create paths if they don't exist
 
 for i in range(num_runs):
     data_paths[i].mkdir(parents=True, exist_ok=True)
+
+# %% Data simulation setup
+
+num_samples = 1000
+
+perc_train = 0.5
 
 # %% Simulate and save data
 

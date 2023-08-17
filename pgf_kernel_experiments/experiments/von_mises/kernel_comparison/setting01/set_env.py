@@ -21,16 +21,6 @@ num_train_seeds = 5 * num_runs
 
 train_seeds = torch.randint(0, 100*num_train_seeds, (num_train_seeds, ))
 
-# %% Data simulation setup
-
-num_samples = 1000
-
-perc_train = 0.5
-
-# %% Training setup
-
-num_train_iters = 500
-
 # %% Set paths
 
 data_basepath = Path('data')

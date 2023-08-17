@@ -16,6 +16,10 @@ from pgf_kernel_experiments.runners import ExactMultiGPRunner
 for i in range(num_runs):
     output_paths[i].mkdir(parents=True, exist_ok=True)
 
+# %% Training setup
+
+num_train_iters = 1000
+
 # %% Run training and save model states
 
 success_count = 0
