@@ -43,13 +43,8 @@ predictions = np.loadtxt(
 # %% Plot predictions
 
 titles = [
-    ['Training data', 'Test data', r'$m_1 = 5$', r'$m_1 = 20$'],
-    [
-        r'$m_1 = 20, m_2 = 5$',
-        r'$m_1 = 20, m_2 = 20$',
-        r'$m_1 = 20, m_2 = 20, m_3 = 5$',
-        r'$m_1 = 20, m_2 = 20, m_3 = 20$'
-    ]
+    [r'$m_1 = 2$', r'$m_1 = 100$', r'$m_1 = 200$', 'Test data'],
+    [r'$m_1 = 10$', r'$m_1 = 10, m_2 = 10$', r'$m_1 = 10, m_2 = 10, m_3 = 10$', 'Test data']
 ]
 
 title_fontsize = 13
@@ -83,24 +78,21 @@ point_marker = 'o'
 
 point_size = 8
 
-ax[0, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
-
 ax[0, 0].scatter(
-    train_pos[:, 0],
-    train_pos[:, 1],
-    train_output,
-    color=train_point_col,
+    test_pos[:, 0],
+    test_pos[:, 1],
+    predictions[:, 0],
+    color=pred_point_col,
     marker=point_marker,
     s=point_size
 )
-
-ax[0, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[0, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
 ax[0, 1].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
-    test_output,
-    color=test_point_col,
+    predictions[:, 1],
+    color=pred_point_col,
     marker=point_marker,
     s=point_size
 )
@@ -110,7 +102,7 @@ ax[0, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
 ax[0, 2].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
-    predictions[:, 0],
+    predictions[:, 2],
     color=pred_point_col,
     marker=point_marker,
     s=point_size
@@ -121,8 +113,8 @@ ax[0, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
 ax[0, 3].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
-    predictions[:, 1],
-    color=pred_point_col,
+    test_output,
+    color=test_point_col,
     marker=point_marker,
     s=point_size
 )
@@ -132,7 +124,7 @@ ax[0, 3].plot(x, y, z, color=pdf_line_col, lw=line_width)
 ax[1, 0].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
-    predictions[:, 2],
+    predictions[:, 3],
     color=pred_point_col,
     marker=point_marker,
     s=point_size
@@ -143,7 +135,7 @@ ax[1, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
 ax[1, 1].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
-    predictions[:, 3],
+    predictions[:, 4],
     color=pred_point_col,
     marker=point_marker,
     s=point_size
@@ -154,7 +146,7 @@ ax[1, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
 ax[1, 2].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
-    predictions[:, 4],
+    predictions[:, 5],
     color=pred_point_col,
     marker=point_marker,
     s=point_size
@@ -165,8 +157,8 @@ ax[1, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
 ax[1, 3].scatter(
     test_pos[:, 0],
     test_pos[:, 1],
-    predictions[:, 5],
-    color=pred_point_col,
+    test_output,
+    color=test_point_col,
     marker=point_marker,
     s=point_size
 )
