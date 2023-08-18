@@ -165,59 +165,67 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
             # torch.optim.lr_scheduler.MultiStepLR(optimizers[0], milestones=[400, 470], gamma=0.5)
         )
 
-        ### Set scheduler for RBFKernel
+        ### Set schedulers for remaining kernels
 
-        schedulers.append(
-            # torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[1], T_0=50, T_mult=1, eta_min=0.05)
-            torch.optim.lr_scheduler.CyclicLR(
-                optimizers[1],
-                base_lr=[0.05, 0.05, 0.05, 0.05],
-                max_lr=[0.1, 0.1, 0.5, 0.5],
-                step_size_up=25,
-                mode='triangular',
-                cycle_momentum=False
+        for i in range(1, runner.num_gps()):
+            schedulers.append(
+                torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=50, T_mult=1, eta_min=0.05)
+                # None
             )
-            # None
-        )
 
-        ### Set scheduler for MaternKernel
+        # ### Set scheduler for RBFKernel
 
-        schedulers.append(
-            torch.optim.lr_scheduler.CyclicLR(
-                optimizers[2],
-                base_lr=[0.05, 0.05, 0.05, 0.05],
-                max_lr=[0.1, 0.1, 0.5, 0.5],
-                step_size_up=25,
-                mode='triangular',
-                cycle_momentum=False
-            )
-        )
+        # schedulers.append(
+        #     # torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[1], T_0=50, T_mult=1, eta_min=0.05)
+        #     torch.optim.lr_scheduler.CyclicLR(
+        #         optimizers[1],
+        #         base_lr=[0.05, 0.05, 0.05, 0.05],
+        #         max_lr=[0.1, 0.1, 0.5, 0.5],
+        #         step_size_up=25,
+        #         mode='triangular',
+        #         cycle_momentum=False
+        #     )
+        #     # None
+        # )
 
-        ### Set scheduler for PeriodicKernel
+        # ### Set scheduler for MaternKernel
 
-        schedulers.append(
-            torch.optim.lr_scheduler.CyclicLR(
-                optimizers[3],
-                base_lr=[0.05, 0.05, 0.05, 0.05],
-                max_lr=[0.1, 0.1, 0.075, 0.075],
-                step_size_up=25,
-                mode='triangular',
-                cycle_momentum=False
-            )
-        )
+        # schedulers.append(
+        #     torch.optim.lr_scheduler.CyclicLR(
+        #         optimizers[2],
+        #         base_lr=[0.05, 0.05, 0.05, 0.05],
+        #         max_lr=[0.1, 0.1, 0.5, 0.5],
+        #         step_size_up=25,
+        #         mode='triangular',
+        #         cycle_momentum=False
+        #     )
+        # )
 
-        ### Set scheduler for SpectralMixtureKernel
+        # ### Set scheduler for PeriodicKernel
 
-        schedulers.append(
-            torch.optim.lr_scheduler.CyclicLR(
-                optimizers[4],
-                base_lr=[0.05, 0.05, 0.05, 0.05, 0.05],
-                max_lr=[0.1, 0.1, 0.5, 0.5, 0.5],
-                step_size_up=25,
-                mode='triangular',
-                cycle_momentum=False
-            )
-        )
+        # schedulers.append(
+        #     torch.optim.lr_scheduler.CyclicLR(
+        #         optimizers[3],
+        #         base_lr=[0.05, 0.05, 0.05, 0.05],
+        #         max_lr=[0.1, 0.1, 0.075, 0.075],
+        #         step_size_up=25,
+        #         mode='triangular',
+        #         cycle_momentum=False
+        #     )
+        # )
+
+        # ### Set scheduler for SpectralMixtureKernel
+
+        # schedulers.append(
+        #     torch.optim.lr_scheduler.CyclicLR(
+        #         optimizers[4],
+        #         base_lr=[0.05, 0.05, 0.05, 0.05, 0.05],
+        #         max_lr=[0.1, 0.1, 0.5, 0.5, 0.5],
+        #         step_size_up=25,
+        #         mode='triangular',
+        #         cycle_momentum=False
+        #     )
+        # )
 
         # Train GP models to find optimal hyperparameters
 

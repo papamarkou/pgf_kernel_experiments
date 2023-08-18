@@ -130,9 +130,9 @@ for i in range(num_runs):
         ax[j].set_ylabel('y', fontsize=axis_fontsize, labelpad=-3)
         ax[j].set_zlabel('z', fontsize=axis_fontsize, labelpad=-27)
 
-        ax[j].set_xticks([-1, 0, 1], fontsize=axis_fontsize)
-        ax[j].set_yticks([-1, 0, 1], fontsize=axis_fontsize)
-        ax[j].set_zticks([0, 5., 10.], fontsize=axis_fontsize)
+        ax[j].set_xticks([-1, 0, 1], [-1, 0, 1], fontsize=axis_fontsize)
+        ax[j].set_yticks([-1, 0, 1], [-1, 0, 1], fontsize=axis_fontsize)
+        ax[j].set_zticks([0, 5, 10], [0, 5, 10], fontsize=axis_fontsize)
 
         ax[j].zaxis.set_rotate_label(False)
 
