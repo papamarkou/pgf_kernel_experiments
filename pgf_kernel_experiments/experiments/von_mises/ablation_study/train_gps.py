@@ -14,7 +14,7 @@ output_path.mkdir(parents=True, exist_ok=True)
 
 # %% Training setup
 
-num_train_iters = 1000
+num_train_iters = 200
 
 # %% Set seed
 
@@ -52,15 +52,15 @@ if use_cuda:
 # %% Set up ExactMultiGPRunner
 
 kernels = [
-    GFKernel(width=[5]),
-    GFKernel(width=[20]),
-    GFKernel(width=[20, 5]),
-    GFKernel(width=[20, 20]),
-    GFKernel(width=[20, 20, 5]),
-    GFKernel(width=[20, 20, 20]),
+    GFKernel(width=[2]),
+    GFKernel(width=[100]),
+    GFKernel(width=[200]),
+    GFKernel(width=[10]),
+    GFKernel(width=[10, 10]),
+    GFKernel(width=[10, 10, 10]),
 ]
 
-kernel_names = ['5', '20', '20_5', '20_20', '20_20_5', '20_20_20']
+kernel_names = ['2', '100', '200', '10', '10_10', '10_10_10']
 
 runner = ExactMultiGPRunner.generator(train_x, train_y, kernels, use_cuda=use_cuda)
 
@@ -74,7 +74,7 @@ for i in range(runner.num_gps()):
 
 # list(runner.single_runners[0].model.named_parameters())
 
-lrs = [0.8, 0.5, 2., 2., 2.]
+lrs = [0.1, 0.1, 3.0, 3.0, 3.0]
 
 optimizers = []
 
@@ -95,23 +95,20 @@ optimizers.append(torch.optim.Adam([
 optimizers.append(torch.optim.Adam([
     {"params": runner.single_runners[2].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
     {"params": runner.single_runners[2].model.mean_module.raw_constant, "lr": lrs[1]},
-    {"params": runner.single_runners[2].model.covar_module.pars0, "lr": lrs[2]},
-    {"params": runner.single_runners[2].model.covar_module.pars1, "lr": lrs[3]}
+    {"params": runner.single_runners[2].model.covar_module.pars0, "lr": lrs[2]}
 ]))
 
 optimizers.append(torch.optim.Adam([
     {"params": runner.single_runners[3].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
     {"params": runner.single_runners[3].model.mean_module.raw_constant, "lr": lrs[1]},
-    {"params": runner.single_runners[3].model.covar_module.pars0, "lr": lrs[2]},
-    {"params": runner.single_runners[3].model.covar_module.pars1, "lr": lrs[3]}
+    {"params": runner.single_runners[3].model.covar_module.pars0, "lr": lrs[2]}
 ]))
 
 optimizers.append(torch.optim.Adam([
     {"params": runner.single_runners[4].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
     {"params": runner.single_runners[4].model.mean_module.raw_constant, "lr": lrs[1]},
     {"params": runner.single_runners[4].model.covar_module.pars0, "lr": lrs[2]},
-    {"params": runner.single_runners[4].model.covar_module.pars1, "lr": lrs[3]},
-    {"params": runner.single_runners[4].model.covar_module.pars2, "lr": lrs[4]}
+    {"params": runner.single_runners[4].model.covar_module.pars1, "lr": lrs[3]}
 ]))
 
 optimizers.append(torch.optim.Adam([

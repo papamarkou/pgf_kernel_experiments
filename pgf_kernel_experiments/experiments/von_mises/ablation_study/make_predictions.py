@@ -61,15 +61,15 @@ if use_cuda:
 # %% Set up ExactMultiGPRunner
 
 kernels = [
-    GFKernel(width=[5]),
-    GFKernel(width=[20]),
-    GFKernel(width=[20, 5]),
-    GFKernel(width=[20, 20]),
-    GFKernel(width=[20, 20, 5]),
-    GFKernel(width=[20, 20, 20]),
+    GFKernel(width=[2]),
+    GFKernel(width=[100]),
+    GFKernel(width=[200]),
+    GFKernel(width=[10]),
+    GFKernel(width=[10, 10]),
+    GFKernel(width=[10, 10, 10]),
 ]
 
-kernel_names = ['5', '20', '20_5', '20_20', '20_20_5', '20_20_20']
+kernel_names = ['2', '100', '200', '10', '10_10', '10_10_10']
 
 runner = ExactMultiGPRunner.generator(train_x, train_y, kernels, use_cuda=use_cuda)
 

@@ -12,7 +12,7 @@ data_path.mkdir(parents=True, exist_ok=True)
 
 # %% Data simulation setup
 
-num_samples = 1000
+num_samples = 500
 
 perc_train = 0.5
 
