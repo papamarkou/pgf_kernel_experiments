@@ -18,14 +18,7 @@ x = data[:, 1]
 y = data[:, 2]
 z = data[:, 3]
 
-train_ids = np.loadtxt(data_path.joinpath('train_ids.csv'), dtype='int')
-
 test_ids = np.loadtxt(data_path.joinpath('test_ids.csv'), dtype='int')
-
-# %% Get training data
-
-train_pos = grid[train_ids, :]
-train_output = z[train_ids]
 
 # %% Get test data
 
@@ -68,7 +61,6 @@ line_width = 2
 pdf_line_col = '#069AF3' # azure
 circle_line_col = 'black'
 
-train_point_col = '#F97306' # orange
 test_point_col = '#C20078' # magenta
 pred_point_col = '#E50000' # red
 
