@@ -7,7 +7,7 @@ import torch
 from pgfml.kernels import GFKernel
 
 from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_env import (
-    data_paths, num_runs, num_train_iters, num_train_seeds, output_basepath, output_paths, train_seeds, use_cuda
+    data_paths, num_runs, num_train_seeds, output_basepath, output_paths, train_seeds, use_cuda
 )
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
@@ -168,7 +168,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         ### Set scheduler for RBFKernel
 
         schedulers.append(
-            # torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[i], T_0=50, T_mult=1, eta_min=0.05)
+            # torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[1], T_0=50, T_mult=1, eta_min=0.05)
             torch.optim.lr_scheduler.CyclicLR(
                 optimizers[1],
                 base_lr=[0.05, 0.05, 0.05, 0.05],
