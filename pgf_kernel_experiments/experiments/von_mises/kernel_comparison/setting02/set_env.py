@@ -6,29 +6,20 @@ from pathlib import Path
 
 # %% Indicate whereas to use GPUs or CPUs
 
-# use_cuda = True
-use_cuda = False
+use_cuda = True
 
 # %% Set number of runs
 
-# num_runs = 10
-num_runs = 4
+num_runs = 10
 
 # %% Set seeds
 
-data_seed = 1000
+data_seed = 1
 
-init_train_seed = 101000
-# num_train_seeds = 50 * num_runs
+init_train_seed = 100000
 num_train_seeds = 5 * num_runs
 
 train_seeds = torch.randint(0, 100*num_train_seeds, (num_train_seeds, ))
-
-# %% Data simulation setup
-
-num_samples = 1000
-
-perc_training = 0.5
 
 # %% Set paths
 

@@ -56,8 +56,7 @@ for i in range(num_runs):
     grid = data[:, 1:3]
     x = data[:, 1]
     y = data[:, 2]
-    z_signal = data[:, 3]
-    z = data[:, 5]
+    z = data[:, 3]
 
     train_ids = np.loadtxt(data_paths[i].joinpath('train_ids.csv'), dtype='int')
 
@@ -71,7 +70,7 @@ for i in range(num_runs):
     # Get test data
 
     test_pos = grid[test_ids, :]
-    test_output = z_signal[test_ids]
+    test_output = z[test_ids]
 
     # Load predictions
 
@@ -94,7 +93,7 @@ for i in range(num_runs):
         hspace=0.15
     )
 
-    ax[0, 0].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    ax[0, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
     ax[0, 1].scatter(
         train_pos[:, 0],
@@ -105,7 +104,7 @@ for i in range(num_runs):
         s=point_size
     )
 
-    ax[0, 1].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    ax[0, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
     ax[0, 2].scatter(
         test_pos[:, 0],
@@ -116,7 +115,7 @@ for i in range(num_runs):
         s=point_size
     )
 
-    ax[0, 2].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    ax[0, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
     ax[0, 3].scatter(
         test_pos[:, 0],
@@ -127,7 +126,7 @@ for i in range(num_runs):
         s=point_size
     )
 
-    ax[0, 3].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    ax[0, 3].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
     ax[1, 0].scatter(
         test_pos[:, 0],
@@ -138,7 +137,7 @@ for i in range(num_runs):
         s=point_size
     )
 
-    ax[1, 0].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    ax[1, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
     ax[1, 1].scatter(
         test_pos[:, 0],
@@ -149,7 +148,7 @@ for i in range(num_runs):
         s=point_size
     )
 
-    ax[1, 1].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    ax[1, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
     ax[1, 2].scatter(
         test_pos[:, 0],
@@ -160,7 +159,7 @@ for i in range(num_runs):
         s=point_size
     )
 
-    ax[1, 2].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    ax[1, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
     ax[1, 3].scatter(
         test_pos[:, 0],
@@ -171,7 +170,7 @@ for i in range(num_runs):
         s=point_size
     )
 
-    ax[1, 3].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
+    ax[1, 3].plot(x, y, z, color=pdf_line_col, lw=line_width)
 
     for j in range(2):
         for k in range(4):
@@ -185,7 +184,7 @@ for i in range(num_runs):
             
             ax[j, k].set_xlim((-1, 1))
             ax[j, k].set_ylim((-1, 1))
-            ax[j, k].set_zlim((-2, 12))
+            ax[j, k].set_zlim((0, 11))
 
             ax[j, k].set_title(titles[j][k], fontsize=title_fontsize, pad=-1.5)
 
@@ -193,9 +192,9 @@ for i in range(num_runs):
             ax[j, k].set_ylabel('y', fontsize=axis_fontsize, labelpad=-3)
             ax[j, k].set_zlabel('z', fontsize=axis_fontsize, labelpad=-27)
 
-            ax[j, k].set_xticks([-1, 0, 1], fontsize=axis_fontsize)
-            ax[j, k].set_yticks([-1, 0, 1], fontsize=axis_fontsize)
-            ax[j, k].set_zticks([-2, 5, 12], fontsize=axis_fontsize)
+            ax[j, k].set_xticks([-1, 0, 1], [-1, 0, 1], fontsize=axis_fontsize)
+            ax[j, k].set_yticks([-1, 0, 1], [-1, 0, 1], fontsize=axis_fontsize)
+            ax[j, k].set_zticks([0, 5, 10], [0, 5, 10], fontsize=axis_fontsize)
 
             ax[j, k].zaxis.set_rotate_label(False)
 

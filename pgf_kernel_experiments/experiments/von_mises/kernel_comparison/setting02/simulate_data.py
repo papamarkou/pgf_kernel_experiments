@@ -4,14 +4,18 @@ import numpy as np
 
 from scipy.stats import vonmises
 
-from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting02.set_env import (
-    data_paths, data_seed, num_runs, num_samples, perc_training
-)
+from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting02.set_env import data_paths, data_seed, num_runs
 
 # %% Create paths if they don't exist
 
 for i in range(num_runs):
     data_paths[i].mkdir(parents=True, exist_ok=True)
+
+# %% Data simulation setup
+
+num_samples = 1000
+
+perc_train = 0.5
 
 # %% Simulate and save data
 
@@ -28,17 +32,13 @@ for i in range(num_runs):
 
     y = np.sin(theta)
 
-    z_signal = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
-
-    z_noise = np.random.default_rng().normal(loc=0.0, scale=0.5, size=num_samples)
-
-    z = z_signal + z_noise
+    z = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
 
     # Generate training data
 
     ids = np.arange(num_samples)
 
-    num_train = int(perc_training * num_samples)
+    num_train = int(perc_train * num_samples)
 
     train_ids = np.random.choice(ids, size=num_train, replace=False)
 
@@ -54,9 +54,9 @@ for i in range(num_runs):
 
     np.savetxt(
         data_paths[i].joinpath('data.csv'),
-        np.column_stack([theta, x, y, z_signal, z_noise, z]),
+        np.column_stack([theta, x, y, z]),
         delimiter=',',
-        header='theta,x,y,z_signal,z_noise,z',
+        header='theta,x,y,z',
         comments=''
     )
 
