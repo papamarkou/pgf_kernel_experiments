@@ -32,7 +32,11 @@ for i in range(num_runs):
 
     y = np.sin(theta)
 
-    z = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
+    z_signal = vonmises.pdf(theta, kappa=2., loc=0., scale=0.05)
+
+    z_noise = np.random.default_rng().normal(loc=0.0, scale=0.5, size=num_samples)
+
+    z = z_signal + z_noise
 
     # Generate training data
 
@@ -54,9 +58,9 @@ for i in range(num_runs):
 
     np.savetxt(
         data_paths[i].joinpath('data.csv'),
-        np.column_stack([theta, x, y, z]),
+        np.column_stack([theta, x, y, z_signal, z_noise, z]),
         delimiter=',',
-        header='theta,x,y,z',
+        header='theta,x,y,z_signal,z_noise,z',
         comments=''
     )
 
