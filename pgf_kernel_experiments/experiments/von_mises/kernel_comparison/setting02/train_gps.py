@@ -18,7 +18,7 @@ for i in range(num_runs):
 
 # %% Training setup
 
-num_train_iters = 500 # 1000
+num_train_iters = 1000
 
 # %% Run training and save model states
 
@@ -155,7 +155,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
             # torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[0], T_0=50, T_mult=1, eta_min=2.0)
             torch.optim.lr_scheduler.CyclicLR(
                 optimizers[0],
-                base_lr=[1, 1, 2, 2, 2],
+                base_lr=[0.05, 0.05, 2, 2, 2],
                 max_lr=[2, 2, 5.5, 5.5, 5.5],
                 step_size_up=25,
                 mode='triangular',
