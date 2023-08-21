@@ -17,9 +17,9 @@ num_runs = 10
 data_seed = 1000
 
 init_train_seed = 101000
-num_train_seeds = 5 * num_runs
+num_train_seeds = 5*num_runs
 
-train_seeds = torch.randint(0, 100*num_train_seeds, (num_train_seeds, ))
+train_seeds = torch.randint(init_train_seed, init_train_seed+100*num_train_seeds, (num_train_seeds, ))
 
 # %% Set paths
 
