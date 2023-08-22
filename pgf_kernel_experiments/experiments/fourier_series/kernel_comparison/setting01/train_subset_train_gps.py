@@ -6,7 +6,7 @@ import torch
 
 from pgfml.kernels import GFKernel
 
-from pgf_kernel_experiments.experiments.von_mises.kernel_comparison.setting01.set_env import (
+from pgf_kernel_experiments.experiments.fourier_series.kernel_comparison.setting01.set_env import (
     data_paths, num_runs, num_train_seeds, output_basepath, output_paths, train_seeds, use_cuda
 )
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
@@ -52,7 +52,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         y = data[:, 2]
         z = data[:, 3]
 
-        train_ids = np.loadtxt(data_paths[success_count].joinpath('train_ids.csv'), dtype='int')
+        train_ids = np.loadtxt(data_paths[success_count].joinpath('train_subset_ids.csv'), dtype='int')
 
         # Get training data
 
@@ -152,7 +152,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         ### Set scheduler for GFKernel
 
         schedulers.append(
-            # torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[0], T_0=50, T_mult=1, eta_min=2.0)
+        #     # torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[0], T_0=50, T_mult=1, eta_min=2.0)
             torch.optim.lr_scheduler.CyclicLR(
                 optimizers[0],
                 base_lr=[0.05, 0.05, 2, 2, 2],
@@ -236,13 +236,13 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         for i in range(runner.num_gps()):
             torch.save(
                 runner.single_runners[i].model.state_dict(),
-                output_paths[success_count].joinpath(kernel_names[i]+'_gp_state.pth')
+                output_paths[success_count].joinpath('train_subset_'+kernel_names[i]+'_gp_state.pth')
             )
 
         # Save losses
 
         np.savetxt(
-            output_paths[success_count].joinpath('losses.csv'),
+            output_paths[success_count].joinpath('train_subset_losses.csv'),
             losses.cpu().detach().numpy(),
             delimiter=',',
             header=','.join(kernel_names),
@@ -273,13 +273,13 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 # %% Save successful and failed seeds
 
 np.savetxt(
-    output_basepath.joinpath('successful_seeds.csv'),
+    output_basepath.joinpath('train_subset_successful_seeds.csv'),
     np.array(successful_seeds),
     fmt='%i'
 )
 
 np.savetxt(
-    output_basepath.joinpath('failed_seeds.csv'),
+    output_basepath.joinpath('train_subset_failed_seeds.csv'),
     np.array(failed_seeds),
     fmt='%i'
 )
