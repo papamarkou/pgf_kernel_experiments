@@ -1,17 +1,39 @@
 # %% Import packages
 
+import torch
+
 from pathlib import Path
 
-# %% Set paths
+# %% Indicate whereas to use GPUs or CPUs
 
-data_path = Path('data')
-output_path = Path('output')
+use_cuda = True
+
+# %% Set number of runs
+
+num_runs = 10
 
 # %% Set seeds
 
-seed = 4
+data_seed = 3000
 
-train_subset1_seed = seed + 1
-train_subset2_seed = seed + 2
-train_subset3_seed = seed + 3
-train_subset4_seed = seed + 4
+init_train_seed = 103000
+num_train_seeds = 5*num_runs
+
+train_seeds = torch.randint(init_train_seed, init_train_seed+100*num_train_seeds, (num_train_seeds, ))
+
+init_train_subset_seed = 203000
+num_train_subset_seeds = 5*num_runs
+
+train_subset_seeds = torch.randint(
+    init_train_subset_seed, init_train_subset_seed+100*num_train_subset_seeds, (num_train_subset_seeds, )
+)
+
+# %% Set paths
+
+data_basepath = Path('data')
+
+data_paths = [Path(data_basepath, 'run'+str(i+1).zfill(len(str(num_runs)))) for i in range(num_runs)]
+
+output_basepath = Path('output')
+
+output_paths = [Path(output_basepath, 'run'+str(i+1).zfill(len(str(num_runs)))) for i in range(num_runs)]

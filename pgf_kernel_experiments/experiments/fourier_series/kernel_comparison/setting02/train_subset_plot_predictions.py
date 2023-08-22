@@ -58,7 +58,7 @@ for i in range(num_runs):
     y = data[:, 2]
     z = data[:, 3]
 
-    train_ids = np.loadtxt(data_paths[i].joinpath('train_ids.csv'), dtype='int')
+    train_ids = np.loadtxt(data_paths[i].joinpath('train_subset_ids.csv'), dtype='int')
 
     test_ids = np.loadtxt(data_paths[i].joinpath('test_ids.csv'), dtype='int')
 
@@ -75,7 +75,7 @@ for i in range(num_runs):
     # Load predictions
 
     predictions = np.loadtxt(
-        output_paths[i].joinpath('train_set_predictions.csv'),
+        output_paths[i].joinpath('train_subset_predictions.csv'),
         delimiter=',',
         skiprows=1
     )
@@ -201,7 +201,7 @@ for i in range(num_runs):
     # Save plot
 
     plt.savefig(
-        output_paths[i].joinpath('train_set_predictions.png'),
+        output_paths[i].joinpath('train_subset_predictions.png'),
         dpi=600,
         pil_kwargs={'quality': 100},
         transparent=True,

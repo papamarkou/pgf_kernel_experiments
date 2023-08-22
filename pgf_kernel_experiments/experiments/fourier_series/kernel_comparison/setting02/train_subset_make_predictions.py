@@ -36,7 +36,7 @@ for run_count in range(num_runs):
     y = data[:, 2]
     z = data[:, 3]
 
-    train_ids = np.loadtxt(data_paths[run_count].joinpath('train_ids.csv'), dtype='int')
+    train_ids = np.loadtxt(data_paths[run_count].joinpath('train_subset_ids.csv'), dtype='int')
 
     test_ids = np.loadtxt(data_paths[run_count].joinpath('test_ids.csv'), dtype='int')
 
@@ -90,7 +90,7 @@ for run_count in range(num_runs):
 
     for i in range(runner.num_gps()):
         runner.single_runners[i].model.load_state_dict(
-            torch.load(output_paths[run_count].joinpath('train_set_'+kernel_names[i]+'_gp_state.pth'))
+            torch.load(output_paths[run_count].joinpath('train_subset_'+kernel_names[i]+'_gp_state.pth'))
         )
 
     # Make predictions
@@ -114,7 +114,7 @@ for run_count in range(num_runs):
     # Save predictions
 
     np.savetxt(
-        output_paths[run_count].joinpath('train_set_predictions.csv'),
+        output_paths[run_count].joinpath('train_subset_predictions.csv'),
         torch.stack([predictions[i].mean for i in range(runner.num_gps())], dim=0).t().cpu().detach().numpy(),
         delimiter=',',
         header=','.join(kernel_names),
@@ -124,7 +124,7 @@ for run_count in range(num_runs):
     # Save error metrics
 
     np.savetxt(
-        output_paths[run_count].joinpath('train_set_error_metrics.csv'),
+        output_paths[run_count].joinpath('train_subset_error_metrics.csv'),
         scores.cpu().detach().numpy(),
         delimiter=',',
         header='mean_abs_error,mean_sq_error,loss',
@@ -147,7 +147,7 @@ stds = all_scores.std(dim=0)
 # %% Save error metric summaries across runs
 
 np.savetxt(
-    output_basepath.joinpath('train_set_error_metric_means.csv'),
+    output_basepath.joinpath('train_subset_error_metric_means.csv'),
     means.cpu().detach().numpy(),
     delimiter=',',
     header='mean_abs_error,mean_sq_error,loss',
@@ -155,7 +155,7 @@ np.savetxt(
 )
 
 np.savetxt(
-    output_basepath.joinpath('train_set_error_metric_stds.csv'),
+    output_basepath.joinpath('train_subset_error_metric_stds.csv'),
     stds.cpu().detach().numpy(),
     delimiter=',',
     header='mean_abs_error,mean_sq_error,loss',

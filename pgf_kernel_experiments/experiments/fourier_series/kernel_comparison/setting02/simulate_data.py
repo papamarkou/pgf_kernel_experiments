@@ -3,82 +3,78 @@
 import numpy as np
 
 from pgf_kernel_experiments.experiments.fourier_series.fourier_series import fourier_series
-from pgf_kernel_experiments.experiments.fourier_series.kernel_comparison.setting02.set_env import data_path, seed
+from pgf_kernel_experiments.experiments.fourier_series.kernel_comparison.setting02.set_env import (
+    data_paths, data_seed, num_runs
+)
 
 # %% Create paths if they don't exist
 
-data_path.mkdir(parents=True, exist_ok=True)
+for i in range(num_runs):
+    data_paths[i].mkdir(parents=True, exist_ok=True)
 
-# %% Set seed
-
-np.random.seed(seed)
-
-# %% Generate data
+# %% Data simulation setup
 
 num_samples = 1000
 
-theta = np.linspace(-np.pi, np.pi, num=num_samples, endpoint=False)
+perc_train = 0.8
 
-x = np.cos(theta)
+num_train_subset_samples = 100
 
-y = np.sin(theta)
+# %% Simulate and save data
 
-z_signal = fourier_series(
-    theta,
-    a=np.array([0.2, 0.2, 0.2, 0.2, 0.2]),
-    p=np.pi / 5,
-    phi=np.array([0., 3 * np.pi, np.pi / 5, np.pi / 10])
-)
+for i in range(num_runs):
+    # Set seed
 
-z_noise = np.random.default_rng().normal(loc=0.0, scale=0.1, size=num_samples)
+    np.random.seed(data_seed+i)
 
-z = z_signal + z_noise
+    # Generate all data
 
-# %% Generate training data
+    theta = np.linspace(-np.pi, np.pi, num=num_samples, endpoint=False)
 
-ids = np.arange(num_samples)
+    x = np.cos(theta)
 
-num_train = int(800)
+    y = np.sin(theta)
 
-train_ids = np.random.choice(ids, size=num_train, replace=False)
+    z = fourier_series(
+        theta,
+        a=np.array([0.2, 0.2, 0.2, 0.2, 0.2]),
+        p=np.pi / 5,
+        phi=np.array([0., 3 * np.pi, np.pi / 5, np.pi / 10])
+    )
 
-train_ids.sort()
+    # Generate training data
 
-# %% Generate training subsets
+    ids = np.arange(num_samples)
 
-train_subset1_ids = np.random.choice(train_ids, size=600, replace=False)
-train_subset1_ids.sort()
+    num_train = int(perc_train * num_samples)
 
-train_subset2_ids = np.random.choice(train_subset1_ids, size=400, replace=False)
-train_subset2_ids.sort()
+    train_ids = np.random.choice(ids, size=num_train, replace=False)
 
-train_subset3_ids = np.random.choice(train_subset2_ids, size=200, replace=False)
-train_subset3_ids.sort()
+    train_ids.sort()
 
-train_subset4_ids = np.random.choice(train_subset3_ids, size=100, replace=False)
-train_subset4_ids.sort()
+    # Generate training subsets
 
-# %% Generate test data
+    train_subset_ids = np.random.choice(train_ids, size=num_train_subset_samples, replace=False)
+    train_subset_ids.sort()
 
-test_ids = np.array(list(set(ids).difference(set(train_ids))))
+    # Generate test data
 
-test_ids.sort()
+    test_ids = np.array(list(set(ids).difference(set(train_ids))))
 
-# %% Save data
+    test_ids.sort()
 
-np.savetxt(
-    data_path.joinpath('data.csv'),
-    np.column_stack([theta, x, y, z_signal, z_noise, z]),
-    delimiter=',',
-    header='theta,x,y,z_signal,z_noise,z',
-    comments=''
-)
+    # Save data
 
-np.savetxt(data_path.joinpath('train_ids.csv'), train_ids, fmt='%i')
+    np.savetxt(
+        data_paths[i].joinpath('data.csv'),
+        np.column_stack([theta, x, y, z]),
+        delimiter=',',
+        header='theta,x,y,z',
+        comments=''
+    )
 
-np.savetxt(data_path.joinpath('train_subset1_ids.csv'), train_subset1_ids, fmt='%i')
-np.savetxt(data_path.joinpath('train_subset2_ids.csv'), train_subset2_ids, fmt='%i')
-np.savetxt(data_path.joinpath('train_subset3_ids.csv'), train_subset3_ids, fmt='%i')
-np.savetxt(data_path.joinpath('train_subset4_ids.csv'), train_subset4_ids, fmt='%i')
-
-np.savetxt(data_path.joinpath('test_ids.csv'), test_ids, fmt='%i')
+    np.savetxt(data_paths[i].joinpath('train_ids.csv'), train_ids, fmt='%i')
+    
+    np.savetxt(data_paths[i].joinpath('train_subset_ids.csv'), train_subset_ids, fmt='%i')
+    
+    np.savetxt(data_paths[i].joinpath('test_ids.csv'), test_ids, fmt='%i')

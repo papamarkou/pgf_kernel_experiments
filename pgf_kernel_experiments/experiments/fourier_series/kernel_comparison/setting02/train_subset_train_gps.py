@@ -52,7 +52,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         y = data[:, 2]
         z = data[:, 3]
 
-        train_ids = np.loadtxt(data_paths[success_count].joinpath('train_ids.csv'), dtype='int')
+        train_ids = np.loadtxt(data_paths[success_count].joinpath('train_subset_ids.csv'), dtype='int')
 
         # Get training data
 
@@ -236,13 +236,13 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         for i in range(runner.num_gps()):
             torch.save(
                 runner.single_runners[i].model.state_dict(),
-                output_paths[success_count].joinpath('train_set_'+kernel_names[i]+'_gp_state.pth')
+                output_paths[success_count].joinpath('train_subset_'+kernel_names[i]+'_gp_state.pth')
             )
 
         # Save losses
 
         np.savetxt(
-            output_paths[success_count].joinpath('train_set_losses.csv'),
+            output_paths[success_count].joinpath('train_subset_losses.csv'),
             losses.cpu().detach().numpy(),
             delimiter=',',
             header=','.join(kernel_names),
@@ -273,13 +273,13 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 # %% Save successful and failed seeds
 
 np.savetxt(
-    output_basepath.joinpath('train_set_successful_seeds.csv'),
+    output_basepath.joinpath('train_subset_successful_seeds.csv'),
     np.array(successful_seeds),
     fmt='%i'
 )
 
 np.savetxt(
-    output_basepath.joinpath('train_set_failed_seeds.csv'),
+    output_basepath.joinpath('train_subset_failed_seeds.csv'),
     np.array(failed_seeds),
     fmt='%i'
 )

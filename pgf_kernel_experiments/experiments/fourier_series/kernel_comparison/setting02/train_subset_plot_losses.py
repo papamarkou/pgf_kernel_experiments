@@ -36,7 +36,7 @@ for i in range(num_runs):
     # Load losses
 
     losses = np.loadtxt(
-        output_paths[i].joinpath('train_set_losses.csv'),
+        output_paths[i].joinpath('train_subset_losses.csv'),
         delimiter=',',
         skiprows=1
     )
@@ -80,7 +80,7 @@ for i in range(num_runs):
     # Save plot
 
     plt.savefig(
-        output_paths[i].joinpath('train_set_losses.png'),
+        output_paths[i].joinpath('train_subset_losses.png'),
         dpi=600,
         pil_kwargs={'quality': 100},
         transparent=True,
@@ -132,7 +132,7 @@ plt.legend(
 # Save plot
 
 plt.savefig(
-    output_basepath.joinpath('train_set_loss_means.png'),
+    output_basepath.joinpath('train_subset_loss_means.png'),
     dpi=600,
     pil_kwargs={'quality': 100},
     transparent=True,
