@@ -184,7 +184,7 @@ for i in range(num_runs):
             
             ax[j, k].set_xlim((-1, 1))
             ax[j, k].set_ylim((-1, 1))
-            ax[j, k].set_zlim((0, 11))
+            ax[j, k].set_zlim((-0.4, 0.8))
 
             ax[j, k].set_title(titles[j][k], fontsize=title_fontsize, pad=-1.5)
 
@@ -194,7 +194,7 @@ for i in range(num_runs):
 
             ax[j, k].set_xticks([-1, 0, 1], [-1, 0, 1], fontsize=axis_fontsize)
             ax[j, k].set_yticks([-1, 0, 1], [-1, 0, 1], fontsize=axis_fontsize)
-            ax[j, k].set_zticks([0, 5, 10], [0, 5, 10], fontsize=axis_fontsize)
+            ax[j, k].set_zticks([-0.4, 0, 0.4, 0.8], [-0.4, 0, 0.4, 0.8], fontsize=axis_fontsize)
 
             ax[j, k].zaxis.set_rotate_label(False)
 

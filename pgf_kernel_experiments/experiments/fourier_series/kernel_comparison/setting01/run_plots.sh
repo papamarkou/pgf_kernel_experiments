@@ -8,5 +8,5 @@ declare -a files=(
 for file in "${files[@]}"
 do
    echo "Executing $file..."
-   python $file
+   ./$file
 done

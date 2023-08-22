@@ -18,7 +18,7 @@ if verbose:
 
 manual_ylim = True
 if manual_ylim:
-    manual_ylims = [[-2, 10] for _ in range(num_runs)]
+    manual_ylims = [[-2, 2] for _ in range(num_runs)]
 
 labels = ['PGF kernel','RBF kernel', 'Matern kernel', 'Periodic kernel', 'Spectral kernel']
 kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
@@ -66,7 +66,7 @@ for i in range(num_runs):
         handles.append(handle)
 
     plt.xticks(np.arange(0, num_iters+50, 50), fontsize=axis_fontsize)
-    plt.yticks(np.arange(-2, 10+2, 2), fontsize=axis_fontsize)
+    plt.yticks(np.arange(-2, 2+1, 1), fontsize=axis_fontsize)
 
     plt.legend(
         handles,
@@ -105,7 +105,7 @@ plt.margins(0.)
 
 plt.xlim([1, num_iters+1])
 if manual_ylim:
-    plt.ylim([-2, 10])
+    plt.ylim([-2, 2])
 else:
     plt.ylim([all_losses.min(), all_losses.max()])
 
@@ -118,7 +118,7 @@ for j in range(num_kernels):
     handles.append(handle)
 
 plt.xticks(np.arange(0, num_iters+50, 50), fontsize=axis_fontsize)
-plt.yticks(np.arange(-2, 10+2, 2), fontsize=axis_fontsize)
+plt.yticks(np.arange(-2, 2+1, 1), fontsize=axis_fontsize)
 
 plt.legend(
     handles,

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 declare -a files=(
-    "simulate_data.py"
+    "simulate_data.sh"
     "train_set_run_numerics.sh"
     "train_subset_run_numerics.sh"
 )
@@ -9,5 +9,5 @@ declare -a files=(
 for file in "${files[@]}"
 do
    echo "Executing $file..."
-   python $file
+   ./$file
 done
