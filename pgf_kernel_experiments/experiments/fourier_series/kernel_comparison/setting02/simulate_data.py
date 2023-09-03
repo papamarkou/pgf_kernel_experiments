@@ -35,12 +35,16 @@ for i in range(num_runs):
 
     y = np.sin(theta)
 
-    z = fourier_series(
+    z_signal = fourier_series(
         theta,
         a=np.array([0.2, 0.2, 0.2, 0.2, 0.2]),
         p=np.pi / 5,
         phi=np.array([0., 3 * np.pi, np.pi / 5, np.pi / 10])
     )
+
+    z_noise = np.random.default_rng().normal(loc=0.0, scale=0.1, size=num_samples)
+
+    z = z_signal + z_noise
 
     # Generate training data
 
@@ -70,6 +74,14 @@ for i in range(num_runs):
         np.column_stack([theta, x, y, z]),
         delimiter=',',
         header='theta,x,y,z',
+        comments=''
+    )
+
+    np.savetxt(
+        data_paths[i].joinpath('data.csv'),
+        np.column_stack([theta, x, y, z_signal, z_noise, z]),
+        delimiter=',',
+        header='theta,x,y,z_signal,z_noise,z',
         comments=''
     )
 
