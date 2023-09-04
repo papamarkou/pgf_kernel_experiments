@@ -26,7 +26,7 @@ for i in range(num_runs):
 
     # Generate all data
 
-    theta = np.linspace(-np.pi, np.pi, num=num_samples, endpoint=False)
+    theta = np.random.uniform(low=-np.pi, high=np.pi, size=num_samples)
 
     x = np.cos(theta)
 
