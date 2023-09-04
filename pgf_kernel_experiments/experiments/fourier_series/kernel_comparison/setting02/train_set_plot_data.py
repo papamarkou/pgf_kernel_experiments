@@ -57,7 +57,8 @@ for i in range(num_runs):
     grid = data[:, 1:3]
     x = data[:, 1]
     y = data[:, 2]
-    z = data[:, 3]
+    z_signal = data[:, 3]
+    z = data[:, 5]
 
     train_ids = np.loadtxt(data_paths[i].joinpath('train_ids.csv'), dtype='int')
     test_ids = np.loadtxt(data_paths[i].joinpath('test_ids.csv'), dtype='int')
@@ -72,7 +73,7 @@ for i in range(num_runs):
 
     test_pos = grid[test_ids, :]
 
-    test_output = z[test_ids]
+    test_output = z_signal[test_ids]
 
     # Plot training and test data
 
@@ -87,7 +88,7 @@ for i in range(num_runs):
         hspace=0.0
     )
 
-    ax[0].plot(x, y, z, color=pdf_line_col, lw=line_width)
+    ax[0].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
     ax[1].scatter(
         train_pos[:, 0],
@@ -98,7 +99,7 @@ for i in range(num_runs):
         s=point_size
     )
 
-    ax[1].plot(x, y, z, color=pdf_line_col, lw=line_width)
+    ax[1].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
     ax[2].scatter(
         test_pos[:, 0],
@@ -109,7 +110,7 @@ for i in range(num_runs):
         s=point_size
     )
 
-    ax[2].plot(x, y, z, color=pdf_line_col, lw=line_width)
+    ax[2].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
     for j in range(3):
         ax[j].set_proj_type('ortho')
