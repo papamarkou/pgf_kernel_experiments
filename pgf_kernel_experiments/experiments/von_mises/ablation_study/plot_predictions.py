@@ -186,10 +186,8 @@ for i in range(2):
 # %% Save plot
 
 plt.savefig(
-    output_path.joinpath('predictions.png'),
-    dpi=600,
-    pil_kwargs={'quality': 100},
-    transparent=True,
+    output_path.joinpath('predictions.pdf'),
+    dpi=1200,
     bbox_inches='tight',
     pad_inches=0.1
 )

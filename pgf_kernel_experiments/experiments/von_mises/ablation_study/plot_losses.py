@@ -23,8 +23,8 @@ depth_idx = [3, 4, 5]
 width_labels = [r'$m_1 = 2$', r'$m_1 = 100$', r'$m_1 = 200$']
 depth_labels = [r'$m_1 = 10$', r'$m_1 = 10, m_2 = 10$', r'$m_1 = 10, m_2 = 10, m_3 = 10$']
 
-width_fname = 'width_losses.png'
-depth_fname = 'depth_losses.png'
+width_fname = 'width_losses.pdf'
+depth_fname = 'depth_losses.pdf'
 
 label_fontsize = 11
 axis_fontsize = 11
@@ -62,9 +62,7 @@ for idx, labels, fname in zip([width_idx, depth_idx], [width_labels, depth_label
 
     plt.savefig(
         output_path.joinpath(fname),
-        dpi=600,
-        pil_kwargs={'quality': 100},
-        transparent=True,
+        dpi=1200,
         bbox_inches='tight',
         pad_inches=0.1
     )
