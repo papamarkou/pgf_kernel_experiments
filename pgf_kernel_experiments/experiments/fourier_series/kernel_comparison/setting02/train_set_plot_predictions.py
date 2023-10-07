@@ -202,10 +202,8 @@ for i in range(num_runs):
     # Save plot
 
     plt.savefig(
-        output_paths[i].joinpath('train_set_predictions.png'),
-        dpi=600,
-        pil_kwargs={'quality': 100},
-        transparent=True,
+        output_paths[i].joinpath('train_set_predictions.pdf'),
+        dpi=1200,
         bbox_inches='tight',
         pad_inches=0.1
     )
