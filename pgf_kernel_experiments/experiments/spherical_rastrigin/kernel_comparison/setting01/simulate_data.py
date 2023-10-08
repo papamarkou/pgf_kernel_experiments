@@ -18,9 +18,13 @@ np.random.seed(seed)
 num_incl = 100
 # num_incl = 200
 
-# Inclination theta and azimuth phi
-phi = np.linspace(-np.pi, np.pi, num=2*num_incl, endpoint=False)
-theta = np.tile(np.linspace(0, np.pi, num=num_incl, endpoint=True), 2)
+# Azimuth phi
+phi = np.random.uniform(low=-np.pi, high=np.pi, size=2*num_incl)
+phi.sort()
+
+# Inclination theta
+theta = np.tile(np.random.uniform(low=0, high=np.pi, size=num_incl), 2)
+theta.sort()
 
 a = 30.
 b = [0.0025, 0.002]
