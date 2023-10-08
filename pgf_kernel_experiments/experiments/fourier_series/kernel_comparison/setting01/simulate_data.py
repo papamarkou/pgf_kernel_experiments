@@ -16,7 +16,7 @@ for i in range(num_runs):
 
 num_samples = 1000
 
-perc_train = 0.8
+perc_train = 0.5
 
 num_train_subset_samples = 100
 
