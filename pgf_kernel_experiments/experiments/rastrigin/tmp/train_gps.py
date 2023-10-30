@@ -13,7 +13,7 @@ from pgf_kernel_experiments.runners import ExactMultiGPRunner
 from pgfml.kernels import GFKernel
 
 # from pgf_kernel_experiments.experiments.bloch_density.bloch_density import BlochDensity
-from pgf_kernel_experiments.experiments.spherical_rastrigin.tmp.set_paths import data_path, output_path
+from pgf_kernel_experiments.experiments.rastrigin.tmp.set_paths import data_path, output_path
 
 # %% Create paths if they don't exist
 

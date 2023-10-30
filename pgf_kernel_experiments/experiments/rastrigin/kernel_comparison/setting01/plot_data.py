@@ -4,7 +4,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 
-from pgf_kernel_experiments.experiments.spherical_rastrigin.kernel_comparison.setting01.set_env import data_path, output_path
+from pgf_kernel_experiments.experiments.rastrigin.kernel_comparison.setting01.set_env import data_path, output_path
 from pgf_kernel_experiments.plots import set_axes_equal
 
 # %% Create paths if they don't exist

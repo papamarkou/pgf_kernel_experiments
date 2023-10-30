@@ -7,7 +7,7 @@ import torch
 
 from pgfml.kernels import GFKernel
 
-from pgf_kernel_experiments.experiments.spherical_rastrigin.kernel_comparison.setting01.set_env import data_path
+from pgf_kernel_experiments.experiments.rastrigin.kernel_comparison.setting01.set_env import data_path
 from pgf_kernel_experiments.runners import ExactSingleGPRunner
 
 # %% Load data

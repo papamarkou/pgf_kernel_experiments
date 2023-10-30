@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from pgf_kernel_experiments.experiments.spherical_rastrigin.kernel_comparison.setting01.set_env import output_path
+from pgf_kernel_experiments.experiments.rastrigin.kernel_comparison.setting01.set_env import output_path
 
 # %% Load predictions
 

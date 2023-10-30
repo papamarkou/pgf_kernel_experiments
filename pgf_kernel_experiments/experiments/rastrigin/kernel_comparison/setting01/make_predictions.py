@@ -6,7 +6,7 @@ import torch
 
 from pgfml.kernels import GFKernel
 
-from pgf_kernel_experiments.experiments.spherical_rastrigin.kernel_comparison.setting01.set_env import data_path, output_path
+from pgf_kernel_experiments.experiments.rastrigin.kernel_comparison.setting01.set_env import data_path, output_path
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
 # %% Create paths if they don't exist
@@ -67,15 +67,14 @@ if use_cuda:
 
 kernels = [
     GFKernel(width=[30, 30, 30]),
-    # gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
-    # gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
-    # gpytorch.kernels.PeriodicKernel(),
-    # gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=3)
+    gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
+    gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
+    gpytorch.kernels.PeriodicKernel(),
+    gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=3)
 ]
 
-# kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
-kernel_names = ['pgf', ]
-                
+kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
+
 runner = ExactMultiGPRunner.generator(train_x, train_y, kernels)
 
 # %% Set the models in double mode
@@ -100,8 +99,8 @@ scores = runner.assess(
     test_y,
     metrics=[
         gpytorch.metrics.mean_absolute_error,
-        gpytorch.metrics.mean_squared_error,
-        lambda predictions, y : gpytorch.metrics.negative_log_predictive_density(predictions, y)
+        gpytorch.metrics.mean_squared_error # ,
+        # lambda predictions, y : gpytorch.metrics.negative_log_predictive_density(predictions, y)
     ]
 )
 
@@ -121,6 +120,6 @@ np.savetxt(
     output_path.joinpath('error_metrics.csv'),
     scores.cpu().detach().numpy(),
     delimiter=',',
-    header='mean_abs_error,mean_sq_error,loss',
+    header='mean_abs_error,mean_sq_error', # ,loss',
     comments=''
 )
