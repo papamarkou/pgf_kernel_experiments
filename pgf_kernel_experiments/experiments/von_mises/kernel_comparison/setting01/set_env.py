@@ -14,9 +14,9 @@ num_runs = 10
 
 # %% Set seeds
 
-data_seed = 1
+data_seed = 3000
 
-init_train_seed = 100000
+init_train_seed = 203000
 num_train_seeds = 5*num_runs
 
 train_seeds = torch.randint(init_train_seed, init_train_seed+100*num_train_seeds, (num_train_seeds, ))
