@@ -13,7 +13,7 @@ from pgf_kernel_experiments.runners import ExactMultiGPRunner
 from pgfml.kernels import GFKernel
 
 # from pgf_kernel_experiments.experiments.bloch_density.bloch_density import BlochDensity
-from pgf_kernel_experiments.experiments.rastrigin.tmp.set_paths import data_path, output_path
+from pgf_kernel_experiments.experiments.trigonometric.tmp.set_paths import data_path, output_path
 
 # %% Create paths if they don't exist
 
@@ -305,7 +305,7 @@ cb.ax.tick_params(labelsize=fontsize)
 # %%
 
 fig.savefig(
-    output_path.joinpath('rastrigin_predictions.png'),
+    output_path.joinpath('trigonometric_predictions.png'),
     dpi=600,
     pil_kwargs={'quality': 100},
     transparent=True,

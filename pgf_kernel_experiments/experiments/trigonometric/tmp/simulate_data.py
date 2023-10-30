@@ -3,7 +3,7 @@
 import numpy as np
 import scipy
 
-from pgf_kernel_experiments.experiments.rastrigin.set_paths import data_path
+from pgf_kernel_experiments.experiments.trigonometric.set_paths import data_path
 
 # %% Set seed
 
@@ -11,7 +11,7 @@ np.random.seed(9)
 
 # %% Function for computing spherical Rastrigin function at a single point
 
-def rastrigin_function(phi, theta, a, b):
+def trigonometric_function(phi, theta, a, b):
     result = 2 * a
     # result = result + ((phi / b[0]) ** 2) - a * np.cos(2 * np.pi * phi / b[0])
     # result = result + ((theta / b[1]) ** 2) - a * np.cos(2 * np.pi * theta / b[1])
@@ -22,7 +22,7 @@ def rastrigin_function(phi, theta, a, b):
 
 # %% Function for generating data
 
-def gen_rastrigin_data(phi, theta, a, b):
+def gen_trigonometric_data(phi, theta, a, b):
     x = np.outer(np.cos(phi), np.sin(theta))
     y = np.outer(np.sin(phi), np.sin(theta))
     z = np.outer(np.ones(np.size(phi)), np.cos(theta))
@@ -33,7 +33,7 @@ def gen_rastrigin_data(phi, theta, a, b):
 
     for i in range(n_rows):
         for j in range(n_cols):
-            freqs[i, j] = rastrigin_function(phi[i], theta[j], a, b)
+            freqs[i, j] = trigonometric_function(phi[i], theta[j], a, b)
 
     return x, y, z, freqs
 
@@ -48,7 +48,7 @@ theta = np.tile(np.linspace(0, np.pi, num=n_incl, endpoint=True), 2)
 a = 10.
 b = [0.01, 0.02] # [10 * np.pi, 10 * np.pi]
 
-x, y, z, freqs = gen_rastrigin_data(phi, theta, a, b)
+x, y, z, freqs = gen_trigonometric_data(phi, theta, a, b)
 
 freqs[-1] = freqs[0]
 

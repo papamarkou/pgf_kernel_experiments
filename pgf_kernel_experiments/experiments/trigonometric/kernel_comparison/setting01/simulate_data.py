@@ -2,8 +2,8 @@
 
 import numpy as np
 
-from pgf_kernel_experiments.experiments.rastrigin.kernel_comparison.setting01.set_env import data_path, seed
-from pgf_kernel_experiments.experiments.rastrigin.rastrigin import gen_rastrigin_data
+from pgf_kernel_experiments.experiments.trigonometric.kernel_comparison.setting01.set_env import data_path, seed
+from pgf_kernel_experiments.experiments.trigonometric.trigonometric import gen_trigonometric_data
 
 # %% Create paths if they don't exist
 
@@ -33,7 +33,7 @@ c = 10
 # b = [0.0202, 0.0205]
 # c = 10
 
-x, y, z, v = gen_rastrigin_data(phi, theta, a, b, c)
+x, y, z, v = gen_trigonometric_data(phi, theta, a, b, c)
 
 num_samples = np.size(v)
 
