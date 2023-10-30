@@ -2,19 +2,16 @@
 
 import numpy as np
 
-# %% Function for computing spherical Rastrigin function given input in polar coordinates
-
-def trigonometric_function(phi, theta, a, b, c):
-    result = (phi ** 2) - a * np.cos(2 * np.pi * phi / b[0])
-    result = result + (theta ** 2) - a * np.cos(2 * np.pi * theta / b[1])
-
-    return result / c
-
-# %% Function for generating data from the spherical Rastrigin function
+# %% Function for computing trigonometric function given input in Cartesian coordinates
 
 # https://www.chebfun.org/docs/guide/guide17.html
 
-def gen_trigonometric_data(phi, theta, a, b, c):
+def trigonometric_function(x, y, z):
+    return np.cos(np.cosh(5 * x * z) - 10 * y)
+
+# %% Function for generating data from the trigonometric function given polar coordinates
+
+def gen_trigonometric_data(phi, theta):
     x = np.outer(np.cos(phi), np.sin(theta))
     y = np.outer(np.sin(phi), np.sin(theta))
     z = np.outer(np.ones(np.size(phi)), np.cos(theta))
@@ -25,7 +22,6 @@ def gen_trigonometric_data(phi, theta, a, b, c):
 
     for i in range(n_rows):
         for j in range(n_cols):
-            # v[i, j] = trigonometric_function(phi[i], theta[j], a, b, c)
-            v[i, j] = np.cos(np.cosh(5 * x[i, j] * z[i, j]) - 10 * y[i, j])
+            v[i, j] = trigonometric_function(x[i, j], y[i, j], z[i, j])
 
     return x, y, z, v

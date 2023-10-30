@@ -15,7 +15,6 @@ np.random.seed(seed)
 
 # %% Generate data
 
-# num_incl = 100
 num_incl = 200
 
 # Azimuth phi
@@ -26,24 +25,13 @@ phi.sort()
 theta = np.tile(np.random.uniform(low=0, high=np.pi, size=num_incl), 2)
 theta.sort()
 
-a = 30.
-b = [0.0025, 0.002]
-c = 10
-# a = 30.
-# b = [0.0202, 0.0205]
-# c = 10
-
-x, y, z, v = gen_trigonometric_data(phi, theta, a, b, c)
+x, y, z, v = gen_trigonometric_data(phi, theta)
 
 num_samples = np.size(v)
 
 # %% Generate training data
 
 ids = np.arange(num_samples)
-
-# num_train = int(0.5 * num_samples)
-# num_train = int(0.015 * num_samples)
-# num_train = 2500
 
 train_ids = np.random.choice(ids, size=4000, replace=False)
 
@@ -52,7 +40,6 @@ train_ids.sort()
 # %% Generate test data
 
 test_ids = np.array(list(set(ids).difference(set(train_ids))))
-# test_ids = np.random.choice(test_ids, size=10000, replace=False)
 test_ids = np.random.choice(test_ids, size=4000, replace=False)
 
 test_ids.sort()
