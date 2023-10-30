@@ -12,8 +12,6 @@ def rastrigin_function(phi, theta, a, b, c):
 
 # %% Function for generating data from the spherical Rastrigin function
 
-# https://www.chebfun.org/docs/guide/guide17.html
-
 def gen_rastrigin_data(phi, theta, a, b, c):
     x = np.outer(np.cos(phi), np.sin(theta))
     y = np.outer(np.sin(phi), np.sin(theta))
@@ -25,7 +23,6 @@ def gen_rastrigin_data(phi, theta, a, b, c):
 
     for i in range(n_rows):
         for j in range(n_cols):
-            # v[i, j] = rastrigin_function(phi[i], theta[j], a, b, c)
-            v[i, j] = np.cos(np.cosh(5 * x[i, j] * z[i, j]) - 10 * y[i, j])
+            v[i, j] = rastrigin_function(phi[i], theta[j], a, b, c)
 
     return x, y, z, v

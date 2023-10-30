@@ -41,10 +41,6 @@ num_samples = np.size(v)
 
 ids = np.arange(num_samples)
 
-# num_train = int(0.5 * num_samples)
-# num_train = int(0.015 * num_samples)
-# num_train = 2500
-
 train_ids = np.random.choice(ids, size=4000, replace=False)
 
 train_ids.sort()
@@ -52,7 +48,6 @@ train_ids.sort()
 # %% Generate test data
 
 test_ids = np.array(list(set(ids).difference(set(train_ids))))
-# test_ids = np.random.choice(test_ids, size=10000, replace=False)
 test_ids = np.random.choice(test_ids, size=4000, replace=False)
 
 test_ids.sort()
