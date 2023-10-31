@@ -26,13 +26,17 @@ for i in range(num_runs):
 
     np.random.seed(data_seed+i)
 
-    # Azimuth phi
+    # Generate azimuth phi for polar coordinates of all data
+
     phi = np.random.uniform(low=-np.pi, high=np.pi, size=2*num_incl)
     phi.sort()
 
-    # Inclination theta
+    # Generate inclination theta for polar coordinates of all data
+
     theta = np.tile(np.random.uniform(low=0, high=np.pi, size=num_incl), 2)
     theta.sort()
+
+    # Generate all data, with input data in Cartesian cordinates
 
     x, y, z, v = gen_trigonometric_data(phi, theta)
 
@@ -56,7 +60,7 @@ for i in range(num_runs):
     # Save data
 
     np.savetxt(
-        data_path.joinpath('data.csv'),
+        data_paths[i].joinpath('data.csv'),
         np.column_stack([
             np.outer(phi, np.ones(np.size(theta))).flatten(),
             np.outer(np.ones(np.size(phi)), theta).flatten(),
@@ -70,7 +74,7 @@ for i in range(num_runs):
         comments=''
     )
 
-    np.savetxt(data_path.joinpath('dims.csv'), np.array([np.size(phi), np.size(theta)]), fmt='%i')
+    np.savetxt(data_paths[i].joinpath('dims.csv'), np.array([np.size(phi), np.size(theta)]), fmt='%i')
 
-    np.savetxt(data_path.joinpath('train_ids.csv'), train_ids, fmt='%i')
-    np.savetxt(data_path.joinpath('test_ids.csv'), test_ids, fmt='%i')
+    np.savetxt(data_paths[i].joinpath('train_ids.csv'), train_ids, fmt='%i')
+    np.savetxt(data_paths[i].joinpath('test_ids.csv'), test_ids, fmt='%i')
