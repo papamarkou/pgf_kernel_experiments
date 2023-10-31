@@ -2,7 +2,7 @@
 
 declare -a files=(
     "simulate_data.py"
-    "train_gps.py"
+    "train_gp01.py"
     "make_predictions.py"
 )
 
