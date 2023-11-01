@@ -1,9 +1,8 @@
 # %% Import packages
 
+import gpytorch
 import numpy as np
 import torch
-
-from pgfml.kernels import GFKernel
 
 from pgf_kernel_experiments.experiments.trigonometric.kernel_comparison.setting01.set_env import (
     data_paths, num_runs, num_train_iters, num_train_seeds, output_basepath, output_paths, train_seeds, use_cuda
@@ -66,7 +65,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Set # %% Set up ExactSingleGPRunner
 
-        kernel = GFKernel(width=[30, 30, 30])
+        kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
 
         runner = ExactSingleGPRunner(train_x, train_y, kernel, use_cuda=use_cuda)
 
@@ -80,24 +79,21 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         optimizer = torch.optim.Adam([
             {"params": runner.model.likelihood.noise_covar.raw_noise, "lr": 0.1},
             {"params": runner.model.mean_module.raw_constant, "lr": 0.1},
-            {"params": runner.model.covar_module.pars0, "lr": 5.5},
-            {"params": runner.model.covar_module.pars1, "lr": 5.5},
-            {"params": runner.model.covar_module.pars2, "lr": 5.5}
+            {"params": runner.model.covar_module.raw_outputscale, "lr": 0.5},
+            {"params": runner.model.covar_module.base_kernel.raw_lengthscale, "lr": 0.5}
         ])
 
         # Set scheduler
 
         scheduler = torch.optim.lr_scheduler.CyclicLR(
             optimizer,
-            base_lr=[0.05, 0.05, 2, 2, 2],
-            max_lr=[0.1, 0.1, 5.5, 5.5, 5.5],
+            base_lr=[0.05, 0.05, 0.05, 0.05],
+            max_lr=[0.1, 0.1, 0.5, 0.5],
             step_size_up=25,
             mode='triangular',
             cycle_momentum=False
         )
-        # scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=50, T_mult=1, eta_min=2.0)
-        # scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_train_iters, eta_min=2.0)
-        # scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[400, 470], gamma=0.5)
+        # scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=50, T_mult=1, eta_min=0.05)
 
         # Train GP model to find optimal hyperparameters
 
@@ -105,12 +101,12 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Save model state
 
-        torch.save(runner.model.state_dict(), output_paths[success_count].joinpath('pgf_gp_state.pth'))
+        torch.save(runner.model.state_dict(), output_paths[success_count].joinpath('rbf_gp_state.pth'))
 
         # Save losses
 
         np.savetxt(
-            output_paths[success_count].joinpath('pgf_gp_losses.csv'),
+            output_paths[success_count].joinpath('rbf_gp_losses.csv'),
             losses.cpu().detach().numpy(),
             delimiter=',',
             comments=''
@@ -140,13 +136,13 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 # %% Save successful and failed seeds
 
 np.savetxt(
-    output_basepath.joinpath('pgf_gp_successful_seeds.csv'),
+    output_basepath.joinpath('rbf_gp_successful_seeds.csv'),
     np.array(successful_seeds),
     fmt='%i'
 )
 
 np.savetxt(
-    output_basepath.joinpath('pgf_gp_failed_seeds.csv'),
+    output_basepath.joinpath('rbf_gp_failed_seeds.csv'),
     np.array(failed_seeds),
     fmt='%i'
 )
