@@ -12,6 +12,10 @@ use_cuda = True
 
 num_runs = 10
 
+# %% Training setup
+
+num_train_iters = 100
+
 # %% Set seeds
 
 data_seed = 5000
