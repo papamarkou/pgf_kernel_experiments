@@ -4,6 +4,9 @@ declare -a files=(
     "simulate_data.py"
     "train_pgf_gp.py"
     "train_rbf_gp.py"
+    "train_matern_gp.py"
+    "train_periodic_gp.py"
+    "train_spectral_gp.py"
     "make_predictions.py"
 )
 
