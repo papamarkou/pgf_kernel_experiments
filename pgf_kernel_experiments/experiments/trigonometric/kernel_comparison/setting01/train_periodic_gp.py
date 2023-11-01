@@ -30,7 +30,7 @@ if verbose:
 while ((success_count < num_runs) and (tot_count < num_train_seeds)):
     # Set seed
 
-    torch.manual_seed(train_seeds[1, tot_count])
+    torch.manual_seed(train_seeds[3, tot_count])
 
     try:
         # Load data
@@ -65,7 +65,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Set # %% Set up ExactSingleGPRunner
 
-        kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel())
+        kernel = gpytorch.kernels.PeriodicKernel()
 
         runner = ExactSingleGPRunner(train_x, train_y, kernel, use_cuda=use_cuda)
 
@@ -79,8 +79,8 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         optimizer = torch.optim.Adam([
             {"params": runner.model.likelihood.noise_covar.raw_noise, "lr": 0.1},
             {"params": runner.model.mean_module.raw_constant, "lr": 0.1},
-            {"params": runner.model.covar_module.raw_outputscale, "lr": 0.5},
-            {"params": runner.model.covar_module.base_kernel.raw_lengthscale, "lr": 0.5}
+            {"params": runner.model.covar_module.raw_lengthscale, "lr": 0.075},
+            {"params": runner.model.covar_module.raw_period_length, "lr": 0.075}
         ])
 
         # Set scheduler
@@ -88,7 +88,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         scheduler = torch.optim.lr_scheduler.CyclicLR(
             optimizer,
             base_lr=[0.05, 0.05, 0.05, 0.05],
-            max_lr=[0.1, 0.1, 0.5, 0.5],
+            max_lr=[0.1, 0.1, 0.075, 0.075],
             step_size_up=25,
             mode='triangular',
             cycle_momentum=False
@@ -101,12 +101,12 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Save model state
 
-        torch.save(runner.model.state_dict(), output_paths[success_count].joinpath('rbf_gp_state.pth'))
+        torch.save(runner.model.state_dict(), output_paths[success_count].joinpath('periodic_gp_state.pth'))
 
         # Save losses
 
         np.savetxt(
-            output_paths[success_count].joinpath('rbf_gp_losses.csv'),
+            output_paths[success_count].joinpath('periodic_gp_losses.csv'),
             losses.cpu().detach().numpy(),
             delimiter=',',
             comments=''
@@ -136,13 +136,13 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 # %% Save successful and failed seeds
 
 np.savetxt(
-    output_basepath.joinpath('rbf_gp_successful_seeds.csv'),
+    output_basepath.joinpath('periodic_gp_successful_seeds.csv'),
     np.array(successful_seeds),
     fmt='%i'
 )
 
 np.savetxt(
-    output_basepath.joinpath('rbf_gp_failed_seeds.csv'),
+    output_basepath.joinpath('periodic_gp_failed_seeds.csv'),
     np.array(failed_seeds),
     fmt='%i'
 )
