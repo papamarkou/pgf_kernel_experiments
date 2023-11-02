@@ -3,7 +3,7 @@
 import numpy as np
 
 from pgf_kernel_experiments.experiments.trigonometric.kernel_comparison.setting01.set_env import (
-    data_paths, data_seed, num_runs
+    a, data_paths, data_seed, num_runs
 )
 from pgf_kernel_experiments.experiments.trigonometric.trigonometric import gen_trigonometric_data
 
@@ -38,7 +38,7 @@ for i in range(num_runs):
 
     # Generate all data, with input data in Cartesian cordinates
 
-    x, y, z, v = gen_trigonometric_data(phi, theta)
+    x, y, z, v = gen_trigonometric_data(phi, theta, a=a)
 
     num_samples = np.size(v)
 

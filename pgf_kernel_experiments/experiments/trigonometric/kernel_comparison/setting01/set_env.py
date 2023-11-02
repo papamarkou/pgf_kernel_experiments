@@ -27,6 +27,10 @@ num_train_seeds = 5*num_gps*num_runs
 
 train_seeds = torch.randint(init_train_seed, init_train_seed+100*num_train_seeds, (num_gps, num_train_seeds))
 
+# %% Set scaling of trigonometric function
+
+a = 6.
+
  # %% Set paths
 
 data_basepath = Path('data')

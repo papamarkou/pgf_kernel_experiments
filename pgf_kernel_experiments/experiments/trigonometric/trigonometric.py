@@ -6,12 +6,12 @@ import numpy as np
 
 # https://www.chebfun.org/docs/guide/guide17.html
 
-def trigonometric_function(x, y, z):
-    return np.cos(np.cosh(5 * x * z) - 10 * y)
+def trigonometric_function(x, y, z, a=1.):
+    return a * np.cos(np.cosh(5 * x * z) - 10 * y)
 
 # %% Function for generating data from the trigonometric function given polar coordinates
 
-def gen_trigonometric_data(phi, theta):
+def gen_trigonometric_data(phi, theta, a=1.):
     x = np.outer(np.cos(phi), np.sin(theta))
     y = np.outer(np.sin(phi), np.sin(theta))
     z = np.outer(np.ones(np.size(phi)), np.cos(theta))
@@ -22,6 +22,6 @@ def gen_trigonometric_data(phi, theta):
 
     for i in range(n_rows):
         for j in range(n_cols):
-            v[i, j] = trigonometric_function(x[i, j], y[i, j], z[i, j])
+            v[i, j] = trigonometric_function(x[i, j], y[i, j], z[i, j], a=a)
 
     return x, y, z, v
