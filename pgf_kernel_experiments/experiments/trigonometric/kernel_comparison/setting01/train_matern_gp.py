@@ -85,15 +85,25 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Set scheduler
 
-        scheduler = torch.optim.lr_scheduler.CyclicLR(
-            optimizer,
-            base_lr=[0.05, 0.05, 0.05, 0.05],
-            max_lr=[0.1, 0.1, 0.5, 0.5],
-            step_size_up=25,
-            mode='triangular',
-            cycle_momentum=False
-        )
-        # scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=50, T_mult=1, eta_min=0.05)
+        # scheduler = torch.optim.lr_scheduler.CyclicLR(
+        #     optimizer,
+        #     # base_lr=[0.01, 0.01, 0.05, 0.05],
+        #     base_lr=[0.05, 0.05, 0.08, 0.08],
+        #     # base_lr=[0.05, 0.05, 0.05, 0.05],
+        #     max_lr=[0.1, 0.1, 0.5, 0.5],
+        #     step_size_up=25,
+        #     scale_fn=lambda x : 0.82 ** (x - 1), 
+        #     cycle_momentum=False
+        # )
+        # scheduler = torch.optim.lr_scheduler.CyclicLR(
+        #     optimizer,
+        #     base_lr=[0.05, 0.05, 0.05, 0.05],
+        #     max_lr=[0.1, 0.1, 0.5, 0.5],
+        #     step_size_up=25,
+        #     mode='triangular',
+        #     cycle_momentum=False
+        # )
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=50, T_mult=1, eta_min=0.05)
 
         # Train GP model to find optimal hyperparameters
 

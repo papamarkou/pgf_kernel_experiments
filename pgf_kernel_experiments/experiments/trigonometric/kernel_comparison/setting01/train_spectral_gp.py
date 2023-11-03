@@ -65,7 +65,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Set # %% Set up ExactSingleGPRunner
 
-        kernel = gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=3)
+        kernel = gpytorch.kernels.SpectralMixtureKernel(num_mixtures=6, ard_num_dims=3)
 
         runner = ExactSingleGPRunner(train_x, train_y, kernel, use_cuda=use_cuda)
 
@@ -86,15 +86,15 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Set scheduler
 
-        scheduler = torch.optim.lr_scheduler.CyclicLR(
-            optimizer,
-            base_lr=[0.05, 0.05, 0.05, 0.05, 0.05],
-            max_lr=[0.1, 0.1, 0.5, 0.5, 0.5],
-            step_size_up=25,
-            mode='triangular',
-            cycle_momentum=False
-        )
-        # scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=50, T_mult=1, eta_min=0.05)
+        # scheduler = torch.optim.lr_scheduler.CyclicLR(
+        #     optimizer,
+        #     base_lr=[0.05, 0.05, 0.05, 0.05, 0.05],
+        #     max_lr=[0.1, 0.1, 0.5, 0.5, 0.5],
+        #     step_size_up=25,
+        #     scale_fn=lambda x : 0.9 ** (x - 1), 
+        #     cycle_momentum=False
+        # )
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=50, T_mult=1, eta_min=0.05)
 
         # Train GP model to find optimal hyperparameters
 
