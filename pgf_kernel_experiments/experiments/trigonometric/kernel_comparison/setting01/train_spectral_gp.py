@@ -77,24 +77,23 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         # Set optimizer
 
         optimizer = torch.optim.Adam([
-            {"params": runner.model.likelihood.noise_covar.raw_noise, "lr": 0.1},
-            {"params": runner.model.mean_module.raw_constant, "lr": 0.1},
-            {"params": runner.model.covar_module.raw_mixture_weights, "lr": 0.5},
-            {"params": runner.model.covar_module.raw_mixture_means, "lr": 0.5},
-            {"params": runner.model.covar_module.raw_mixture_scales, "lr": 0.5}
+            {"params": runner.model.likelihood.noise_covar.raw_noise, "lr": 0.01},
+            {"params": runner.model.mean_module.raw_constant, "lr": 0.01},
+            {"params": runner.model.covar_module.raw_mixture_weights, "lr": 0.01},
+            {"params": runner.model.covar_module.raw_mixture_means, "lr": 0.01},
+            {"params": runner.model.covar_module.raw_mixture_scales, "lr": 0.01}
         ])
 
         # Set scheduler
 
-        # scheduler = torch.optim.lr_scheduler.CyclicLR(
-        #     optimizer,
-        #     base_lr=[0.05, 0.05, 0.05, 0.05, 0.05],
-        #     max_lr=[0.1, 0.1, 0.5, 0.5, 0.5],
-        #     step_size_up=25,
-        #     scale_fn=lambda x : 0.9 ** (x - 1), 
-        #     cycle_momentum=False
-        # )
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=50, T_mult=1, eta_min=0.05)
+        scheduler = torch.optim.lr_scheduler.CyclicLR(
+            optimizer,
+            base_lr=[0.001, 0.001, 0.001, 0.001, 0.001],
+            max_lr=[0.01, 0.01, 0.01, 0.01, 0.01],
+            step_size_up=25,
+            scale_fn=lambda x : 0.79 ** (x - 1),
+            cycle_momentum=False
+        )
 
         # Train GP model to find optimal hyperparameters
 
