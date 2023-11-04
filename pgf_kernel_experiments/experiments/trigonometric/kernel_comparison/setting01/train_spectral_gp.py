@@ -91,7 +91,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
             base_lr=[0.001, 0.001, 0.001, 0.001, 0.001],
             max_lr=[0.01, 0.01, 0.01, 0.01, 0.01],
             step_size_up=25,
-            scale_fn=lambda x : 0.79 ** (x - 1),
+            scale_fn=lambda x : 0.97 ** (x - 1),
             cycle_momentum=False
         )
 

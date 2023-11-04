@@ -15,7 +15,8 @@ num_runs = 1
 
 # %% Training setup
 
-num_train_iters = 500
+# num_train_iters = 500
+num_train_iters = 3000
 
 # %% Set seeds
 
