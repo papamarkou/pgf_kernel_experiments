@@ -7,7 +7,7 @@ import torch
 from pgfml.kernels import GFKernel
 
 from pgf_kernel_experiments.experiments.trigonometric.kernel_comparison.setting01.set_env import (
-    data_paths, num_runs, output_basepath, output_paths, use_cuda
+    data_paths, num_runs, num_test, output_basepath, output_paths, use_cuda
 )
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
@@ -40,6 +40,11 @@ for run_count in range(num_runs):
     train_ids = np.loadtxt(data_paths[run_count].joinpath('train_ids.csv'), dtype='int')
 
     test_ids = np.loadtxt(data_paths[run_count].joinpath('test_ids.csv'), dtype='int')
+
+    if num_test is not None:
+        test_ids = np.random.choice(test_ids, size=num_test, replace=False)
+
+    test_ids.sort()
 
     # Get training data
 

@@ -17,7 +17,7 @@ for i in range(num_runs):
 num_incl = 200
 
 num_train = 4000
-num_test = 4000
+num_test = None
 
 # %% Simulate and save data
 
@@ -53,9 +53,6 @@ for i in range(num_runs):
     # Generate test data
 
     test_ids = np.array(list(set(ids).difference(set(train_ids))))
-    test_ids = np.random.choice(test_ids, size=num_test, replace=False)
-
-    test_ids.sort()
 
     # Save data
 

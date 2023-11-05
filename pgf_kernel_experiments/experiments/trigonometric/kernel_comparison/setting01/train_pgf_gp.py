@@ -80,52 +80,21 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         optimizer = torch.optim.Adam([
             {"params": runner.model.likelihood.noise_covar.raw_noise, "lr": 0.1},
             {"params": runner.model.mean_module.raw_constant, "lr": 0.1},
-            {"params": runner.model.covar_module.pars0, "lr": 5.5},
-            {"params": runner.model.covar_module.pars1, "lr": 5.5},
-            {"params": runner.model.covar_module.pars2, "lr": 5.5}
+            {"params": runner.model.covar_module.pars0, "lr": 0.1},
+            {"params": runner.model.covar_module.pars1, "lr": 0.1},
+            {"params": runner.model.covar_module.pars2, "lr": 0.1}
         ])
 
         # Set scheduler
 
         scheduler = torch.optim.lr_scheduler.CyclicLR(
             optimizer,
-            base_lr=[0.015, 0.015, 0.9, 0.9, 0.9],
-            max_lr=[0.1, 0.1, 5.5, 5.5, 5.5],
+            base_lr=[0.0001, 0.0001, 0.0001, 0.0001, 0.0001],
+            max_lr=[0.1, 0.1, 0.1, 0.1, 0.1],
             step_size_up=25,
-            scale_fn=lambda x : 0.82 ** (x - 1),
+            scale_fn=lambda x : 0.9 ** (x - 1), 
             cycle_momentum=False
         )
-        # scheduler = torch.optim.lr_scheduler.OneCycleLR(
-        #     optimizer,
-        #     max_lr=[0.1, 0.1, 5.5, 5.5, 5.5],
-        #     total_steps=num_train_iters,
-        #     pct_start=0.1
-        # )
-        # scheduler = torch.optim.lr_scheduler.CyclicLR(
-        #     optimizer,
-        #     base_lr=[0.005, 0.005, 0.3, 0.3, 0.3],
-        #     # base_lr=[0.05, 0.05, 1.9, 1.9, 1.9],
-        #     # base_lr=[0.05, 0.05, 2, 2, 2],
-        #     max_lr=[0.1, 0.1, 3, 3, 3],
-        #     # max_lr=[0.1, 0.1, 5.5, 5.5, 5.5],
-        #     step_size_up=50,
-        #     mode='exp_range',
-        #     gamma=0.5,
-        #     cycle_momentum=False
-        # )
-        # scheduler = torch.optim.lr_scheduler.CyclicLR(
-        #     optimizer,
-        #     base_lr=[0.05, 0.05, 2, 2, 2],
-        #     max_lr=[0.1, 0.1, 5.5, 5.5, 5.5],
-        #     step_size_up=25,
-        #     mode='triangular',
-        #     cycle_momentum=False
-        # )
-        # scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
-        #     optimizer, T_0=50, T_mult=1, eta_min=[0.05, 0.05, 2, 2, 2]
-        # )
-        # scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_train_iters, eta_min=2.0)
-        # scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[50, 70, 100, 200], gamma=0.5)
 
         # Train GP model to find optimal hyperparameters
 

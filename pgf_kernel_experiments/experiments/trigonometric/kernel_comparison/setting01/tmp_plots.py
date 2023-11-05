@@ -5,16 +5,31 @@ import numpy as np
 
 # %%
 
-# losses = np.loadtxt(("output/run1/spectral_gp_losses.csv"), skiprows=1)
-# losses = np.loadtxt(("output/run1/periodic_gp_losses.csv"), skiprows=1)
-losses = np.loadtxt(("output/run1/matern_gp_losses.csv"), skiprows=1)
+losses = []
 
-loss_run_mean = np.cumsum(losses) / np.arange(1, losses.shape[0]+1)
+losses.append(np.loadtxt(("output/run1/spectral_gp_losses.csv"), skiprows=1))
+
+losses.append(np.loadtxt(("output/run1/periodic_gp_losses.csv"), skiprows=1))
+
+losses.append(np.loadtxt(("output/run1/matern_gp_losses.csv"), skiprows=1))
+
+losses.append(np.loadtxt(("output/run1/rbf_gp_losses.csv"), skiprows=1))
 
 # %%
 
-plt.plot(losses)
+loss_run_mean = []
 
-plt.plot(loss_run_mean)
+for i in range(4):
+    loss_run_mean.append(np.cumsum(losses[i]) / np.arange(1, losses[i].shape[0]+1))
+
+# %%
+
+for i in range(4):
+    plt.plot(losses[i])
+
+# %%
+
+for i in range(4):
+    plt.plot(loss_run_mean[i])
 
 # %%
