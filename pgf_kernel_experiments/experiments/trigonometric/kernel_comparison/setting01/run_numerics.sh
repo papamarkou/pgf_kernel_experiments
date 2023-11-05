@@ -1,17 +1,10 @@
 #!/bin/bash
 
 declare -a files=(
-    "simulate_data.py"
-    "train_pgf_gp.py"
-    "train_rbf_gp.py"
-    "train_matern_gp.py"
-    "train_periodic_gp.py"
-    "train_spectral_gp.py"
-    "make_predictions.py"
+    "run_data_simulation.sh"
+    "run_training.sh"
+    "run_predictions.sh"
 )
 
-for file in "${files[@]}"
-do
-   echo "Executing $file..."
-   python $file
-done
+echo "Executing $file..."
+./$file
