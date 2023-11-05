@@ -13,6 +13,14 @@ use_cuda = True
 num_runs = 1
 # num_runs = 10
 
+# %% Data simulation setup
+
+num_incl = 200
+
+num_train = 4000
+# num_test = 10000
+num_test = None
+
 # %% Training setup
 
 # num_train_iters = 500
