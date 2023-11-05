@@ -67,7 +67,7 @@ conda env config vars set NUMEXPR_MAX_THREADS=1 # Related to shell convection an
 conda deactivate
 conda activate pgfml
 
-conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
+conda install pytorch=2.0 torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
 
 # python
 # import torch
