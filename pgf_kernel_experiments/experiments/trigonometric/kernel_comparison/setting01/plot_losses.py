@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from pgf_kernel_experiments.experiments.trigonometric.kernel_comparison.setting01.set_env import (
-    num_runs, output_basepath, output_paths
+    dpi, num_runs, output_basepath, output_paths
 )
 
 # %% Generate and save plots of losses
@@ -16,10 +16,11 @@ if verbose:
     num_run_digits = len(str(num_runs))
     msg = 'Plotting losses of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
 
-manual_ylim = False
+manual_ylim = True
 if manual_ylim:
     manual_ylims = [[-2, 10] for _ in range(num_runs)]
 
+kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
 labels = ['PGF kernel','RBF kernel', 'Matern kernel', 'Periodic kernel', 'Spectral kernel']
 
 label_fontsize = 11
@@ -34,11 +35,10 @@ for i in range(num_runs):
 
     # Load losses
 
-    losses = np.loadtxt(
-        output_paths[i].joinpath('losses.csv'),
-        delimiter=',',
-        skiprows=1
-    )
+    losses = []
+    for name in kernel_names:
+        losses.append(np.loadtxt(output_paths[i].joinpath(name+'_gp_losses.csv')))
+    losses = np.array(losses).transpose()
 
     all_losses = all_losses + losses
 
@@ -64,7 +64,7 @@ for i in range(num_runs):
         handle, = plt.plot(range(1, num_iters+1), losses[:, j])
         handles.append(handle)
 
-    plt.xticks(np.arange(0, num_iters+50, 50), fontsize=axis_fontsize)
+    plt.xticks(np.arange(0, num_iters+500, 500), fontsize=axis_fontsize)
     if manual_ylim:
         plt.yticks(np.arange(-2, 10+2, 2), fontsize=axis_fontsize)
 
@@ -81,7 +81,7 @@ for i in range(num_runs):
 
     plt.savefig(
         output_paths[i].joinpath('losses.pdf'),
-        dpi=1200,
+        dpi=dpi,
         bbox_inches='tight',
         pad_inches=0.1
     )
@@ -115,7 +115,7 @@ for j in range(num_kernels):
     handle, = plt.plot(range(1, num_iters+1), all_losses[:, j])
     handles.append(handle)
 
-plt.xticks(np.arange(0, num_iters+50, 50), fontsize=axis_fontsize)
+plt.xticks(np.arange(0, num_iters+500, 500), fontsize=axis_fontsize)
 if manual_ylim:
     plt.yticks(np.arange(-2, 10+2, 2), fontsize=axis_fontsize)
 
@@ -132,7 +132,7 @@ plt.legend(
 
 plt.savefig(
     output_basepath.joinpath('loss_means.pdf'),
-    dpi=1200,
+    dpi=dpi,
     bbox_inches='tight',
     pad_inches=0.1
 )

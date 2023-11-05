@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from pgf_kernel_experiments.experiments.trigonometric.kernel_comparison.setting01.set_env import (
-    a, data_paths, num_runs, output_paths
+    a, data_paths, dpi, num_runs, output_paths
 )
 from pgf_kernel_experiments.plots import set_axes_equal
 
@@ -223,8 +223,7 @@ for i in range(num_runs):
 
     plt.savefig(
         output_paths[i].joinpath('data.pdf'),
-        dpi=600,
-        # dpi=1200,
+        dpi=dpi,
         bbox_inches='tight',
         pad_inches=0.1
     )

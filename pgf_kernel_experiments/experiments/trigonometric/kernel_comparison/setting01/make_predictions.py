@@ -11,6 +11,10 @@ from pgf_kernel_experiments.experiments.trigonometric.kernel_comparison.setting0
 )
 from pgf_kernel_experiments.runners import ExactMultiGPRunner
 
+# %% Set maximum number of CG iterations
+
+# gpytorch.settings.max_cg_iterations(300)
+
 # %% Make and save predictions and error metrics per run
 
 all_scores = []

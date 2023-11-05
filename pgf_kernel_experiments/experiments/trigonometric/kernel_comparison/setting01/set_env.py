@@ -50,3 +50,7 @@ data_paths = [Path(data_basepath, 'run'+str(i+1).zfill(len(str(num_runs)))) for 
 output_basepath = Path('output')
 
 output_paths = [Path(output_basepath, 'run'+str(i+1).zfill(len(str(num_runs)))) for i in range(num_runs)]
+
+# %% Set DPI for saving plots
+
+dpi = 600
