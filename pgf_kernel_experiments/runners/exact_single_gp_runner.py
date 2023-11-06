@@ -64,7 +64,7 @@ class ExactSingleGPRunner:
 
         return scores
 
-    def test(self, test_x, metrics=None):
+    def test(self, test_x):
         self.model.setup('test')
 
         predictions = self.predict(test_x)
