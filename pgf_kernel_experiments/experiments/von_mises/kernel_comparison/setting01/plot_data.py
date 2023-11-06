@@ -65,13 +65,11 @@ for i in range(num_runs):
     # Get training data
 
     train_pos = grid[train_ids, :]
-
     train_output = z[train_ids]
 
     # Get test data
 
     test_pos = grid[test_ids, :]
-
     test_output = z[test_ids]
 
     # Plot training and test data

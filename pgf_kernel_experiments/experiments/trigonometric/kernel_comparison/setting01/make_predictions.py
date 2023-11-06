@@ -44,10 +44,8 @@ for run_count in range(num_runs):
     train_ids = np.loadtxt(data_paths[run_count].joinpath('train_ids.csv'), dtype='int')
 
     test_ids = np.loadtxt(data_paths[run_count].joinpath('test_ids.csv'), dtype='int')
-
     if num_test is not None:
-        test_ids = np.random.choice(test_ids, size=num_test, replace=False)
-
+        test_ids = test_ids[:num_test]
     test_ids.sort()
 
     # Get training data

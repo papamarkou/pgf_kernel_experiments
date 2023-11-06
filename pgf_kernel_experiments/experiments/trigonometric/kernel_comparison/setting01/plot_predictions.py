@@ -9,20 +9,20 @@ from pgf_kernel_experiments.experiments.trigonometric.kernel_comparison.setting0
 )
 from pgf_kernel_experiments.plots import set_axes_equal
 
-# %% Create paths if they don't exist
-
-for i in range(num_runs):
-    output_paths[i].mkdir(parents=True, exist_ok=True)
-
 # %% Generate and save plots of data
 
 verbose = True
 if verbose:
     num_run_digits = len(str(num_runs))
-    msg = 'Plotting dataset {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
+    msg = 'Plotting predictions of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
 
 title_fontsize = 15
 colorbar_fontsize = 11
+
+titles = [
+    ['von Mises density', 'Training data', 'Test data', 'PGF kernel'],
+    ['RBF kernel', 'Matern kernel', 'Periodic kernel', 'Spectral kernel']
+]
 
 for i in range(num_runs):
     # If verbose, state run number
@@ -53,16 +53,22 @@ for i in range(num_runs):
         test_ids = test_ids[:num_test]
     test_ids.sort()
 
+    # Load predictions
+
+    predictions = np.loadtxt(
+        output_paths[i].joinpath('predictions.csv'),
+        delimiter=',',
+        skiprows=1
+    )
+
     # Get training data
 
     train_pos = grid[train_ids, :]
-
     train_output = v[train_ids]
 
     # Get test data
 
     test_pos = grid[test_ids, :]
-
     test_output = v[test_ids]
 
     # Reshape data for plotting
@@ -101,6 +107,13 @@ for i in range(num_runs):
     test_v_plot[non_test_ids] = np.nan
     test_v_plot = test_v_plot.reshape(dims[0], dims[1], order='C')
     test_v_plot = np.vstack([test_v_plot, test_v_plot[0, :]])
+
+    # Generate plot points for GP predictions based on PGF kernel
+
+    pgf_v_plot = np.full_like(v, np.nan).flatten()
+    pgf_v_plot[test_ids] = predictions[:, 0]
+    pgf_v_plot = pgf_v_plot.reshape(dims[0], dims[1], order='C')
+    pgf_v_plot = np.vstack([pgf_v_plot, pgf_v_plot[0, :]])
 
     # Plot data, including separate training and test data (adding color map)
 

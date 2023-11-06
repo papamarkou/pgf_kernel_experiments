@@ -47,6 +47,8 @@ for i in range(num_runs):
 
     test_ids = np.array(list(set(ids).difference(set(train_ids))))
 
+    np.random.shuffle(test_ids)
+
     # Save data
 
     np.savetxt(
