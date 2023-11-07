@@ -118,7 +118,7 @@ for run_count in range(num_runs):
 
     np.savetxt(
         output_paths[run_count].joinpath('pgf_gp_error_metrics.csv'),
-        scores.cpu().detach().numpy(),
+        [scores.cpu().detach().numpy()],
         delimiter=',',
         header='mean_abs_error,mean_sq_error,loss',
         comments=''
@@ -141,7 +141,7 @@ stds = all_scores.std(dim=0)
 
 np.savetxt(
     output_basepath.joinpath('pgf_gp_error_metric_means.csv'),
-    means.cpu().detach().numpy(),
+    [means.cpu().detach().numpy()],
     delimiter=',',
     header='mean_abs_error,mean_sq_error,loss',
     comments=''
@@ -149,7 +149,7 @@ np.savetxt(
 
 np.savetxt(
     output_basepath.joinpath('pgf_gp_error_metric_stds.csv'),
-    stds.cpu().detach().numpy(),
+    [stds.cpu().detach().numpy()],
     delimiter=',',
     header='mean_abs_error,mean_sq_error,loss',
     comments=''
