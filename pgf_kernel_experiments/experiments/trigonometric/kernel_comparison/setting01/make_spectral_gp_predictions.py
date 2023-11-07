@@ -100,8 +100,8 @@ for run_count in range(num_runs):
         test_y,
         metrics=[
             gpytorch.metrics.mean_absolute_error,
-            gpytorch.metrics.mean_squared_error # ,
-            # lambda predictions, y : gpytorch.metrics.negative_log_predictive_density(predictions, y)
+            gpytorch.metrics.mean_squared_error,
+            lambda predictions, y : gpytorch.metrics.negative_log_predictive_density(predictions, y)
         ]
     )
 
@@ -120,7 +120,7 @@ for run_count in range(num_runs):
         output_paths[run_count].joinpath('spectral_gp_error_metrics.csv'),
         scores.cpu().detach().numpy(),
         delimiter=',',
-        header='mean_abs_error,mean_sq_error', # ,loss',
+        header='mean_abs_error,mean_sq_error,loss',
         comments=''
     )
 
