@@ -20,8 +20,9 @@ title_fontsize = 15
 colorbar_fontsize = 11
 
 titles = [
-    ['von Mises density', 'Training data', 'Test data', 'PGF kernel'],
-    ['RBF kernel', 'Matern kernel', 'Periodic kernel', 'Spectral kernel']
+    ['Trigonometric function', 'Noiseless training signal', '',],
+    ['Test data', 'PGF kernel', 'RBF kernel'],
+    ['Matern kernel', 'Periodic kernel', 'Spectral kernel']
 ]
 
 for i in range(num_runs):
@@ -115,9 +116,37 @@ for i in range(num_runs):
     pgf_v_plot = pgf_v_plot.reshape(dims[0], dims[1], order='C')
     pgf_v_plot = np.vstack([pgf_v_plot, pgf_v_plot[0, :]])
 
+    # Generate plot points for GP predictions based on RBF kernel
+
+    rbf_v_plot = np.full_like(v, np.nan).flatten()
+    rbf_v_plot[test_ids] = predictions[:, 1]
+    rbf_v_plot = rbf_v_plot.reshape(dims[0], dims[1], order='C')
+    rbf_v_plot = np.vstack([rbf_v_plot, rbf_v_plot[0, :]])
+
+    # Generate plot points for GP predictions based on Matern kernel
+
+    matern_v_plot = np.full_like(v, np.nan).flatten()
+    matern_v_plot[test_ids] = predictions[:, 2]
+    matern_v_plot = matern_v_plot.reshape(dims[0], dims[1], order='C')
+    matern_v_plot = np.vstack([matern_v_plot, matern_v_plot[0, :]])
+
+    # Generate plot points for GP predictions based on periodic kernel
+
+    periodic_v_plot = np.full_like(v, np.nan).flatten()
+    periodic_v_plot[test_ids] = predictions[:, 3]
+    periodic_v_plot = periodic_v_plot.reshape(dims[0], dims[1], order='C')
+    periodic_v_plot = np.vstack([periodic_v_plot, periodic_v_plot[0, :]])
+
+    # Generate plot points for GP predictions based on spectral kernel
+
+    spectral_v_plot = np.full_like(v, np.nan).flatten()
+    spectral_v_plot[test_ids] = predictions[:, 4]
+    spectral_v_plot = spectral_v_plot.reshape(dims[0], dims[1], order='C')
+    spectral_v_plot = np.vstack([spectral_v_plot, spectral_v_plot[0, :]])
+
     # Plot data, including separate training and test data (adding color map)
 
-    fig = plt.figure(figsize=[14, 6])
+    fig = plt.figure(figsize=[14, 14])
 
     # https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subplots_adjust.html
     # https://stackoverflow.com/questions/6541123/improve-subplot-size-spacing-with-many-subplots
