@@ -6,5 +6,8 @@ declare -a files=(
     "run_predictions.sh"
 )
 
-echo "Executing $file..."
-./$file
+for file in "${files[@]}"
+do
+   echo "Executing $file..."
+   ./$file
+done
