@@ -20,9 +20,9 @@ title_fontsize = 15
 colorbar_fontsize = 11
 
 titles = [
-    ['Trigonometric function', 'Noiseless training signal', '',],
-    ['Test data', 'PGF kernel', 'RBF kernel'],
-    ['Matern kernel', 'Periodic kernel', 'Spectral kernel']
+    'Trigonometric function', 'Noiseless training signal', '',
+    'Test data', 'PGF kernel', 'RBF kernel',
+    'Matern kernel', 'Periodic kernel', 'Spectral kernel'
 ]
 
 for i in range(num_runs):
@@ -111,42 +111,42 @@ for i in range(num_runs):
 
     # Generate plot points for GP predictions based on PGF kernel
 
-    pgf_v_plot = np.full_like(v, np.nan).flatten()
-    pgf_v_plot[test_ids] = predictions[:, 0]
-    pgf_v_plot = pgf_v_plot.reshape(dims[0], dims[1], order='C')
-    pgf_v_plot = np.vstack([pgf_v_plot, pgf_v_plot[0, :]])
+    pgf_gp_v_plot = np.full_like(v, np.nan).flatten()
+    pgf_gp_v_plot[test_ids] = predictions[:, 0]
+    pgf_gp_v_plot = pgf_gp_v_plot.reshape(dims[0], dims[1], order='C')
+    pgf_gp_v_plot = np.vstack([pgf_gp_v_plot, pgf_gp_v_plot[0, :]])
 
     # Generate plot points for GP predictions based on RBF kernel
 
-    rbf_v_plot = np.full_like(v, np.nan).flatten()
-    rbf_v_plot[test_ids] = predictions[:, 1]
-    rbf_v_plot = rbf_v_plot.reshape(dims[0], dims[1], order='C')
-    rbf_v_plot = np.vstack([rbf_v_plot, rbf_v_plot[0, :]])
+    rbf_gp_v_plot = np.full_like(v, np.nan).flatten()
+    rbf_gp_v_plot[test_ids] = predictions[:, 1]
+    rbf_gp_v_plot = rbf_gp_v_plot.reshape(dims[0], dims[1], order='C')
+    rbf_gp_v_plot = np.vstack([rbf_gp_v_plot, rbf_gp_v_plot[0, :]])
 
     # Generate plot points for GP predictions based on Matern kernel
 
-    matern_v_plot = np.full_like(v, np.nan).flatten()
-    matern_v_plot[test_ids] = predictions[:, 2]
-    matern_v_plot = matern_v_plot.reshape(dims[0], dims[1], order='C')
-    matern_v_plot = np.vstack([matern_v_plot, matern_v_plot[0, :]])
+    matern_gp_v_plot = np.full_like(v, np.nan).flatten()
+    matern_gp_v_plot[test_ids] = predictions[:, 2]
+    matern_gp_v_plot = matern_gp_v_plot.reshape(dims[0], dims[1], order='C')
+    matern_gp_v_plot = np.vstack([matern_gp_v_plot, matern_gp_v_plot[0, :]])
 
     # Generate plot points for GP predictions based on periodic kernel
 
-    periodic_v_plot = np.full_like(v, np.nan).flatten()
-    periodic_v_plot[test_ids] = predictions[:, 3]
-    periodic_v_plot = periodic_v_plot.reshape(dims[0], dims[1], order='C')
-    periodic_v_plot = np.vstack([periodic_v_plot, periodic_v_plot[0, :]])
+    periodic_gp_v_plot = np.full_like(v, np.nan).flatten()
+    periodic_gp_v_plot[test_ids] = predictions[:, 3]
+    periodic_gp_v_plot = periodic_gp_v_plot.reshape(dims[0], dims[1], order='C')
+    periodic_gp_v_plot = np.vstack([periodic_gp_v_plot, periodic_gp_v_plot[0, :]])
 
     # Generate plot points for GP predictions based on spectral kernel
 
-    spectral_v_plot = np.full_like(v, np.nan).flatten()
-    spectral_v_plot[test_ids] = predictions[:, 4]
-    spectral_v_plot = spectral_v_plot.reshape(dims[0], dims[1], order='C')
-    spectral_v_plot = np.vstack([spectral_v_plot, spectral_v_plot[0, :]])
+    spectral_gp_v_plot = np.full_like(v, np.nan).flatten()
+    spectral_gp_v_plot[test_ids] = predictions[:, 4]
+    spectral_gp_v_plot = spectral_gp_v_plot.reshape(dims[0], dims[1], order='C')
+    spectral_gp_v_plot = np.vstack([spectral_gp_v_plot, spectral_gp_v_plot[0, :]])
 
     # Plot data, including separate training and test data (adding color map)
 
-    fig = plt.figure(figsize=[14, 14])
+    fig = plt.figure(figsize=[14, 22])
 
     # https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subplots_adjust.html
     # https://stackoverflow.com/questions/6541123/improve-subplot-size-spacing-with-many-subplots
@@ -161,7 +161,7 @@ for i in range(num_runs):
         hspace=0.0 # 0.15
     )
 
-    ax1 = fig.add_subplot(1, 3, 1, projection='3d')
+    ax1 = fig.add_subplot(3, 3, 1, projection='3d')
 
     norm = plt.Normalize()
 
@@ -177,7 +177,7 @@ for i in range(num_runs):
 
     ax1.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(v_plot)), edgecolor='none')
 
-    ax1.set_title('All data', fontsize=title_fontsize)
+    ax1.set_title(titles[0], fontsize=title_fontsize)
 
     ax1.set_box_aspect([1, 1, 1])
 
@@ -194,14 +194,14 @@ for i in range(num_runs):
     ax1.set_ylim(-xyz_lim, xyz_lim)
     ax1.set_zlim(-xyz_lim, xyz_lim)
 
-    ax2 = fig.add_subplot(1, 3, 2, projection='3d')
+    ax2 = fig.add_subplot(3, 3, 2, projection='3d')
 
     ax2.view_init(elev=30, azim=-50, roll=10)
     # ax2.view_init(elev=30, azim=-60, roll=10) # default
 
     ax2.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(train_v_plot)), edgecolor='none')
 
-    ax2.set_title('Training data', fontsize=title_fontsize)
+    ax2.set_title(titles[1], fontsize=title_fontsize)
 
     ax2.set_box_aspect([1, 1, 1])
 
@@ -216,27 +216,137 @@ for i in range(num_runs):
     ax2.set_ylim(-xyz_lim, xyz_lim)
     ax2.set_zlim(-xyz_lim, xyz_lim)
 
-    ax3 = fig.add_subplot(1, 3, 3, projection='3d')
+    ax4 = fig.add_subplot(3, 3, 4, projection='3d')
 
-    ax3.view_init(elev=30, azim=-50, roll=10)
-    # ax3.view_init(elev=30, azim=-60, roll=10) # default
+    ax4.view_init(elev=30, azim=-50, roll=10)
+    # ax4.view_init(elev=30, azim=-60, roll=10) # default
 
-    ax3.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(test_v_plot)), edgecolor='none')
+    ax4.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(test_v_plot)), edgecolor='none')
 
-    ax3.set_title('Test data', fontsize=title_fontsize)
+    ax4.set_title(titles[3], fontsize=title_fontsize)
 
-    ax3.set_box_aspect([1, 1, 1])
+    ax4.set_box_aspect([1, 1, 1])
 
-    # ax3.set_proj_type('ortho') # default is perspective
+    # ax4.set_proj_type('ortho') # default is perspective
 
-    set_axes_equal(ax3)
+    set_axes_equal(ax4)
 
-    ax3.grid(False)
-    ax3.axis('off')
+    ax4.grid(False)
+    ax4.axis('off')
 
-    ax3.set_xlim(-xyz_lim, xyz_lim)
-    ax3.set_ylim(-xyz_lim, xyz_lim)
-    ax3.set_zlim(-xyz_lim, xyz_lim)
+    ax4.set_xlim(-xyz_lim, xyz_lim)
+    ax4.set_ylim(-xyz_lim, xyz_lim)
+    ax4.set_zlim(-xyz_lim, xyz_lim)
+
+    ax5 = fig.add_subplot(3, 3, 5, projection='3d')
+
+    ax5.view_init(elev=30, azim=-50, roll=10)
+    # ax5.view_init(elev=30, azim=-60, roll=10) # default
+
+    ax5.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(pgf_gp_v_plot)), edgecolor='none')
+
+    ax5.set_title(titles[4], fontsize=title_fontsize)
+
+    ax5.set_box_aspect([1, 1, 1])
+
+    # ax5.set_proj_type('ortho') # default is perspective
+
+    set_axes_equal(ax5)
+
+    ax5.grid(False)
+    ax5.axis('off')
+
+    ax5.set_xlim(-xyz_lim, xyz_lim)
+    ax5.set_ylim(-xyz_lim, xyz_lim)
+    ax5.set_zlim(-xyz_lim, xyz_lim)
+
+    ax6 = fig.add_subplot(3, 3, 6, projection='3d')
+
+    ax6.view_init(elev=30, azim=-50, roll=10)
+    # ax6.view_init(elev=30, azim=-60, roll=10) # default
+
+    ax6.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(rbf_gp_v_plot)), edgecolor='none')
+
+    ax6.set_title(titles[5], fontsize=title_fontsize)
+
+    ax6.set_box_aspect([1, 1, 1])
+
+    # ax6.set_proj_type('ortho') # default is perspective
+
+    set_axes_equal(ax6)
+
+    ax6.grid(False)
+    ax6.axis('off')
+
+    ax6.set_xlim(-xyz_lim, xyz_lim)
+    ax6.set_ylim(-xyz_lim, xyz_lim)
+    ax6.set_zlim(-xyz_lim, xyz_lim)
+
+    ax7 = fig.add_subplot(3, 3, 7, projection='3d')
+
+    ax7.view_init(elev=30, azim=-50, roll=10)
+    # ax7.view_init(elev=30, azim=-60, roll=10) # default
+
+    ax7.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(matern_gp_v_plot)), edgecolor='none')
+
+    ax7.set_title(titles[6], fontsize=title_fontsize)
+
+    ax7.set_box_aspect([1, 1, 1])
+
+    # ax7.set_proj_type('ortho') # default is perspective
+
+    set_axes_equal(ax7)
+
+    ax7.grid(False)
+    ax7.axis('off')
+
+    ax7.set_xlim(-xyz_lim, xyz_lim)
+    ax7.set_ylim(-xyz_lim, xyz_lim)
+    ax7.set_zlim(-xyz_lim, xyz_lim)
+
+    ax8 = fig.add_subplot(3, 3, 8, projection='3d')
+
+    ax8.view_init(elev=30, azim=-50, roll=10)
+    # ax8.view_init(elev=30, azim=-60, roll=10) # default
+
+    ax8.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(periodic_gp_v_plot)), edgecolor='none')
+
+    ax8.set_title(titles[7], fontsize=title_fontsize)
+
+    ax8.set_box_aspect([1, 1, 1])
+
+    # ax8.set_proj_type('ortho') # default is perspective
+
+    set_axes_equal(ax8)
+
+    ax8.grid(False)
+    ax8.axis('off')
+
+    ax8.set_xlim(-xyz_lim, xyz_lim)
+    ax8.set_ylim(-xyz_lim, xyz_lim)
+    ax8.set_zlim(-xyz_lim, xyz_lim)
+
+    ax9 = fig.add_subplot(3, 3, 9, projection='3d')
+
+    ax9.view_init(elev=30, azim=-50, roll=10)
+    # ax9.view_init(elev=30, azim=-60, roll=10) # default
+
+    ax9.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(spectral_gp_v_plot)), edgecolor='none')
+
+    ax9.set_title(titles[8], fontsize=title_fontsize)
+
+    ax9.set_box_aspect([1, 1, 1])
+
+    # ax9.set_proj_type('ortho') # default is perspective
+
+    set_axes_equal(ax9)
+
+    ax9.grid(False)
+    ax9.axis('off')
+
+    ax9.set_xlim(-xyz_lim, xyz_lim)
+    ax9.set_ylim(-xyz_lim, xyz_lim)
+    ax9.set_zlim(-xyz_lim, xyz_lim)
 
     # https://www.geeksforgeeks.org/set-matplotlib-colorbar-size-to-match-graph/
 
@@ -275,3 +385,5 @@ for i in range(num_runs):
     )
 
     plt.close(fig)
+
+# %%
