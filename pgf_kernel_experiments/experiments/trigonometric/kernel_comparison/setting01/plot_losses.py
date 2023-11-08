@@ -36,8 +36,8 @@ for i in range(num_runs):
     # Load losses
 
     losses = []
-    for name in kernel_names:
-        losses.append(np.loadtxt(output_paths[i].joinpath(name+'_gp_losses.csv')))
+    for kernel_name in kernel_names:
+        losses.append(np.loadtxt(output_paths[i].joinpath(kernel_name+'_gp_losses.csv')))
     losses = np.array(losses).transpose()
 
     all_losses = all_losses + losses

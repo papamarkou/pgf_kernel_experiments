@@ -6,6 +6,7 @@ declare -a files=(
     "make_matern_gp_predictions.py"
     "make_periodic_gp_predictions.py"
     "make_spectral_gp_predictions.py"
+    "merge_predictions.py"
 )
 
 for file in "${files[@]}"

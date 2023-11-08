@@ -4,8 +4,6 @@ import gpytorch
 import numpy as np
 import torch
 
-from pgfml.kernels import GFKernel
-
 from pgf_kernel_experiments.experiments.trigonometric.kernel_comparison.setting01.set_env import (
     data_paths, num_runs, num_test, output_basepath, output_paths, use_cuda
 )
