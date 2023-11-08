@@ -62,6 +62,7 @@ for i in range(num_runs):
     handles = []
     for j in range(num_kernels):
         handle, = plt.plot(range(1, num_iters+1), losses[:, j])
+        # handle, = plt.plot(range(1, num_iters+1), np.cumsum(losses[:, j]) / np.arange(1, num_iters+1))
         handles.append(handle)
 
     plt.xticks(np.arange(0, num_iters+500, 500), fontsize=axis_fontsize)
@@ -113,6 +114,7 @@ plt.ylabel('Loss', fontsize=label_fontsize)
 handles = []
 for j in range(num_kernels):
     handle, = plt.plot(range(1, num_iters+1), all_losses[:, j])
+    # handle, = plt.plot(range(1, num_iters+1), np.cumsum(all_losses[:, j]) / np.arange(1, num_iters+1))
     handles.append(handle)
 
 plt.xticks(np.arange(0, num_iters+500, 500), fontsize=axis_fontsize)
