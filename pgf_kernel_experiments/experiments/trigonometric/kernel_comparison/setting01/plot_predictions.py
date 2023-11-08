@@ -20,8 +20,8 @@ title_fontsize = 15
 colorbar_fontsize = 11
 
 titles = [
-    'Trigonometric function', 'Noiseless training signal', '',
-    'Test data', 'PGF kernel', 'RBF kernel',
+    'Trigonometric function', 'Noiseless training points', '',
+    'Test points', 'PGF kernel', 'RBF kernel',
     'Matern kernel', 'Periodic kernel', 'Spectral kernel'
 ]
 
@@ -146,7 +146,7 @@ for i in range(num_runs):
 
     # Plot data, including separate training and test data (adding color map)
 
-    fig = plt.figure(figsize=[14, 22])
+    fig = plt.figure(figsize=[14, 18])
 
     # https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subplots_adjust.html
     # https://stackoverflow.com/questions/6541123/improve-subplot-size-spacing-with-many-subplots
@@ -157,8 +157,8 @@ for i in range(num_runs):
         bottom=0.0,
         right=1.0,
         top=1.0,
-        wspace=-0.02, # -0.65,
-        hspace=0.0 # 0.15
+        wspace=-0.02,
+        hspace=-0.45
     )
 
     ax1 = fig.add_subplot(3, 3, 1, projection='3d')
@@ -352,7 +352,8 @@ for i in range(num_runs):
 
     fig.subplots_adjust(bottom=0.0, right=0.80, top=1.0)
 
-    cax = fig.add_axes([0.80, 0.2, 0.01, 0.6])
+    # cax = fig.add_axes([0.80, 0.2, 0.01, 0.6])
+    cax = fig.add_axes([0.80, 0.3, 0.01, 0.4])
 
     # https://stackoverflow.com/questions/33443334/how-to-decrease-colorbar-width-in-matplotlib
     # https://matplotlib.org/stable/api/cm_api.html#matplotlib.cm.ScalarMappable
@@ -378,12 +379,10 @@ for i in range(num_runs):
     # Save plot
 
     plt.savefig(
-        output_paths[i].joinpath('data.pdf'),
+        output_paths[i].joinpath('predictions.pdf'),
         dpi=dpi,
         bbox_inches='tight',
         pad_inches=0.1
     )
 
     plt.close(fig)
-
-# %%
