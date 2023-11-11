@@ -17,7 +17,7 @@ num_runs = 4
 num_incl = 200
 
 num_train = 4000
-num_test = 30000
+num_test = 4000
 # num_test = None
 
 # %% Training setup
