@@ -37,7 +37,8 @@ for run_count in range(num_runs):
     x = data[:, 2]
     y = data[:, 3]
     z = data[:, 4]
-    v = data[:, 5]
+    v_signal = data[:, 5]
+    v = data[:, 7]
 
     train_ids = np.loadtxt(data_paths[run_count].joinpath('train_ids.csv'), dtype='int')
 
@@ -54,7 +55,7 @@ for run_count in range(num_runs):
     # Get test data
 
     test_pos = grid[test_ids, :]
-    test_output = v[test_ids]
+    test_output = v_signal[test_ids]
 
     # Convert training data to PyTorch format
 

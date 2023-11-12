@@ -45,7 +45,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         x = data[:, 2]
         y = data[:, 3]
         z = data[:, 4]
-        v = data[:, 5]
+        v = data[:, 7]
 
         train_ids = np.loadtxt(data_paths[success_count].joinpath('train_ids.csv'), dtype='int')
 
