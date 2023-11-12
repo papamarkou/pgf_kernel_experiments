@@ -16,6 +16,8 @@ if verbose:
     num_run_digits = len(str(num_runs))
     msg = 'Plotting predictions of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
 
+xyz_lim = 0.63
+
 title_fontsize = 15
 colorbar_fontsize = 11
 
@@ -187,8 +189,6 @@ for i in range(num_runs):
 
     ax1.grid(False)
     ax1.axis('off')
-
-    xyz_lim = 0.63
 
     ax1.set_xlim(-xyz_lim, xyz_lim)
     ax1.set_ylim(-xyz_lim, xyz_lim)

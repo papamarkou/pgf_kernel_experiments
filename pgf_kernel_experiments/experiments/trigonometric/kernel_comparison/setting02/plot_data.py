@@ -21,6 +21,8 @@ if verbose:
     num_run_digits = len(str(num_runs))
     msg = 'Plotting dataset {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
 
+xyz_lim = 0.63
+
 title_fontsize = 15
 colorbar_fontsize = 11
 
@@ -77,7 +79,7 @@ for i in range(num_runs):
     z_plot = z.reshape(dims[0], dims[1], order='C')
     z_plot = np.vstack([z_plot, z_plot[0, :]])
 
-    v_signal_plot = v.reshape(dims[0], dims[1], order='C')
+    v_signal_plot = v_signal.reshape(dims[0], dims[1], order='C')
     v_signal_plot = np.vstack([v_signal_plot, v_signal_plot[0, :]])
 
     v_plot = v.reshape(dims[0], dims[1], order='C')
@@ -101,10 +103,10 @@ for i in range(num_runs):
     non_test_ids = np.array(list(set(ids).difference(set(test_ids))))
     non_test_ids.sort()
 
-    test_v_plot = v.flatten()
-    test_v_plot[non_test_ids] = np.nan
-    test_v_plot = test_v_plot.reshape(dims[0], dims[1], order='C')
-    test_v_plot = np.vstack([test_v_plot, test_v_plot[0, :]])
+    test_v_signal_plot = v.flatten()
+    test_v_signal_plot[non_test_ids] = np.nan
+    test_v_signal_plot = test_v_signal_plot.reshape(dims[0], dims[1], order='C')
+    test_v_signal_plot = np.vstack([test_v_signal_plot, test_v_signal_plot[0, :]])
 
     # Plot data, including separate training and test data (adding color map)
 
@@ -150,8 +152,6 @@ for i in range(num_runs):
     ax1.grid(False)
     ax1.axis('off')
 
-    xyz_lim = 0.63
-
     ax1.set_xlim(-xyz_lim, xyz_lim)
     ax1.set_ylim(-xyz_lim, xyz_lim)
     ax1.set_zlim(-xyz_lim, xyz_lim)
@@ -183,7 +183,9 @@ for i in range(num_runs):
     ax3.view_init(elev=30, azim=-50, roll=10)
     # ax3.view_init(elev=30, azim=-60, roll=10) # default
 
-    ax3.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(test_v_plot)), edgecolor='none')
+    ax3.plot_surface(
+        x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(test_v_signal_plot)), edgecolor='none'
+    )
 
     ax3.set_title('Test data', fontsize=title_fontsize)
 

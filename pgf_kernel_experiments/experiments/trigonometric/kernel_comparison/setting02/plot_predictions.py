@@ -16,12 +16,14 @@ if verbose:
     num_run_digits = len(str(num_runs))
     msg = 'Plotting predictions of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
 
+xyz_lim = 0.63
+
 title_fontsize = 15
 colorbar_fontsize = 11
 
 titles = [
-    'Trigonometric function', 'Noiseless training points', '',
-    'Test points', 'PGF kernel', 'RBF kernel',
+    'Trigonometric function', 'Noisy signal', 'Training data',
+    'Test data', 'PGF kernel', 'RBF kernel',
     'Matern kernel', 'Periodic kernel', 'Spectral kernel'
 ]
 
@@ -43,7 +45,8 @@ for i in range(num_runs):
     x = data[:, 2]
     y = data[:, 3]
     z = data[:, 4]
-    v = data[:, 5]
+    v_signal = data[:, 5]
+    v = data[:, 7]
 
     dims = np.loadtxt(data_paths[i].joinpath('dims.csv'), dtype='int')
 
@@ -70,7 +73,7 @@ for i in range(num_runs):
     # Get test data
 
     test_pos = grid[test_ids, :]
-    test_output = v[test_ids]
+    test_output = v_signal[test_ids]
 
     # Reshape data for plotting
 
@@ -82,6 +85,9 @@ for i in range(num_runs):
 
     z_plot = z.reshape(dims[0], dims[1], order='C')
     z_plot = np.vstack([z_plot, z_plot[0, :]])
+
+    v_signal_plot = v_signal.reshape(dims[0], dims[1], order='C')
+    v_signal_plot = np.vstack([v_signal_plot, v_signal_plot[0, :]])
 
     v_plot = v.reshape(dims[0], dims[1], order='C')
     v_plot = np.vstack([v_plot, v_plot[0, :]])
@@ -104,10 +110,10 @@ for i in range(num_runs):
     non_test_ids = np.array(list(set(ids).difference(set(test_ids))))
     non_test_ids.sort()
 
-    test_v_plot = v.flatten()
-    test_v_plot[non_test_ids] = np.nan
-    test_v_plot = test_v_plot.reshape(dims[0], dims[1], order='C')
-    test_v_plot = np.vstack([test_v_plot, test_v_plot[0, :]])
+    test_v_signal_plot = v.flatten()
+    test_v_signal_plot[non_test_ids] = np.nan
+    test_v_signal_plot = test_v_signal_plot.reshape(dims[0], dims[1], order='C')
+    test_v_signal_plot = np.vstack([test_v_signal_plot, test_v_signal_plot[0, :]])
 
     # Generate plot points for GP predictions based on PGF kernel
 
@@ -175,7 +181,7 @@ for i in range(num_runs):
 
     # https://github.com/matplotlib/matplotlib/issues/14647
 
-    ax1.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(v_plot)), edgecolor='none')
+    ax1.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(v_signal_plot)), edgecolor='none')
 
     ax1.set_title(titles[0], fontsize=title_fontsize)
 
@@ -188,18 +194,25 @@ for i in range(num_runs):
     ax1.grid(False)
     ax1.axis('off')
 
-    xyz_lim = 0.63
-
     ax1.set_xlim(-xyz_lim, xyz_lim)
     ax1.set_ylim(-xyz_lim, xyz_lim)
     ax1.set_zlim(-xyz_lim, xyz_lim)
 
     ax2 = fig.add_subplot(3, 3, 2, projection='3d')
 
+    norm = plt.Normalize()
+
+    # https://stackoverflow.com/questions/2578752/how-can-i-plot-nan-values-as-a-special-color-with-imshow-in-matplotlib
+
+    cmap = plt.cm.jet
+    cmap.set_bad('white')
+
     ax2.view_init(elev=30, azim=-50, roll=10)
     # ax2.view_init(elev=30, azim=-60, roll=10) # default
 
-    ax2.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(train_v_plot)), edgecolor='none')
+    # https://github.com/matplotlib/matplotlib/issues/14647
+
+    ax2.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(v_plot)), edgecolor='none')
 
     ax2.set_title(titles[1], fontsize=title_fontsize)
 
@@ -216,12 +229,36 @@ for i in range(num_runs):
     ax2.set_ylim(-xyz_lim, xyz_lim)
     ax2.set_zlim(-xyz_lim, xyz_lim)
 
+    ax3 = fig.add_subplot(3, 3, 3, projection='3d')
+
+    ax3.view_init(elev=30, azim=-50, roll=10)
+    # ax3.view_init(elev=30, azim=-60, roll=10) # default
+
+    ax3.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(train_v_plot)), edgecolor='none')
+
+    ax3.set_title(titles[2], fontsize=title_fontsize)
+
+    ax3.set_box_aspect([1, 1, 1])
+
+    # ax3.set_proj_type('ortho') # default is perspective
+
+    set_axes_equal(ax3)
+
+    ax3.grid(False)
+    ax3.axis('off')
+
+    ax3.set_xlim(-xyz_lim, xyz_lim)
+    ax3.set_ylim(-xyz_lim, xyz_lim)
+    ax3.set_zlim(-xyz_lim, xyz_lim)
+
     ax4 = fig.add_subplot(3, 3, 4, projection='3d')
 
     ax4.view_init(elev=30, azim=-50, roll=10)
     # ax4.view_init(elev=30, azim=-60, roll=10) # default
 
-    ax4.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(test_v_plot)), edgecolor='none')
+    ax4.plot_surface(
+        x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(test_v_signal_plot)), edgecolor='none'
+    )
 
     ax4.set_title(titles[3], fontsize=title_fontsize)
 
