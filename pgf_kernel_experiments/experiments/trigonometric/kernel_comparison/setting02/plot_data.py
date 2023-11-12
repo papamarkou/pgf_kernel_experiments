@@ -42,7 +42,8 @@ for i in range(num_runs):
     x = data[:, 2]
     y = data[:, 3]
     z = data[:, 4]
-    v = data[:, 5]
+    v_signal = data[:, 5]
+    v = data[:, 7]
 
     dims = np.loadtxt(data_paths[i].joinpath('dims.csv'), dtype='int')
 
@@ -63,7 +64,7 @@ for i in range(num_runs):
 
     test_pos = grid[test_ids, :]
 
-    test_output = v[test_ids]
+    test_output = v_signal[test_ids]
 
     # Reshape data for plotting
 
@@ -76,6 +77,9 @@ for i in range(num_runs):
     z_plot = z.reshape(dims[0], dims[1], order='C')
     z_plot = np.vstack([z_plot, z_plot[0, :]])
 
+    v_signal_plot = v.reshape(dims[0], dims[1], order='C')
+    v_signal_plot = np.vstack([v_signal_plot, v_signal_plot[0, :]])
+
     v_plot = v.reshape(dims[0], dims[1], order='C')
     v_plot = np.vstack([v_plot, v_plot[0, :]])
 
@@ -84,13 +88,13 @@ for i in range(num_runs):
     num_samples = dims[0] * dims[1]
     ids = np.arange(num_samples)
 
-    non_train_ids = np.array(list(set(ids).difference(set(train_ids))))
-    non_train_ids.sort()
+    # non_train_ids = np.array(list(set(ids).difference(set(train_ids))))
+    # non_train_ids.sort()
 
-    train_v_plot = v.flatten()
-    train_v_plot[non_train_ids] = np.nan
-    train_v_plot = train_v_plot.reshape(dims[0], dims[1], order='C')
-    train_v_plot = np.vstack([train_v_plot, train_v_plot[0, :]])
+    # train_v_plot = v.flatten()
+    # train_v_plot[non_train_ids] = np.nan
+    # train_v_plot = train_v_plot.reshape(dims[0], dims[1], order='C')
+    # train_v_plot = np.vstack([train_v_plot, train_v_plot[0, :]])
 
     # Generate plot points for test data
 
@@ -133,9 +137,9 @@ for i in range(num_runs):
 
     # https://github.com/matplotlib/matplotlib/issues/14647
 
-    ax1.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(v_plot)), edgecolor='none')
+    ax1.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(v_signal_plot)), edgecolor='none')
 
-    ax1.set_title('All data', fontsize=title_fontsize)
+    ax1.set_title('Noiseless signal', fontsize=title_fontsize)
 
     ax1.set_box_aspect([1, 1, 1])
 
@@ -157,9 +161,9 @@ for i in range(num_runs):
     ax2.view_init(elev=30, azim=-50, roll=10)
     # ax2.view_init(elev=30, azim=-60, roll=10) # default
 
-    ax2.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(train_v_plot)), edgecolor='none')
+    ax2.plot_surface(x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(v_plot)), edgecolor='none')
 
-    ax2.set_title('Training data', fontsize=title_fontsize)
+    ax2.set_title('Noisy signal', fontsize=title_fontsize)
 
     ax2.set_box_aspect([1, 1, 1])
 

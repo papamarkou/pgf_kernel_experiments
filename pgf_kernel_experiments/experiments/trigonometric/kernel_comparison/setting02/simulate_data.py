@@ -31,9 +31,13 @@ for i in range(num_runs):
 
     # Generate all data, with input data in Cartesian cordinates
 
-    x, y, z, v = gen_trigonometric_data(phi, theta, a=a)
+    x, y, z, v_signal = gen_trigonometric_data(phi, theta, a=a)
 
-    num_samples = np.size(v)
+    v_noise = np.random.default_rng().normal(loc=0.0, scale=0.5, size=v_signal.shape)
+
+    v = v_signal + v_noise
+
+    num_samples = np.size(v_signal)
 
     # Generate training data
 
@@ -59,10 +63,12 @@ for i in range(num_runs):
             x.flatten(),
             y.flatten(),
             z.flatten(),
+            v_signal.flatten(),
+            v_noise.flatten(),
             v.flatten()
         ]),
         delimiter=',',
-        header='phi,theta,x,y,z,v',
+        header='phi,theta,x,y,z,v_signal,v_noise,v',
         comments=''
     )
 
