@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from pgf_kernel_experiments.experiments.trigonometric.kernel_comparison.setting02.set_env import num_runs, output_paths
+from pgf_kernel_experiments.experiments.discoball.kernel_comparison.setting02.set_env import num_runs, output_paths
 
 # %% Merge and save predictions in a single file per run
 

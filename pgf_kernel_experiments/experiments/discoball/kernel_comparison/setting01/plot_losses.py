@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from pgf_kernel_experiments.experiments.trigonometric.kernel_comparison.setting01.set_env import (
+from pgf_kernel_experiments.experiments.discoball.kernel_comparison.setting01.set_env import (
     dpi, num_runs, output_basepath, output_paths
 )
 

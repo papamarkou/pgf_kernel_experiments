@@ -5,7 +5,7 @@ import torch
 
 from pgfml.kernels import GFKernel
 
-from pgf_kernel_experiments.experiments.trigonometric.kernel_comparison.setting02.set_env import (
+from pgf_kernel_experiments.experiments.discoball.kernel_comparison.setting02.set_env import (
     data_paths, num_runs, num_train_iters, num_train_seeds, output_basepath, output_paths, train_seeds, use_cuda
 )
 from pgf_kernel_experiments.runners import ExactSingleGPRunner

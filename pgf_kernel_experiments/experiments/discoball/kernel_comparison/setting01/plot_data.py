@@ -4,7 +4,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 
-from pgf_kernel_experiments.experiments.trigonometric.kernel_comparison.setting01.set_env import (
+from pgf_kernel_experiments.experiments.discoball.kernel_comparison.setting01.set_env import (
     a, data_paths, dpi, num_runs, num_test, output_paths
 )
 from pgf_kernel_experiments.plots import set_axes_equal
