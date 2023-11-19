@@ -3,7 +3,7 @@
 import numpy as np
 
 from pgf_kernel_experiments.experiments.discoball.kernel_comparison.setting01.set_env import (
-    a, data_paths, data_seed, num_incl, num_runs, num_train
+    a, b, data_paths, data_seed, k, l, m, num_incl, num_runs, num_train, terms
 )
 from pgf_kernel_experiments.experiments.discoball.discoball import gen_discoball_data
 
@@ -31,7 +31,7 @@ for i in range(num_runs):
 
     # Generate all data, with input data in Cartesian cordinates
 
-    x, y, z, v = gen_discoball_data(phi, theta, a=a)
+    x, y, z, v = gen_discoball_data(phi, theta, k, l, m, terms, a=a, b=b)
 
     num_samples = np.size(v)
 

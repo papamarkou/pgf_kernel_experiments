@@ -4,35 +4,24 @@ import numpy as np
 
 # %% Function for computing discoball function given input in Cartesian coordinates
 
-# https://www.chebfun.org/docs/guide/guide17.html
+def discoball_function(phi, theta, k, l, m, terms, a=1., b=0.):
+    num_terms = len(k)
 
-# def discoball_function(x, y, z, a=1.):
-#     return a * np.cos(np.cosh(5 * x * z) - 10 * y)
+    exponent = 0.
+    for i in range(num_terms):
+        if terms[i] == 0:
+            angle = phi
+        elif terms[i] == 1:
+            angle = theta
+        elif terms[i] == 2:
+            angle = phi + theta
+        exponent += k[i] * np.cos(l[i] * (angle + m[i]))
 
-def discoball_function(phi, theta, k, l, a=1., b=0.):
-    # return a * np.exp(np.cos(10 * (x + y + z)))
-    # return a * np.exp(1.5 * np.cos(15 * phi) + 1.5 * np.cos(15 * theta)) + b
-    return a * np.exp(k[0] * np.cos(l[0] * phi) + k[1] * np.cos(l[1] * theta) + k[2] * np.sin(l[2] * (phi + theta))) + b
-    # return a * np.exp(x + y + z)
+    return a * np.exp(exponent) + b
 
 # %% Function for generating data from the discoball function given polar coordinates
 
-# def gen_discoball_data(phi, theta, a=1.):
-#     x = np.outer(np.cos(phi), np.sin(theta))
-#     y = np.outer(np.sin(phi), np.sin(theta))
-#     z = np.outer(np.ones(np.size(phi)), np.cos(theta))
-
-#     v = np.empty_like(x)
-
-#     n_rows, n_cols = v.shape
-
-#     for i in range(n_rows):
-#         for j in range(n_cols):
-#             v[i, j] = discoball_function(x[i, j], y[i, j], z[i, j], a=a)
-
-#     return x, y, z, v
-
-def gen_discoball_data(phi, theta, k, l, a=1., b=0.):
+def gen_discoball_data(phi, theta, k, l, m, terms, a=1., b=0.):
     x = np.outer(np.cos(phi), np.sin(theta))
     y = np.outer(np.sin(phi), np.sin(theta))
     z = np.outer(np.ones(np.size(phi)), np.cos(theta))
@@ -46,6 +35,6 @@ def gen_discoball_data(phi, theta, k, l, a=1., b=0.):
 
     for i in range(n_rows):
         for j in range(n_cols):
-            v[i, j] = discoball_function(phi_grid[i, j], theta_grid[i, j], k, l, a=a, b=b)
+            v[i, j] = discoball_function(phi_grid[i, j], theta_grid[i, j], k, l, m, terms, a=a, b=b)
 
     return x, y, z, v

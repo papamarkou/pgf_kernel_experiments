@@ -1,5 +1,6 @@
 # %% Import packages
 
+import gpytorch
 import numpy as np
 import torch
 
@@ -66,7 +67,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Set # %% Set up ExactSingleGPRunner
 
-        kernel = GFKernel(width=[20, 20, 20])
+        kernel = gpytorch.kernels.ScaleKernel(GFKernel(width=[20, 20, 20]))
 
         runner = ExactSingleGPRunner(train_x, train_y, kernel, use_cuda=use_cuda)
 
@@ -80,17 +81,18 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         optimizer = torch.optim.Adam([
             {"params": runner.model.likelihood.noise_covar.raw_noise, "lr": 0.1},
             {"params": runner.model.mean_module.raw_constant, "lr": 0.1},
-            {"params": runner.model.covar_module.pars0, "lr": 0.1},
-            {"params": runner.model.covar_module.pars1, "lr": 0.1},
-            {"params": runner.model.covar_module.pars2, "lr": 0.1}
+            {"params": runner.model.covar_module.raw_outputscale, "lr": 0.1},
+            {"params": runner.model.covar_module.base_kernel.pars0, "lr": 0.1},
+            {"params": runner.model.covar_module.base_kernel.pars1, "lr": 0.1},
+            {"params": runner.model.covar_module.base_kernel.pars2, "lr": 0.1}
         ])
 
         # Set scheduler
 
         scheduler = torch.optim.lr_scheduler.CyclicLR(
             optimizer,
-            base_lr=[0.0001, 0.0001, 0.0001, 0.0001, 0.0001],
-            max_lr=[0.1, 0.1, 0.1, 0.1, 0.1],
+            base_lr=[0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001],
+            max_lr=[0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
             step_size_up=25,
             scale_fn=lambda x : 0.9 ** (x - 1), 
             cycle_momentum=False
