@@ -74,7 +74,7 @@ for run_count in range(num_runs):
 
     # Set up ExactSingleGPRunner
 
-    kernel = gpytorch.kernels.PeriodicKernel()
+    kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.PeriodicKernel())
 
     runner = ExactSingleGPRunner(train_x, train_y, kernel, use_cuda=use_cuda)
 

@@ -225,11 +225,13 @@ for i in range(num_runs):
 
     # Save plot
 
-    plt.savefig(
-        output_paths[i].joinpath('data.pdf'),
-        dpi=dpi,
-        bbox_inches='tight',
-        pad_inches=0.1
-    )
+    # plt.savefig(
+    #     output_paths[i].joinpath('data.pdf'),
+    #     dpi=dpi,
+    #     bbox_inches='tight',
+    #     pad_inches=0.1
+    # )
 
-    plt.close(fig)
+    # plt.close(fig)
+
+# %%

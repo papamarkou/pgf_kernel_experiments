@@ -1,5 +1,6 @@
 # %% Import packages
 
+import numpy as np
 import torch
 
 from pathlib import Path
@@ -40,8 +41,10 @@ train_seeds = torch.randint(init_train_seed, init_train_seed+100*num_train_seeds
 
 # %% Set scaling of discoball function
 
-k = [1.5, 1.5, 1.5]
-l = [15, 15, 15]
+k = [1.75, 1.5, 1.25, 1.]
+l = [25, 20, 15, 10]
+m = [np.pi, np.pi / 2, 0., - np.pi / 2]
+terms = [0, 2, 1, 2]
 a = 2.
 b = -7.
 

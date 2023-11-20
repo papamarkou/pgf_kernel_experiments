@@ -65,7 +65,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Set # %% Set up ExactSingleGPRunner
 
-        kernel = gpytorch.kernels.SpectralMixtureKernel(num_mixtures=6, ard_num_dims=3)
+        kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.SpectralMixtureKernel(num_mixtures=6, ard_num_dims=3))
 
         runner = ExactSingleGPRunner(train_x, train_y, kernel, use_cuda=use_cuda)
 
@@ -79,17 +79,18 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         optimizer = torch.optim.Adam([
             {"params": runner.model.likelihood.noise_covar.raw_noise, "lr": 0.01},
             {"params": runner.model.mean_module.raw_constant, "lr": 0.01},
-            {"params": runner.model.covar_module.raw_mixture_weights, "lr": 0.01},
-            {"params": runner.model.covar_module.raw_mixture_means, "lr": 0.01},
-            {"params": runner.model.covar_module.raw_mixture_scales, "lr": 0.01}
+            {"params": runner.model.covar_module.raw_outputscale, "lr": 0.01},
+            {"params": runner.model.covar_module.base_kernel.raw_mixture_weights, "lr": 0.01},
+            {"params": runner.model.covar_module.base_kernel.raw_mixture_means, "lr": 0.01},
+            {"params": runner.model.covar_module.base_kernel.raw_mixture_scales, "lr": 0.01}
         ])
 
         # Set scheduler
 
         scheduler = torch.optim.lr_scheduler.CyclicLR(
             optimizer,
-            base_lr=[0.001, 0.001, 0.001, 0.001, 0.001],
-            max_lr=[0.01, 0.01, 0.01, 0.01, 0.01],
+            base_lr=[0.001, 0.001, 0.001, 0.001, 0.001, 0.001],
+            max_lr=[0.01, 0.01, 0.01, 0.01, 0.01, 0.01],
             step_size_up=25,
             scale_fn=lambda x : 0.97 ** (x - 1),
             cycle_momentum=False
