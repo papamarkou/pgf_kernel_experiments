@@ -75,7 +75,7 @@ for run_count in range(num_runs):
 
     # Set up ExactSingleGPRunner
 
-    kernel = gpytorch.kernels.SpectralMixtureKernel(num_mixtures=6, ard_num_dims=3)
+    kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.SpectralMixtureKernel(num_mixtures=6, ard_num_dims=3))
 
     runner = ExactSingleGPRunner(train_x, train_y, kernel, use_cuda=use_cuda)
 

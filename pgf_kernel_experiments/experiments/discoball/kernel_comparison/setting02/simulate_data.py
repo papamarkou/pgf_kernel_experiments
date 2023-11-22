@@ -3,7 +3,7 @@
 import numpy as np
 
 from pgf_kernel_experiments.experiments.discoball.kernel_comparison.setting02.set_env import (
-    a, b, data_paths, data_seed, k, l, m, num_incl, num_runs, num_train
+    a, b, data_paths, data_seed, k, l, m, num_incl, num_runs, num_train, terms
 )
 from pgf_kernel_experiments.experiments.discoball.discoball import gen_discoball_data
 
@@ -31,7 +31,7 @@ for i in range(num_runs):
 
     # Generate all data, with input data in Cartesian cordinates
 
-    x, y, z, v_signal = gen_discoball_data(phi, theta, k, l, m, a=a, b=b)
+    x, y, z, v_signal = gen_discoball_data(phi, theta, k, l, m, terms, a=a, b=b)
 
     v_noise = np.random.default_rng().normal(loc=0.0, scale=0.5, size=v_signal.shape)
 

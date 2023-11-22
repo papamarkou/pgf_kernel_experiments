@@ -11,8 +11,7 @@ use_cuda = True
 
 # %% Set number of runs
 
-num_runs = 1
-# num_runs = 4
+num_runs = 4
 
 # %% Data simulation setup
 
@@ -24,9 +23,7 @@ num_test = 4000
 
 # %% Training setup
 
-num_train_iters = 100
-# num_train_iters = 1000
-# num_train_iters = 3000
+num_train_iters = 1000
 
 # %% Set seeds
 
@@ -41,12 +38,12 @@ train_seeds = torch.randint(init_train_seed, init_train_seed+100*num_train_seeds
 
 # %% Set scaling of discoball function
 
-k = [1.75, 1.5, 1.25, 1.]
-l = [25, 20, 15, 10]
-m = [np.pi, np.pi / 2, 0., - np.pi / 2]
+k = [0.5, 0.5, 0.5, 0.5]
+l = [15, 15, 15, 15]
+m = [0., np.pi / 2, np.pi, 3 * np.pi / 2]
 terms = [0, 2, 1, 2]
-a = 2.
-b = -7.
+a = 1.
+b = 0.
 
  # %% Set paths
 
