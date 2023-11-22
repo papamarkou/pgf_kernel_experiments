@@ -33,7 +33,7 @@ for i in range(num_runs):
 
     x, y, z, v_signal = gen_discoball_data(phi, theta, k, l, m, terms, a=a, b=b)
 
-    v_noise = np.random.default_rng().normal(loc=0.0, scale=0.5, size=v_signal.shape)
+    v_noise = np.random.default_rng().normal(loc=0.0, scale=0.2, size=v_signal.shape)
 
     v = v_signal + v_noise
 
