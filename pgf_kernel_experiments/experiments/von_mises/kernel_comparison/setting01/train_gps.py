@@ -71,11 +71,11 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         # Set ExactMultiGPRunner
 
         kernels = [
-            GFKernel(width=[30, 30, 30]),
+            gpytorch.kernels.ScaleKernel(GFKernel(width=[30, 30, 30])),
             gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
             gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
-            gpytorch.kernels.PeriodicKernel(),
-            gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2)
+            gpytorch.kernels.ScaleKernel(gpytorch.kernels.PeriodicKernel()),
+            gpytorch.kernels.ScaleKernel(gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2))
         ]
 
         kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
@@ -103,9 +103,10 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         optimizers.append(torch.optim.Adam([
             {"params": runner.single_runners[0].model.likelihood.noise_covar.raw_noise, "lr": 0.1},
             {"params": runner.single_runners[0].model.mean_module.raw_constant, "lr": 0.1},
-            {"params": runner.single_runners[0].model.covar_module.pars0, "lr": 5.5},
-            {"params": runner.single_runners[0].model.covar_module.pars1, "lr": 5.5},
-            {"params": runner.single_runners[0].model.covar_module.pars2, "lr": 5.5}
+            {"params": runner.single_runners[0].model.covar_module.raw_outputscale, "lr": 0.5},
+            {"params": runner.single_runners[0].model.covar_module.base_kernel.pars0, "lr": 5.5},
+            {"params": runner.single_runners[0].model.covar_module.base_kernel.pars1, "lr": 5.5},
+            {"params": runner.single_runners[0].model.covar_module.base_kernel.pars2, "lr": 5.5}
         ]))
 
         ### Set optimizer for RBFKernel
@@ -131,8 +132,9 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         optimizers.append(torch.optim.Adam([
             {"params": runner.single_runners[3].model.likelihood.noise_covar.raw_noise, "lr": 0.1},
             {"params": runner.single_runners[3].model.mean_module.raw_constant, "lr": 0.1},
-            {"params": runner.single_runners[3].model.covar_module.raw_lengthscale, "lr": 0.075},
-            {"params": runner.single_runners[3].model.covar_module.raw_period_length, "lr": 0.075}
+            {"params": runner.single_runners[3].model.covar_module.raw_outputscale, "lr": 0.5},
+            {"params": runner.single_runners[3].model.covar_module.base_kernel.raw_lengthscale, "lr": 0.075},
+            {"params": runner.single_runners[3].model.covar_module.base_kernel.raw_period_length, "lr": 0.075}
         ]))
 
         ### Set optimizer for SpectralMixtureKernel
@@ -140,9 +142,10 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         optimizers.append(torch.optim.Adam([
             {"params": runner.single_runners[4].model.likelihood.noise_covar.raw_noise, "lr": 0.1},
             {"params": runner.single_runners[4].model.mean_module.raw_constant, "lr": 0.1},
-            {"params": runner.single_runners[4].model.covar_module.raw_mixture_weights, "lr": 0.5},
-            {"params": runner.single_runners[4].model.covar_module.raw_mixture_means, "lr": 0.5},
-            {"params": runner.single_runners[4].model.covar_module.raw_mixture_scales, "lr": 0.5}
+            {"params": runner.single_runners[4].model.covar_module.raw_outputscale, "lr": 0.5},
+            {"params": runner.single_runners[4].model.covar_module.base_kernel.raw_mixture_weights, "lr": 0.5},
+            {"params": runner.single_runners[4].model.covar_module.base_kernel.raw_mixture_means, "lr": 0.5},
+            {"params": runner.single_runners[4].model.covar_module.base_kernel.raw_mixture_scales, "lr": 0.5}
         ]))
 
         ## Set schedulers
@@ -155,8 +158,8 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
             # torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizers[0], T_0=50, T_mult=1, eta_min=2.0)
             torch.optim.lr_scheduler.CyclicLR(
                 optimizers[0],
-                base_lr=[0.05, 0.05, 2, 2, 2],
-                max_lr=[0.1, 0.1, 5.5, 5.5, 5.5],
+                base_lr=[0.05, 0.05, 0.05, 2, 2, 2],
+                max_lr=[0.1, 0.1, 0.5, 5.5, 5.5, 5.5],
                 step_size_up=25,
                 mode='triangular',
                 cycle_momentum=False

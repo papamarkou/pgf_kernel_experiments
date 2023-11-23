@@ -71,11 +71,11 @@ for run_count in range(num_runs):
     # Set up ExactMultiGPRunner
 
     kernels = [
-        GFKernel(width=[30, 30, 30]),
+        gpytorch.kernels.ScaleKernel(GFKernel(width=[30, 30, 30])),
         gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()),
         gpytorch.kernels.ScaleKernel(gpytorch.kernels.MaternKernel(nu=0.5)),
-        gpytorch.kernels.PeriodicKernel(),
-        gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2)
+        gpytorch.kernels.ScaleKernel(gpytorch.kernels.PeriodicKernel()),
+        gpytorch.kernels.ScaleKernel(gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2))
     ]
 
     runner = ExactMultiGPRunner.generator(train_x, train_y, kernels, use_cuda=use_cuda)
