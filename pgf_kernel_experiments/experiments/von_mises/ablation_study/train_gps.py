@@ -1,5 +1,6 @@
 # %% Import packages
 
+import gpytorch
 import numpy as np
 import torch
 
@@ -52,12 +53,12 @@ if use_cuda:
 # %% Set up ExactMultiGPRunner
 
 kernels = [
-    GFKernel(width=[2]),
-    GFKernel(width=[100]),
-    GFKernel(width=[200]),
-    GFKernel(width=[10]),
-    GFKernel(width=[10, 10]),
-    GFKernel(width=[10, 10, 10]),
+    gpytorch.kernels.ScaleKernel(GFKernel(width=[2])),
+    gpytorch.kernels.ScaleKernel(GFKernel(width=[100])),
+    gpytorch.kernels.ScaleKernel(GFKernel(width=[200])),
+    gpytorch.kernels.ScaleKernel(GFKernel(width=[10])),
+    gpytorch.kernels.ScaleKernel(GFKernel(width=[10, 10])),
+    gpytorch.kernels.ScaleKernel(GFKernel(width=[10, 10, 10])),
 ]
 
 kernel_names = ['2', '100', '200', '10', '10_10', '10_10_10']
@@ -74,7 +75,7 @@ for i in range(runner.num_gps()):
 
 # list(runner.single_runners[0].model.named_parameters())
 
-lrs = [0.1, 0.1, 3.0, 3.0, 3.0]
+lrs = [0.1, 0.1, 0.1, 3.0, 3.0, 3.0]
 
 optimizers = []
 
@@ -83,40 +84,46 @@ schedulers = []
 optimizers.append(torch.optim.Adam([
     {"params": runner.single_runners[0].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
     {"params": runner.single_runners[0].model.mean_module.raw_constant, "lr": lrs[1]},
-    {"params": runner.single_runners[0].model.covar_module.pars0, "lr": lrs[2]}
+    {"params": runner.single_runners[0].model.covar_module.raw_outputscale, "lr": lrs[2]},
+    {"params": runner.single_runners[0].model.covar_module.base_kernel.pars0, "lr": lrs[3]}
 ]))
 
 optimizers.append(torch.optim.Adam([
     {"params": runner.single_runners[1].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
     {"params": runner.single_runners[1].model.mean_module.raw_constant, "lr": lrs[1]},
-    {"params": runner.single_runners[1].model.covar_module.pars0, "lr": lrs[2]}
+    {"params": runner.single_runners[1].model.covar_module.raw_outputscale, "lr": lrs[2]},
+    {"params": runner.single_runners[1].model.covar_module.base_kernel.pars0, "lr": lrs[3]}
 ]))
 
 optimizers.append(torch.optim.Adam([
     {"params": runner.single_runners[2].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
     {"params": runner.single_runners[2].model.mean_module.raw_constant, "lr": lrs[1]},
-    {"params": runner.single_runners[2].model.covar_module.pars0, "lr": lrs[2]}
+    {"params": runner.single_runners[2].model.covar_module.raw_outputscale, "lr": lrs[2]},
+    {"params": runner.single_runners[2].model.covar_module.base_kernel.pars0, "lr": lrs[3]}
 ]))
 
 optimizers.append(torch.optim.Adam([
     {"params": runner.single_runners[3].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
     {"params": runner.single_runners[3].model.mean_module.raw_constant, "lr": lrs[1]},
-    {"params": runner.single_runners[3].model.covar_module.pars0, "lr": lrs[2]}
+    {"params": runner.single_runners[3].model.covar_module.raw_outputscale, "lr": lrs[2]},
+    {"params": runner.single_runners[3].model.covar_module.base_kernel.pars0, "lr": lrs[3]}
 ]))
 
 optimizers.append(torch.optim.Adam([
     {"params": runner.single_runners[4].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
     {"params": runner.single_runners[4].model.mean_module.raw_constant, "lr": lrs[1]},
-    {"params": runner.single_runners[4].model.covar_module.pars0, "lr": lrs[2]},
-    {"params": runner.single_runners[4].model.covar_module.pars1, "lr": lrs[3]}
+    {"params": runner.single_runners[4].model.covar_module.raw_outputscale, "lr": lrs[2]},
+    {"params": runner.single_runners[4].model.covar_module.base_kernel.pars0, "lr": lrs[3]},
+    {"params": runner.single_runners[4].model.covar_module.base_kernel.pars1, "lr": lrs[4]}
 ]))
 
 optimizers.append(torch.optim.Adam([
     {"params": runner.single_runners[5].model.likelihood.noise_covar.raw_noise, "lr": lrs[0]},
     {"params": runner.single_runners[5].model.mean_module.raw_constant, "lr": lrs[1]},
-    {"params": runner.single_runners[5].model.covar_module.pars0, "lr": lrs[2]},
-    {"params": runner.single_runners[5].model.covar_module.pars1, "lr": lrs[3]},
-    {"params": runner.single_runners[5].model.covar_module.pars2, "lr": lrs[4]}
+    {"params": runner.single_runners[5].model.covar_module.raw_outputscale, "lr": lrs[2]},
+    {"params": runner.single_runners[5].model.covar_module.base_kernel.pars0, "lr": lrs[3]},
+    {"params": runner.single_runners[5].model.covar_module.base_kernel.pars1, "lr": lrs[4]},
+    {"params": runner.single_runners[5].model.covar_module.base_kernel.pars2, "lr": lrs[5]}
 ]))
 
 for i in range(runner.num_gps()):

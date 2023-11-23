@@ -61,12 +61,12 @@ if use_cuda:
 # %% Set up ExactMultiGPRunner
 
 kernels = [
-    GFKernel(width=[2]),
-    GFKernel(width=[100]),
-    GFKernel(width=[200]),
-    GFKernel(width=[10]),
-    GFKernel(width=[10, 10]),
-    GFKernel(width=[10, 10, 10]),
+    gpytorch.kernels.ScaleKernel(GFKernel(width=[2])),
+    gpytorch.kernels.ScaleKernel(GFKernel(width=[100])),
+    gpytorch.kernels.ScaleKernel(GFKernel(width=[200])),
+    gpytorch.kernels.ScaleKernel(GFKernel(width=[10])),
+    gpytorch.kernels.ScaleKernel(GFKernel(width=[10, 10])),
+    gpytorch.kernels.ScaleKernel(GFKernel(width=[10, 10, 10])),
 ]
 
 kernel_names = ['2', '100', '200', '10', '10_10', '10_10_10']
