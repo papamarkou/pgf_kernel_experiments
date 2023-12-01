@@ -21,12 +21,12 @@ for i in range(num_runs):
 
     # Generate azimuth phi for polar coordinates of all data
 
-    phi = np.random.uniform(low=-np.pi, high=np.pi, size=2*num_incl)
+    phi = np.random.default_rng().uniform(low=-np.pi, high=np.pi, size=2*num_incl)
     phi.sort()
 
     # Generate inclination theta for polar coordinates of all data
 
-    theta = np.tile(np.random.uniform(low=0, high=np.pi, size=num_incl), 2)
+    theta = np.tile(np.random.default_rng().uniform(low=0, high=np.pi, size=num_incl), 2)
     theta.sort()
 
     # Generate all data, with input data in Cartesian cordinates

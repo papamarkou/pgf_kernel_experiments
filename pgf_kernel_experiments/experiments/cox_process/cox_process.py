@@ -9,26 +9,42 @@ from scipy.special import gamma
 # https://en.wikipedia.org/wiki/N-sphere#Spherical_coordinates
 # https://math.stackexchange.com/questions/56582/what-is-the-analogue-of-spherical-coordinates-in-n-dimensions
 
-class CoxProcess:
-    def __init__(self, n, r, lambdas, scales):
+class SphericalCoords:
+    def __init__(self, n):
         self.n = n
-        self.r = r
+
+    def simulate_spherical_coords(self, num_points):
+        spherical_coords = np.empty([num_points, self.n])
+
+        for i in range():
+            spherical_coords[:, :(self.n-1)] = None
+            # np.random.default_rng().uniform(low=0, high=np.pi, size=2*num_incl)
+
+    def spherical_to_polar_coords(self):
+        pass
+
+class CoxProcess:
+    def __init__(self, n, lambdas, scales):
+        self.n = n
         self.lambdas = lambdas
         self.scales = scales
 
-    def num_clusters(self):
+    def get_num_clusters(self):
         return len(self.lambdas)
 
-    def surface_area(self):
+    def get_surface_area(self):
         return 2 * (np.pi^(self.n/2)) / gamma(self.n/2)
 
-    def poisson_rates(self):
+    def get_poisson_rates(self):
         return self.surface_area() * self.lambdas
 
     def simulate_cluster_centers(self):
         pass
 
-    def spherical_to_polar_coords(self):
+    def simulate_num_points(self):
+        pass
+
+    def simulate_data(self):
         pass
 
 # %%

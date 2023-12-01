@@ -29,7 +29,7 @@ for i in range(num_runs):
 
     # Generate all data
 
-    theta = np.random.uniform(low=-np.pi, high=np.pi, size=num_samples)
+    theta = np.random.default_rng().uniform(low=-np.pi, high=np.pi, size=num_samples)
     theta.sort()
 
     x = np.cos(theta)

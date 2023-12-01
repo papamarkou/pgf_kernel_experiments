@@ -16,7 +16,7 @@ np.random.seed(5)
 # %% Function for simulating from Wiener process with variance
 
 def sim_dW(n, scale=1.) -> np.ndarray:
-    return np.random.normal(loc=0.0, scale=scale, size=n)
+    return np.random.default_rng().normal(loc=0.0, scale=scale, size=n)
 
 def sim_W(n, scale=1.):
     dW = sim_dW(n, scale=scale)

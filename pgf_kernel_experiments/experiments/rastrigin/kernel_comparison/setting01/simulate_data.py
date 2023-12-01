@@ -19,11 +19,11 @@ np.random.seed(seed)
 num_incl = 200
 
 # Azimuth phi
-phi = np.random.uniform(low=-np.pi, high=np.pi, size=2*num_incl)
+phi = np.random.default_rng().uniform(low=-np.pi, high=np.pi, size=2*num_incl)
 phi.sort()
 
 # Inclination theta
-theta = np.tile(np.random.uniform(low=0, high=np.pi, size=num_incl), 2)
+theta = np.tile(np.random.default_rng().uniform(low=0, high=np.pi, size=num_incl), 2)
 theta.sort()
 
 a = 30.
