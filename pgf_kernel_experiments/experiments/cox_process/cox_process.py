@@ -16,9 +16,10 @@ class SphericalCoords:
     def simulate_spherical_coords(self, num_points):
         spherical_coords = np.empty([num_points, self.n])
 
-        for i in range():
-            spherical_coords[:, :(self.n-1)] = None
-            # np.random.default_rng().uniform(low=0, high=np.pi, size=2*num_incl)
+        spherical_coords[:, :(self.n-1)] = np.random.default_rng().uniform(low=0, high=np.pi, size=[num_points, self.n-1])
+        spherical_coords[:, self.n-1] = np.random.default_rng().uniform(low=0, high=2*np.pi, size=num_points)
+
+        return spherical_coords
 
     def spherical_to_polar_coords(self):
         pass
