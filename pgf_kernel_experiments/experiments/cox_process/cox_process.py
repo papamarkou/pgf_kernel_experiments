@@ -4,7 +4,7 @@ import numpy as np
 
 from scipy.special import gamma
 
-# %% Class for Cox process
+# %% Class for spherical coordinates
 
 # https://en.wikipedia.org/wiki/N-sphere#Spherical_coordinates
 # https://math.stackexchange.com/questions/56582/what-is-the-analogue-of-spherical-coordinates-in-n-dimensions
@@ -33,9 +33,13 @@ class SphericalCoords:
 
         for i in range(1, self.n):
             sin_products = sin_products * np.sin(spherical_coords[:, i-1])
+            cartesian_coords[:, i] = sin_products * np.cos(spherical_coords[:, i])
 
-            if i < self.n:
-                cartesian_coords[:, i] = sin_products * np.cos(spherical_coords[:, i])
+        cartesian_coords[:, self.n] = sin_products * np.sin(spherical_coords[:, self.n-1])
+
+        return cartesian_coords
+
+# %% Calss for Cox process
 
 class CoxProcess:
     def __init__(self, n, lambdas, scales):
