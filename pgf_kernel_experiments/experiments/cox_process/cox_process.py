@@ -3,6 +3,7 @@
 import numpy as np
 
 from scipy.special import gamma
+from scipy.stats import vonmises_fisher
 
 # %% Class for coordinate system
 
@@ -12,6 +13,12 @@ from scipy.special import gamma
 class CoordSys:
     def __init__(self, n=None):
         self.n = n
+
+    def get_num_spherical_coords(self):
+        return self.n
+
+    def get_num_cartesian_coords(self):
+        return self.get_num_spherical_coords() + 1
 
     def simulate_spherical_coords(self, num_points):
         spherical_coords = np.empty([num_points, self.n])
@@ -52,10 +59,10 @@ print(np.linalg.norm(cartesian_coords, axis=1))
 # %% Calss for Cox process
 
 class CoxProcess:
-    def __init__(self, n, lambdas, scales):
+    def __init__(self, n, lambdas, kappas):
         self.coord_sys = CoordSys(n)
         self.lambdas = lambdas
-        self.scales = scales
+        self.kappas = kappas
 
     def get_num_clusters(self):
         return len(self.lambdas)
@@ -72,63 +79,33 @@ class CoxProcess:
     def simulate_num_points(self):
         return np.random.default_rng().poisson(lam=self.get_surface_area() * self.lambdas)
 
-    def simulate_data(self):
-        # cartesian_coords = self.coord_sys.spherical_to_cartesian_coords(spherical_coords)
-        # np.random.default_rng().normal(loc=0.0, scale=0.2, size=v_signal.shape)
-        pass
+    def simulate_data(self, cluster_centers=None, num_points=None):
+        if cluster_centers is None:
+            center_spherical_coords = self.simulate_cluster_centers()
+            center_cartesian_coords = self.coord_sys.spherical_to_cartesian_coords(center_spherical_coords)
+        else:
+            center_cartesian_coords = cluster_centers
+
+        if num_points is None:
+            num_points = self.simulate_num_points()
+
+        data_cartesian_coords = []
+
+        for i in range(self.get_num_clusters()):
+            data_cartesian_coords.append(vonmises_fisher(
+                center_cartesian_coords[i, :], self.kappas[i]).rvs(num_points[i], random_state=np.random.default_rng()
+            ))
+
+        data_cartesian_coords = np.vstack(data_cartesian_coords)
+
+        labels = np.repeat(list(range(len(num_points))), num_points)
+
+        return data_cartesian_coords, labels, center_cartesian_coords, num_points
 
 # %%
 
-def simulate_cox_process(n, r, intensities, scales):
-    num_clusters = len(intensities)
+cox_process = CoxProcess(4, [2, 3, 5], [20, 20, 20])
 
-    center_spherical_coords = None
+cox_process.get_num_clusters()
 
-    center_cartesian_coords = None
-
-    # np.random.default_rng().normal(loc=0.0, scale=0.2, size=v_signal.shape)
-
-    data_polar_coords = None
-
-    data_cartesian_coords = None
-
-    labels = None
-
-    return data_polar_coords, data_cartesian_coords, labels, center_spherical_coords, center_cartesian_coords
-
-# %% Function for computing discoball function given input in Cartesian coordinates
-
-def discoball_function(phi, theta, k, l, m, terms, a=1., b=0.):
-    num_terms = len(k)
-
-    exponent = 0.
-    for i in range(num_terms):
-        if terms[i] == 0:
-            angle = phi
-        elif terms[i] == 1:
-            angle = theta
-        elif terms[i] == 2:
-            angle = phi + theta
-        exponent += k[i] * np.cos(l[i] * (angle + m[i]))
-
-    return a * np.exp(exponent) + b
-
-# %% Function for generating data from the discoball function given polar coordinates
-
-def gen_discoball_data(phi, theta, k, l, m, terms, a=1., b=0.):
-    x = np.outer(np.cos(phi), np.sin(theta))
-    y = np.outer(np.sin(phi), np.sin(theta))
-    z = np.outer(np.ones(np.size(phi)), np.cos(theta))
-
-    phi_grid = np.outer(phi, np.ones(np.size(theta)))
-    theta_grid = np.outer(np.ones(np.size(phi)), theta)
-
-    v = np.empty_like(x)
-
-    n_rows, n_cols = v.shape
-
-    for i in range(n_rows):
-        for j in range(n_cols):
-            v[i, j] = discoball_function(phi_grid[i, j], theta_grid[i, j], k, l, m, terms, a=a, b=b)
-
-    return x, y, z, v
+# %%
