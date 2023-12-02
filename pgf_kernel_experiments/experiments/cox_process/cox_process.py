@@ -4,12 +4,12 @@ import numpy as np
 
 from scipy.special import gamma
 
-# %% Class for spherical coordinates
+# %% Class for coordinate system
 
 # https://en.wikipedia.org/wiki/N-sphere#Spherical_coordinates
 # https://math.stackexchange.com/questions/56582/what-is-the-analogue-of-spherical-coordinates-in-n-dimensions
 
-class SphericalCoords:
+class CoordSys:
     def __init__(self, n=None):
         self.n = n
 
@@ -38,6 +38,16 @@ class SphericalCoords:
         cartesian_coords[:, self.n] = sin_products * np.sin(spherical_coords[:, self.n-1])
 
         return cartesian_coords
+
+# %%
+
+coord_sys = CoordSys(4)
+
+spherical_coords = coord_sys.simulate_spherical_coords(2)
+
+cartesian_coords = coord_sys.spherical_to_cartesian_coords(spherical_coords)
+
+print(np.linalg.norm(cartesian_coords, axis=1))
 
 # %% Calss for Cox process
 
