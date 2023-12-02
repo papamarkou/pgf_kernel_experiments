@@ -10,7 +10,7 @@ from scipy.special import gamma
 # https://math.stackexchange.com/questions/56582/what-is-the-analogue-of-spherical-coordinates-in-n-dimensions
 
 class SphericalCoords:
-    def __init__(self, n):
+    def __init__(self, n=None):
         self.n = n
 
     def simulate_spherical_coords(self, num_points):
@@ -21,8 +21,21 @@ class SphericalCoords:
 
         return spherical_coords
 
-    def spherical_to_polar_coords(self):
-        pass
+    def spherical_to_cartesian_coords(self, spherical_coords):
+        num_points, n = spherical_coords.shape
+        assert self.n == n
+
+        cartesian_coords = np.empty([num_points, self.n+1])
+
+        cartesian_coords[:, 0] = np.cos(spherical_coords[:, 0])
+
+        sin_products = 1
+
+        for i in range(1, self.n):
+            sin_products = sin_products * np.sin(spherical_coords[:, i-1])
+
+            if i < self.n:
+                cartesian_coords[:, i] = sin_products * np.cos(spherical_coords[:, i])
 
 class CoxProcess:
     def __init__(self, n, lambdas, scales):
