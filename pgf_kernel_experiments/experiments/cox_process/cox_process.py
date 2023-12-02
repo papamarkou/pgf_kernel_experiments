@@ -53,7 +53,7 @@ print(np.linalg.norm(cartesian_coords, axis=1))
 
 class CoxProcess:
     def __init__(self, n, lambdas, scales):
-        self.n = n
+        self.coord_sys = CoordSys(n)
         self.lambdas = lambdas
         self.scales = scales
 
@@ -61,18 +61,20 @@ class CoxProcess:
         return len(self.lambdas)
 
     def get_surface_area(self):
-        return 2 * (np.pi^(self.n/2)) / gamma(self.n/2)
+        return 2 * (np.pi^(self.coord_sys.n/2)) / gamma(self.coord_sys.n/2)
 
     def get_poisson_rates(self):
         return self.surface_area() * self.lambdas
 
     def simulate_cluster_centers(self):
-        pass
+        return self.coord_sys.simulate_spherical_coords(self.get_num_clusters())
 
     def simulate_num_points(self):
-        pass
+        return np.random.default_rng().poisson(lam=self.get_surface_area() * self.lambdas)
 
     def simulate_data(self):
+        # cartesian_coords = self.coord_sys.spherical_to_cartesian_coords(spherical_coords)
+        # np.random.default_rng().normal(loc=0.0, scale=0.2, size=v_signal.shape)
         pass
 
 # %%
