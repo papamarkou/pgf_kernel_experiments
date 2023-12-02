@@ -61,17 +61,17 @@ print(np.linalg.norm(cartesian_coords, axis=1))
 class CoxProcess:
     def __init__(self, n, lambdas, kappas):
         self.coord_sys = CoordSys(n)
-        self.lambdas = lambdas
-        self.kappas = kappas
+        self.lambdas = np.array(lambdas)
+        self.kappas = np.array(kappas)
 
     def get_num_clusters(self):
         return len(self.lambdas)
 
     def get_surface_area(self):
-        return 2 * (np.pi^(self.coord_sys.n/2)) / gamma(self.coord_sys.n/2)
+        return 2 * (np.pi ** (self.coord_sys.n / 2)) / gamma(self.coord_sys.n / 2)
 
     def get_poisson_rates(self):
-        return self.surface_area() * self.lambdas
+        return self.get_surface_area() * self.lambdas
 
     def simulate_cluster_centers(self):
         return self.coord_sys.simulate_spherical_coords(self.get_num_clusters())
