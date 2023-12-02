@@ -1,0 +1,23 @@
+#!/bin/bash --login
+
+# Job will run in the current directory (where you ran qsub)
+#$ -cwd
+
+# A 1-GPU request to be run on a A100 GPU
+#$ -l nvidia_a100=1
+
+# Use 8 CPUs
+#$ -pe smp.pe 8
+
+# Load modules
+module load libs/cuda/11.7.0
+module load libs/cuDNN/8.5.0
+
+# Set number of threads to number of slots
+export OMP_NUM_THREADS=$NSLOTS
+
+# Activate conda pgfml environment
+conda activate pgfml
+
+# Now the commands to be run by the job
+python train_pgf_gp.py
