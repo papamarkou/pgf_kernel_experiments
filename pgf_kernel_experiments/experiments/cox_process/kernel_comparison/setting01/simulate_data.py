@@ -14,17 +14,6 @@ for i in range(num_runs):
 
 # %% Simulate and save data
 
-lambdas = np.full(10, 850.)
-
-i = 0
-np.random.seed(data_seed+i)
-cox_process = CoxProcess(n, lambdas, kappas)
-data_cartesian_coords, labels, center_cartesian_coords, num_points = cox_process.simulate_data()
-print(num_points)
-print(sum(num_points))
-
-# %%
-
 for i in range(num_runs):
     # Set seed
 
@@ -68,7 +57,8 @@ for i in range(num_runs):
 
     np.savetxt(
         data_paths[i].joinpath('labels.csv'),
-        labels.reshape(1, labels.shape[0]),
+        labels,
+        fmt='%d',
         header='',
         comments=''
     )
@@ -83,7 +73,8 @@ for i in range(num_runs):
 
     np.savetxt(
         data_paths[i].joinpath('num_points.csv'),
-        num_points.reshape(1, num_points.shape[0]),
+        num_points,
+        fmt='%d',
         header='',
         comments=''
     )
