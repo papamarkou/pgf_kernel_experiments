@@ -3,6 +3,10 @@ __pycache__
 pgf_kernel_experiments.egg-info
 pgf_kernel_experiments/experiments/air_passengers/passenger_numbers.csv
 pgf_kernel_experiments/experiments/bloch_density/data
+pgf_kernel_experiments/experiments/cox_process/kernel_comparison/setting01/data
+pgf_kernel_experiments/experiments/cox_process/kernel_comparison/setting01/output
+pgf_kernel_experiments/experiments/cox_process/kernel_comparison/setting02/data
+pgf_kernel_experiments/experiments/cox_process/kernel_comparison/setting02/output
 pgf_kernel_experiments/experiments/discoball/kernel_comparison/setting01/data
 pgf_kernel_experiments/experiments/discoball/kernel_comparison/setting01/output
 pgf_kernel_experiments/experiments/discoball/kernel_comparison/setting02/data

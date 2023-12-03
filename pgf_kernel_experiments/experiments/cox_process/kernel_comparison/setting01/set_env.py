@@ -11,14 +11,11 @@ use_cuda = True
 
 # %% Set number of runs
 
-num_runs = 4
+num_runs = 2 # 4
 
 # %% Data simulation setup
 
-num_incl = 200
-
-num_train = 4000
-num_test = 4000
+perc_train = 0.5
 # num_test = None
 
 # %% Training setup
@@ -38,12 +35,10 @@ train_seeds = torch.randint(init_train_seed, init_train_seed+100*num_train_seeds
 
 # %% Set hyperparameters of Cox process
 
-k = [0.5, 0.5, 0.5, 0.5]
-l = [15, 15, 15, 15]
-m = [0., np.pi / 2, np.pi, 3 * np.pi / 2]
-terms = [0, 2, 1, 2]
-a = 1.
-b = 0.
+n = 19
+num_clusters = 10
+lambdas = np.full(num_clusters, 850.)
+kappas = np.full(num_clusters, 20.)
 
  # %% Set paths
 

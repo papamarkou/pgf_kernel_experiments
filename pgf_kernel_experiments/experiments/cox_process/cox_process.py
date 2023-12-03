@@ -46,16 +46,6 @@ class CoordSys:
 
         return cartesian_coords
 
-# %%
-
-coord_sys = CoordSys(4)
-
-spherical_coords = coord_sys.simulate_spherical_coords(2)
-
-cartesian_coords = coord_sys.spherical_to_cartesian_coords(spherical_coords)
-
-print(np.linalg.norm(cartesian_coords, axis=1))
-
 # %% Calss for Cox process
 
 class CoxProcess:
@@ -101,11 +91,3 @@ class CoxProcess:
         labels = np.repeat(list(range(len(num_points))), num_points)
 
         return data_cartesian_coords, labels, center_cartesian_coords, num_points
-
-# %%
-
-cox_process = CoxProcess(4, [2, 3, 5], [20, 20, 20])
-
-cox_process.get_num_clusters()
-
-# %%
