@@ -12,10 +12,12 @@ class ExactGPModel(gpytorch.models.ExactGP):
     ):
         super(ExactGPModel, self).__init__(train_x, train_y, likelihood)
 
-        if num_classes is None:
+        self.num_classes = num_classes
+
+        if self.num_classes is None:
             self.mean_module = gpytorch.means.ConstantMean()
         else:
-            self.mean_module = gpytorch.means.ConstantMean(batch_shape=torch.Size((num_classes,)))
+            self.mean_module = gpytorch.means.ConstantMean(batch_shape=torch.Size((self.num_classes,)))
 
         self.covar_module = kernel
 

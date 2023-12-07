@@ -7,7 +7,7 @@ import torch
 from pgf_kernel_experiments.experiments.cox_process.kernel_comparison.setting01.set_env import (
     data_paths, num_classes, num_runs, num_train_iters, num_train_seeds, output_basepath, output_paths, train_seeds, use_cuda
 )
-from pgf_kernel_experiments.runners import ExactSingleGPRunner
+from pgf_kernel_experiments.runners import ExactSingleDKLRunner
 
 # %% Create paths if they don't exist
 
@@ -57,14 +57,17 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
             train_x = train_x.cuda()
             train_y = train_y.cuda()
 
-        # Set # %% Set up ExactSingleGPRunner
+        # Set up ExactSingleDKLRunner
 
         kernel = gpytorch.kernels.ScaleKernel(
             gpytorch.kernels.RBFKernel(batch_shape=torch.Size((num_classes,))),
             batch_shape=torch.Size((num_classes,)),
         )
 
-        runner = ExactSingleGPRunner(train_x, train_y, kernel, use_cuda=use_cuda)
+        likelihood = gpytorch.likelihoods.DirichletClassificationLikelihood(train_output, learn_additional_noise=True)
+        # model = DirichletGPModel(train_x, likelihood.transformed_targets, likelihood, num_classes=likelihood.num_classes)
+
+        runner = ExactSingleDKLRunner(train_x, train_y, kernel, use_cuda=use_cuda)
 
         # Set the model in double mode
 

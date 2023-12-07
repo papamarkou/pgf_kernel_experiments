@@ -13,12 +13,14 @@ class ExactDKLModel(gpytorch.models.ExactGP):
     ):
         super(ExactDKLModel, self).__init__(train_x, train_y, likelihood)
 
+        self.num_classes = num_classes
+
         self.feature_extractor = feature_extractor
 
-        if num_classes is None:
+        if self.num_classes is None:
             self.mean_module = gpytorch.means.ConstantMean()
         else:
-            self.mean_module = gpytorch.means.ConstantMean(batch_shape=torch.Size((num_classes,)))
+            self.mean_module = gpytorch.means.ConstantMean(batch_shape=torch.Size((self.num_classes,)))
 
         self.covar_module = kernel
 
