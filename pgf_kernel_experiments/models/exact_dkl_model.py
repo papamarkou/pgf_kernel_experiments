@@ -1,12 +1,25 @@
 import gpytorch
+import torch
 
 class ExactDKLModel(gpytorch.models.ExactGP):
-    def __init__(self, train_x, train_y, feature_extractor, kernel, likelihood=gpytorch.likelihoods.GaussianLikelihood()):
+    def __init__(
+        self,
+        train_x,
+        train_y,
+        feature_extractor,
+        kernel,
+        likelihood=gpytorch.likelihoods.GaussianLikelihood(),
+        num_classes=None
+    ):
         super(ExactDKLModel, self).__init__(train_x, train_y, likelihood)
 
         self.feature_extractor = feature_extractor
 
-        self.mean_module = gpytorch.means.ConstantMean()
+        if num_classes is None:
+            self.mean_module = gpytorch.means.ConstantMean()
+        else:
+            self.mean_module = gpytorch.means.ConstantMean(batch_shape=torch.Size((num_classes,)))
+
         self.covar_module = kernel
 
         self.likelihood = likelihood

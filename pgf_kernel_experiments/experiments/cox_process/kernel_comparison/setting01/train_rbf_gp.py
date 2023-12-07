@@ -5,7 +5,7 @@ import numpy as np
 import torch
 
 from pgf_kernel_experiments.experiments.cox_process.kernel_comparison.setting01.set_env import (
-    data_paths, num_runs, num_train_iters, num_train_seeds, output_basepath, output_paths, train_seeds, use_cuda
+    data_paths, num_classes, num_runs, num_train_iters, num_train_seeds, output_basepath, output_paths, train_seeds, use_cuda
 )
 from pgf_kernel_experiments.runners import ExactSingleGPRunner
 
@@ -59,7 +59,10 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Set # %% Set up ExactSingleGPRunner
 
-        kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel())
+        kernel = gpytorch.kernels.ScaleKernel(
+            gpytorch.kernels.RBFKernel(batch_shape=torch.Size((num_classes,))),
+            batch_shape=torch.Size((num_classes,)),
+        )
 
         runner = ExactSingleGPRunner(train_x, train_y, kernel, use_cuda=use_cuda)
 

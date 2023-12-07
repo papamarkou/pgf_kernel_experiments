@@ -1,10 +1,22 @@
 import gpytorch
+import torch
 
 class ExactGPModel(gpytorch.models.ExactGP):
-    def __init__(self, train_x, train_y, kernel, likelihood=gpytorch.likelihoods.GaussianLikelihood()):
+    def __init__(
+        self,
+        train_x,
+        train_y,
+        kernel,
+        likelihood=gpytorch.likelihoods.GaussianLikelihood(),
+        num_classes=None
+    ):
         super(ExactGPModel, self).__init__(train_x, train_y, likelihood)
 
-        self.mean_module = gpytorch.means.ConstantMean()
+        if num_classes is None:
+            self.mean_module = gpytorch.means.ConstantMean()
+        else:
+            self.mean_module = gpytorch.means.ConstantMean(batch_shape=torch.Size((num_classes,)))
+
         self.covar_module = kernel
 
         self.likelihood = likelihood
