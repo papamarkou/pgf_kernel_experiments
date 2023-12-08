@@ -4,20 +4,8 @@ import torch
 from pgf_kernel_experiments.models.exact_dkl_model import ExactDKLModel
 
 class ExactSingleDKLRunner:
-    def __init__(
-        self,
-        train_x,
-        train_y,
-        feature_extractor,
-        kernel,
-        likelihood=gpytorch.likelihoods.GaussianLikelihood(),
-        num_classes=None,
-        use_cuda=True
-    ):
-        self.model = ExactDKLModel(
-            train_x, train_y, feature_extractor, kernel, likelihood=likelihood, num_classes=num_classes
-        )
-        # model = DirichletGPModel(train_x, likelihood.transformed_targets, likelihood, num_classes=likelihood.num_classes)
+    def __init__(self, train_x, train_y, feature_extractor, kernel, likelihood, num_classes=None, use_cuda=True):
+        self.model = ExactDKLModel(train_x, train_y, feature_extractor, kernel, likelihood, num_classes=num_classes)
         self.mll = gpytorch.mlls.ExactMarginalLogLikelihood(self.model.likelihood, self.model)
 
         if use_cuda:

@@ -2,14 +2,7 @@ import gpytorch
 import torch
 
 class ExactGPModel(gpytorch.models.ExactGP):
-    def __init__(
-        self,
-        train_x,
-        train_y,
-        kernel,
-        likelihood=gpytorch.likelihoods.GaussianLikelihood(),
-        num_classes=None
-    ):
+    def __init__(self, train_x, train_y, kernel, likelihood, num_classes=None):
         super(ExactGPModel, self).__init__(train_x, train_y, likelihood)
 
         self.num_classes = num_classes

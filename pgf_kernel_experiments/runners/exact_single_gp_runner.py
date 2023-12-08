@@ -4,16 +4,8 @@ import torch
 from pgf_kernel_experiments.models.exact_gp_model import ExactGPModel
 
 class ExactSingleGPRunner:
-    def __init__(
-        self,
-        train_x,
-        train_y,
-        kernel,
-        likelihood=gpytorch.likelihoods.GaussianLikelihood(),
-        num_classes=None,
-        use_cuda=True
-    ):
-        self.model = ExactGPModel(train_x, train_y, kernel, likelihood=likelihood, num_classes=num_classes)
+    def __init__(self, train_x, train_y, kernel, likelihood, num_classes=None, use_cuda=True):
+        self.model = ExactGPModel(train_x, train_y, kernel, likelihood, num_classes=num_classes)
         self.mll = gpytorch.mlls.ExactMarginalLogLikelihood(self.model.likelihood, self.model)
 
         if use_cuda:

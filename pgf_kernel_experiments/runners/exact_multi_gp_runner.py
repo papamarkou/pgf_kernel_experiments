@@ -19,6 +19,12 @@ class ExactMultiGPRunner:
             output = self.single_runners[i].model(train_x)
 
             loss = -self.single_runners[i].mll(output, train_y)
+
+            if self.model.num_classes is None:
+                loss = -self.single_runners[i].mll(output, train_y)
+            else:
+                loss = -self.single_runners[i].mll(output, train_y).sum()
+
             loss.backward()
 
             optimizers[i].step()
@@ -87,15 +93,10 @@ class ExactMultiGPRunner:
         return predictions
 
     @classmethod
-    def generator(selfclass, train_x, train_y, kernels, likelihoods=None, use_cuda=True):
-        if likelihoods is None:
-            likelihoods = [gpytorch.likelihoods.GaussianLikelihood() for _ in range(len(kernels))]
-
+    def generator(selfclass, train_x, train_y, kernels, likelihoods, use_cuda=True):
         single_runners = []
 
         for i in range(len(kernels)):
-            single_runners.append(ExactSingleGPRunner(
-                train_x, train_y, kernels[i], likelihood=likelihoods[i], use_cuda=use_cuda
-            ))
+            single_runners.append(ExactSingleGPRunner(train_x, train_y, kernels[i], likelihoods[i], use_cuda=use_cuda))
 
         return selfclass(single_runners)
