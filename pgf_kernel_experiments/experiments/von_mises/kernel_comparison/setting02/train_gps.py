@@ -80,7 +80,9 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
 
-        runner = ExactMultiGPRunner.generator(train_x, train_y, kernels, use_cuda=use_cuda)
+        likelihoods = [gpytorch.likelihoods.GaussianLikelihood() for _ in range(len(kernels))]
+
+        runner = ExactMultiGPRunner.generator(train_x, train_y, kernels, likelihoods, use_cuda=use_cuda)
 
         # Set the models in double mode
 

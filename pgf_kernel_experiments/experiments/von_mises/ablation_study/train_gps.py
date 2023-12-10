@@ -15,7 +15,7 @@ output_path.mkdir(parents=True, exist_ok=True)
 
 # %% Training setup
 
-num_train_iters = 10 # 200
+num_train_iters = 200
 
 # %% Set seed
 

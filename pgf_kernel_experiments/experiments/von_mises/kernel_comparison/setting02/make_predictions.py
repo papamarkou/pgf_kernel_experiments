@@ -79,7 +79,9 @@ for run_count in range(num_runs):
         gpytorch.kernels.ScaleKernel(gpytorch.kernels.SpectralMixtureKernel(num_mixtures=10, ard_num_dims=2))
     ]
 
-    runner = ExactMultiGPRunner.generator(train_x, train_y, kernels, use_cuda=use_cuda)
+    likelihoods = [gpytorch.likelihoods.GaussianLikelihood() for _ in range(len(kernels))]
+
+    runner = ExactMultiGPRunner.generator(train_x, train_y, kernels, likelihoods, use_cuda=use_cuda)
 
     # Set the models in double mode
 
