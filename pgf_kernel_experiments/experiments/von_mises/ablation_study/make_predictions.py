@@ -71,7 +71,9 @@ kernels = [
 
 kernel_names = ['2', '100', '200', '10', '10_10', '10_10_10']
 
-runner = ExactMultiGPRunner.generator(train_x, train_y, kernels, use_cuda=use_cuda)
+likelihoods = [gpytorch.likelihoods.GaussianLikelihood() for _ in range(len(kernels))]
+
+runner = ExactMultiGPRunner.generator(train_x, train_y, kernels, likelihoods, use_cuda=use_cuda)
 
 # %% Set the models in double mode
 

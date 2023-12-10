@@ -14,22 +14,7 @@ class ExactMultiGPRunner:
         losses = torch.empty([self.num_gps()], dtype=train_x.dtype, device=train_x.device)
 
         for i in range(self.num_gps()):
-            optimizers[i].zero_grad()
-
-            output = self.single_runners[i].model(train_x)
-
-            loss = -self.single_runners[i].mll(output, train_y)
-
-            if self.model.task == 'regression':
-                loss = -self.single_runners[i].mll(output, train_y)
-            elif self.model.task == 'classification':
-                loss = -self.single_runners[i].mll(output, train_y).sum()
-
-            loss.backward()
-
-            optimizers[i].step()
-
-            losses[i] = loss
+            losses[i] = self.single_runners[i].step(train_x, train_y, optimizers[i])
 
         return losses
 
