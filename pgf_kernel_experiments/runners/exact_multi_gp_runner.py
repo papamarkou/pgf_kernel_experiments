@@ -46,12 +46,7 @@ class ExactMultiGPRunner:
         return losses
 
     def predict(self, test_x):
-        predictions = []
-
-        for i in range(self.num_gps()):
-            predictions.append(self.single_runners[i].predict(test_x))
-
-        return predictions
+        return [self.single_runners[i].predict(test_x) for i in range(self.num_gps())]
 
     def assess(self, predictions, test_y, metrics, verbose=True):
         scores = torch.empty([self.num_gps(), len(metrics)], dtype=test_y.dtype, device=test_y.device)
@@ -75,6 +70,13 @@ class ExactMultiGPRunner:
         predictions = self.predict(test_x)
 
         return predictions
+
+    # def test(self, test_x):
+    #     self.model.setup('test')
+
+    #     predictions = self.predict(test_x)
+
+    #     return predictions
 
     @classmethod
     def generator(selfclass, train_x, train_y, kernels, likelihoods, tasks=None, num_classes=None, use_cuda=True):

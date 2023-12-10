@@ -46,12 +46,7 @@ class ExactMultiDKLRunner:
         return losses
 
     def predict(self, test_x):
-        predictions = []
-
-        for i in range(self.num_gps()):
-            predictions.append(self.single_runners[i].predict(test_x))
-
-        return predictions
+        return [self.single_runners[i].predict(test_x) for i in range(self.num_gps())]
 
     def assess(self, predictions, test_y, metrics, verbose=True):
         scores = torch.empty([self.num_gps(), len(metrics)], dtype=test_y.dtype, device=test_y.device)
