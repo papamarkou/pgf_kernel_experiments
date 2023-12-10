@@ -64,12 +64,7 @@ class ExactMultiDKLRunner:
         return scores
 
     def test(self, test_x):
-        for i in range(self.num_gps()):
-            self.single_runners[i].model.setup('test')
-
-        predictions = self.predict(test_x)
-
-        return predictions
+        return [self.single_runners[i].test(test_x) for i in range(self.num_gps())]
 
     @classmethod
     def generator(

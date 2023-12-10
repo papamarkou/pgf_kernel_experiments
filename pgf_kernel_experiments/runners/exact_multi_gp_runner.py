@@ -64,19 +64,7 @@ class ExactMultiGPRunner:
         return scores
 
     def test(self, test_x):
-        for i in range(self.num_gps()):
-            self.single_runners[i].model.setup('test')
-
-        predictions = self.predict(test_x)
-
-        return predictions
-
-    # def test(self, test_x):
-    #     self.model.setup('test')
-
-    #     predictions = self.predict(test_x)
-
-    #     return predictions
+        return [self.single_runners[i].test(test_x) for i in range(self.num_gps())]
 
     @classmethod
     def generator(selfclass, train_x, train_y, kernels, likelihoods, tasks=None, num_classes=None, use_cuda=True):
