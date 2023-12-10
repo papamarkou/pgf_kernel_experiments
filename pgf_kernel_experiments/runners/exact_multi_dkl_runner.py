@@ -1,9 +1,9 @@
 import gpytorch
 import torch
 
-from .exact_single_gp_runner import ExactSingleGPRunner
+from .exact_single_dkl_runner import ExactSingleDKLRunner
 
-class ExactMultiGPRunner:
+class ExactMultiDKLRunner:
     def __init__(self, single_runners):
         self.single_runners = single_runners
 
@@ -18,9 +18,9 @@ class ExactMultiGPRunner:
 
             output = self.single_runners[i].model(train_x)
 
-            if self.model.num_classes is None:
+            if self.model.task == 'regression':
                 loss = -self.single_runners[i].mll(output, train_y)
-            else:
+            elif self.model.task == 'classification':
                 loss = -self.single_runners[i].mll(output, train_y).sum()
 
             loss.backward()
@@ -91,12 +91,24 @@ class ExactMultiGPRunner:
         return predictions
 
     @classmethod
-    def generator(selfclass, train_x, train_y, feature_extractors, kernels, likelihoods, use_cuda=True):
+    def generator(
+        selfclass, train_x, train_y, feature_extractors, kernels, likelihoods, tasks=None, num_classes=None, use_cuda=True
+    ):
         single_runners = []
 
+        if tasks is None:
+            tasks = ['regression' for _ in range(len(kernels))]
+
         for i in range(len(kernels)):
-            single_runners.append(
-                ExactSingleGPRunner(train_x, train_y, feature_extractors[i], kernels[i], likelihoods[i], use_cuda=use_cuda)
+            single_runners.append(ExactSingleDKLRunner(
+                train_x,
+                train_y,
+                feature_extractors[i],
+                kernels[i],
+                likelihoods[i],
+                task=tasks[i],
+                num_classes=None if num_classes is None else num_classes[i],
+                use_cuda=use_cuda)
             )
 
         return selfclass(single_runners)

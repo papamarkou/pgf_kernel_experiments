@@ -4,8 +4,8 @@ import torch
 from pgf_kernel_experiments.models.exact_gp_model import ExactGPModel
 
 class ExactSingleGPRunner:
-    def __init__(self, train_x, train_y, kernel, likelihood, num_classes=None, use_cuda=True):
-        self.model = ExactGPModel(train_x, train_y, kernel, likelihood, num_classes=num_classes)
+    def __init__(self, train_x, train_y, kernel, likelihood, task='regression', num_classes=None, use_cuda=True):
+        self.model = ExactGPModel(train_x, train_y, kernel, likelihood, task=task, num_classes=num_classes)
         self.mll = gpytorch.mlls.ExactMarginalLogLikelihood(self.model.likelihood, self.model)
 
         if use_cuda:
@@ -17,9 +17,9 @@ class ExactSingleGPRunner:
 
         output = self.model(train_x)
 
-        if self.model.num_classes is None:
+        if self.model.task == 'regression':
             loss = -self.mll(output, train_y)
-        else:
+        elif self.model.task == 'classification':
             loss = -self.mll(output, train_y).sum()
 
         loss.backward()

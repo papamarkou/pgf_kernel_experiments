@@ -2,14 +2,15 @@ import gpytorch
 import torch
 
 class ExactGPModel(gpytorch.models.ExactGP):
-    def __init__(self, train_x, train_y, kernel, likelihood, num_classes=None):
+    def __init__(self, train_x, train_y, kernel, likelihood, task='regression', num_classes=None):
         super(ExactGPModel, self).__init__(train_x, train_y, likelihood)
 
+        self.task = task
         self.num_classes = num_classes
 
-        if self.num_classes is None:
+        if self.task == 'regression':
             self.mean_module = gpytorch.means.ConstantMean()
-        else:
+        elif self.task == 'classification':
             self.mean_module = gpytorch.means.ConstantMean(batch_shape=torch.Size((self.num_classes,)))
 
         self.covar_module = kernel
