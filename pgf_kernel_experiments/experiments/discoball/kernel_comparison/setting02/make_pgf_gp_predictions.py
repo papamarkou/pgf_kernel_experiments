@@ -79,7 +79,9 @@ for run_count in range(num_runs):
 
     kernel = gpytorch.kernels.ScaleKernel(GFKernel(width=[20, 20, 20]))
 
-    runner = ExactSingleGPRunner(train_x, train_y, kernel, use_cuda=use_cuda)
+    likelihood = gpytorch.likelihoods.GaussianLikelihood()
+
+    runner = ExactSingleGPRunner(train_x, train_y, kernel, likelihood, use_cuda=use_cuda)
 
     # Set the model in double mode
 
