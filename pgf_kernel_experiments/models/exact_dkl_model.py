@@ -5,6 +5,7 @@ class ExactDKLModel(gpytorch.models.ExactGP):
     def __init__(self, train_x, train_y, feature_extractor, kernel, likelihood, task='regression', num_classes=None):
         super(ExactDKLModel, self).__init__(train_x, train_y, likelihood)
 
+        self.task = task
         self.num_classes = num_classes
 
         self.feature_extractor = feature_extractor

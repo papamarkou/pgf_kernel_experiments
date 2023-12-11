@@ -1,4 +1,3 @@
-import gpytorch
 import torch
 
 from .exact_single_gp_runner import ExactSingleGPRunner

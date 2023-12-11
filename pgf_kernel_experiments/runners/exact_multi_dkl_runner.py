@@ -1,4 +1,3 @@
-import gpytorch
 import torch
 
 from .exact_single_dkl_runner import ExactSingleDKLRunner
