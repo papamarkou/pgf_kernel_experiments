@@ -4,8 +4,18 @@ import gpytorch
 import numpy as np
 import torch
 
+from pgf_kernel_experiments.experiments.cox_process.feature_extractor import FeatureExtractor
 from pgf_kernel_experiments.experiments.cox_process.kernel_comparison.setting01.set_env import (
-    data_paths, num_classes, num_runs, num_train_iters, num_train_seeds, output_basepath, output_paths, train_seeds, use_cuda
+    data_paths,
+    n,
+    num_classes,
+    num_runs,
+    num_train_iters,
+    num_train_seeds,
+    output_basepath,
+    output_paths,
+    train_seeds,
+    use_cuda
 )
 from pgf_kernel_experiments.runners import ExactSingleDKLRunner
 
@@ -51,7 +61,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         # Convert training data to PyTorch format
 
         train_x = torch.as_tensor(train_pos, dtype=torch.float64)
-        # train_y = torch.as_tensor(train_output.T, dtype=torch.float64)
+        train_y = torch.as_tensor(train_output.T, dtype=torch.int64)
 
         if use_cuda:
             train_x = train_x.cuda()
@@ -59,15 +69,25 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Set up ExactSingleDKLRunner
 
+        feature_extractor=FeatureExtractor(n+1)
+
         kernel = gpytorch.kernels.ScaleKernel(
             gpytorch.kernels.RBFKernel(batch_shape=torch.Size((num_classes,))),
             batch_shape=torch.Size((num_classes,)),
         )
 
-        likelihood = gpytorch.likelihoods.DirichletClassificationLikelihood(train_output, learn_additional_noise=True)
-        # model = DirichletGPModel(train_x, likelihood.transformed_targets, likelihood, num_classes=likelihood.num_classes)
+        likelihood = gpytorch.likelihoods.DirichletClassificationLikelihood(train_y, learn_additional_noise=True)
 
-        runner = ExactSingleDKLRunner(train_x, train_y, kernel, use_cuda=use_cuda)
+        runner = ExactSingleDKLRunner(
+            train_x,
+            likelihood.transformed_targets,
+            feature_extractor,
+            kernel,
+            likelihood,
+            task='classification',
+            num_classes=likelihood.num_classes,
+            use_cuda=use_cuda
+        )
 
         # Set the model in double mode
 
