@@ -96,11 +96,15 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Set optimizer
 
+        # [list(runner.model.named_parameters())[i][0] for i in range(len(list(runner.model.named_parameters())))]
+        # [list(runner.model.feature_extractor.named_parameters())[i][0] for i in range(len(list(runner.model.feature_extractor.named_parameters())))]
+    
         optimizer = torch.optim.Adam([
-            {"params": runner.model.likelihood.noise_covar.raw_noise, "lr": 0.1},
-            {"params": runner.model.mean_module.raw_constant, "lr": 0.1},
-            {"params": runner.model.covar_module.raw_outputscale, "lr": 0.1},
-            {"params": runner.model.covar_module.base_kernel.raw_lengthscale, "lr": 0.1}
+            {"params": runner.model.likelihood.second_noise_covar.raw_noise, "lr": 0.01},
+            {'params': runner.model.feature_extractor.parameters(), "lr": 0.01},
+            {"params": runner.model.mean_module.raw_constant, "lr": 0.01},
+            {"params": runner.model.covar_module.raw_outputscale, "lr": 0.01},
+            {"params": runner.model.covar_module.base_kernel.raw_lengthscale, "lr": 0.01}
         ])
 
         # Set scheduler
