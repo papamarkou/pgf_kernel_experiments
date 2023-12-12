@@ -96,8 +96,10 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Set optimizer
 
-        # [list(runner.model.named_parameters())[i][0] for i in range(len(list(runner.model.named_parameters())))]
-        # [list(runner.model.feature_extractor.named_parameters())[i][0] for i in range(len(list(runner.model.feature_extractor.named_parameters())))]
+        # all_named_params = list(runner.model.named_parameters())
+        # print([all_named_params[i][0] for i in range(len(all_named_params))])
+        # nn_named_params = list(runner.model.feature_extractor.named_parameters())
+        # print([nn_named_params[i][0] for i in range(len(nn_named_params))])
     
         optimizer = torch.optim.Adam([
             {"params": runner.model.likelihood.second_noise_covar.raw_noise, "lr": 0.01},
@@ -111,8 +113,8 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         scheduler = torch.optim.lr_scheduler.CyclicLR(
             optimizer,
-            base_lr=[0.0001, 0.0001, 0.0001, 0.0001],
-            max_lr=[0.1, 0.1, 0.1, 0.1],
+            base_lr=[0.0001, 0.0001, 0.0001, 0.0001, 0.0001],
+            max_lr=[0.1, 0.1, 0.1, 0.1, 0.1],
             step_size_up=25,
             scale_fn=lambda x : 0.9 ** (x - 1), 
             cycle_momentum=False
