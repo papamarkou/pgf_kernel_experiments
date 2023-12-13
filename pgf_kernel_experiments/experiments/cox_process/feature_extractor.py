@@ -14,9 +14,11 @@ class FeatureExtractor(nn.Module):
 
     def forward(self, x):
         x = x.view(-1, self.n)
-        x = x / x.norm(dim=1, keepdim=True)
+        # x = x / x.norm(dim=1, keepdim=True)
         x = nn.functional.sigmoid(self.fc1(x))
         x = x / x.norm(dim=1, keepdim=True)
         x = nn.functional.sigmoid(self.fc2(x))
+        x = x / x.norm(dim=1, keepdim=True)
+        x = nn.functional.sigmoid(self.fc3(x))
         x = x / x.norm(dim=1, keepdim=True)
         return x
