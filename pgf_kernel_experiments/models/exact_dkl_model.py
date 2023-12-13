@@ -33,4 +33,4 @@ class ExactDKLModel(gpytorch.models.ExactGP):
         mean_x = self.mean_module(projected_x)
         covar_x = self.covar_module(projected_x)
 
-        return gpytorch.distributions.MultivariateNormal(mean_x, covar_x)
+        return gpytorch.distributions.MultivariateNormal(mean_x, covar_x), projected_x

@@ -19,7 +19,7 @@ class ExactSingleDKLRunner:
     def step(self, train_x, train_y, optimizer):
         optimizer.zero_grad()
 
-        output = self.model(train_x)
+        output, projected_x = self.model(train_x)
 
         if self.model.task == 'regression':
             loss = -self.mll(output, train_y)
@@ -30,7 +30,7 @@ class ExactSingleDKLRunner:
 
         optimizer.step()
 
-        return loss
+        return loss, projected_x
 
     def train(self, train_x, train_y, optimizer, num_iters, scheduler=None, verbose=True):
         self.model.setup('train')
@@ -42,7 +42,8 @@ class ExactSingleDKLRunner:
             msg = 'Iteration {:'+str(n)+'d}/{:'+str(n)+'d}, loss: {:.6f}'
 
         for i in range(num_iters):
-            losses[i] = self.step(train_x, train_y, optimizer).item()
+            loss, projected_x = self.step(train_x, train_y, optimizer)
+            losses[i] = loss.item()
 
             if scheduler is not None:
                 scheduler.step()
@@ -50,7 +51,7 @@ class ExactSingleDKLRunner:
             if verbose:
                 print(msg.format(i + 1, num_iters, losses[i]))
 
-        return losses
+        return losses, projected_x
 
     def predict(self, test_x):
         with torch.no_grad():
