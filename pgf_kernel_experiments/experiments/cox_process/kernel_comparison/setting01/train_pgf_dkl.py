@@ -4,6 +4,8 @@ import gpytorch
 import numpy as np
 import torch
 
+from pgfml.kernels import GFKernel
+
 from pgf_kernel_experiments.experiments.cox_process.feature_extractor import FeatureExtractor
 from pgf_kernel_experiments.experiments.cox_process.kernel_comparison.setting01.set_env import (
     data_paths,
@@ -72,7 +74,7 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         feature_extractor=FeatureExtractor(n+1)
 
         kernel = gpytorch.kernels.ScaleKernel(
-            gpytorch.kernels.MaternKernel(nu=0.5, batch_shape=torch.Size((num_classes,))),
+            GFKernel(width=[20, 20, 20], batch_shape=torch.Size((num_classes,))),
             batch_shape=torch.Size((num_classes,)),
         )
 
@@ -101,22 +103,24 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
         # nn_named_params = list(runner.model.feature_extractor.named_parameters())
         # print([nn_named_params[i][0] for i in range(len(nn_named_params))])
 
-        optimizer =torch.optim.Adam([
+        optimizer = torch.optim.Adam([
             {"params": runner.model.likelihood.second_noise_covar.raw_noise, "lr": 0.1},
             {'params': runner.model.feature_extractor.parameters(), "lr": 0.1},
             {"params": runner.model.mean_module.raw_constant, "lr": 0.1},
             {"params": runner.model.covar_module.raw_outputscale, "lr": 0.1},
-            {"params": runner.model.covar_module.base_kernel.raw_lengthscale, "lr": 0.1}
+            {"params": runner.model.covar_module.base_kernel.pars0, "lr": 0.1},
+            {"params": runner.model.covar_module.base_kernel.pars1, "lr": 0.1},
+            {"params": runner.model.covar_module.base_kernel.pars2, "lr": 0.1}
         ])
 
         # Set scheduler
 
         scheduler = torch.optim.lr_scheduler.CyclicLR(
             optimizer,
-            base_lr=[0.01, 0.01, 0.01, 0.01, 0.01],
-            max_lr=[0.1, 0.1, 0.1, 0.1, 0.1],
+            base_lr=[0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001],
+            max_lr=[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
             step_size_up=25,
-            scale_fn=lambda x : 0.97 ** (x - 1),
+            scale_fn=lambda x : 0.9 ** (x - 1), 
             cycle_momentum=False
         )
 
