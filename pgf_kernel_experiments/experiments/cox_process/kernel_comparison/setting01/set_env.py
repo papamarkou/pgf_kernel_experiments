@@ -17,7 +17,6 @@ num_runs = 2 # 4
 
 num_classes = 10
 perc_train = 0.5
-# num_test = None
 
 # %% Training setup
 

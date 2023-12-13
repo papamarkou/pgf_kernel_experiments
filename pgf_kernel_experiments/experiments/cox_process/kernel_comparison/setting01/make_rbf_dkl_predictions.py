@@ -4,8 +4,9 @@ import gpytorch
 import numpy as np
 import torch
 
-from pgf_kernel_experiments.experiments.discoball.kernel_comparison.setting01.set_env import (
-    data_paths, num_runs, num_test, output_basepath, output_paths, use_cuda
+from pgf_kernel_experiments.experiments.cox_process.feature_extractor import FeatureExtractor
+from pgf_kernel_experiments.experiments.cox_process.kernel_comparison.setting01.set_env import (
+    data_paths, n, num_classes, num_runs, output_basepath, output_paths, use_cuda
 )
 from pgf_kernel_experiments.runners import ExactSingleDKLRunner
 
@@ -35,24 +36,20 @@ for run_count in range(num_runs):
 
     test_ids = np.loadtxt(data_paths[run_count].joinpath('test_ids.csv'), dtype='int')
 
-    if num_test is not None:
-        test_ids = test_ids[:num_test]
-    test_ids.sort()
-
     # Get training data
 
-    train_pos = grid[train_ids, :]
-    train_output = v[train_ids]
+    train_pos = input_data[train_ids, :]
+    train_output = labels[train_ids]
 
     # Get test data
 
-    test_pos = grid[test_ids, :]
-    test_output = v[test_ids]
+    test_pos = input_data[test_ids, :]
+    test_output = labels[test_ids]
 
     # Convert training data to PyTorch format
 
     train_x = torch.as_tensor(train_pos, dtype=torch.float64)
-    train_y = torch.as_tensor(train_output.T, dtype=torch.float64)
+    train_y = torch.as_tensor(train_output.T, dtype=torch.int64)
 
     if use_cuda:
         train_x = train_x.cuda()
@@ -61,19 +58,33 @@ for run_count in range(num_runs):
     # Convert test data to PyTorch format
 
     test_x = torch.as_tensor(test_pos, dtype=torch.float64)
-    test_y = torch.as_tensor(test_output.T, dtype=torch.float64)
+    test_y = torch.as_tensor(test_output.T, dtype=torch.int64)
 
     if use_cuda:
         test_x = test_x.cuda()
         test_y = test_y.cuda()
 
-    # Set up ExactSingleGPRunner
+    # Set up ExactSingleDKLRunner
 
-    kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel())
+    feature_extractor=FeatureExtractor(n+1)
 
-    likelihood = gpytorch.likelihoods.GaussianLikelihood()
+    kernel = gpytorch.kernels.ScaleKernel(
+        gpytorch.kernels.RBFKernel(batch_shape=torch.Size((num_classes,))),
+        batch_shape=torch.Size((num_classes,)),
+    )
 
-    runner = ExactSingleGPRunner(train_x, train_y, kernel, likelihood, use_cuda=use_cuda)
+    likelihood = gpytorch.likelihoods.DirichletClassificationLikelihood(train_y, learn_additional_noise=True)
+
+    runner = ExactSingleDKLRunner(
+        train_x,
+        likelihood.transformed_targets,
+        feature_extractor,
+        kernel,
+        likelihood,
+        task='classification',
+        num_classes=likelihood.num_classes,
+        use_cuda=use_cuda
+    )
 
     # Set the model in double mode
 
@@ -82,7 +93,7 @@ for run_count in range(num_runs):
 
     # Load model state
 
-    runner.model.load_state_dict(torch.load(output_paths[run_count].joinpath('rbf_gp_state.pth')))
+    runner.model.load_state_dict(torch.load(output_paths[run_count].joinpath('rbf_dkl_state.pth')))
 
     # Make predictions
 
@@ -94,9 +105,7 @@ for run_count in range(num_runs):
         predictions,
         test_y,
         metrics=[
-            gpytorch.metrics.mean_absolute_error,
-            gpytorch.metrics.mean_squared_error,
-            lambda predictions, y : gpytorch.metrics.negative_log_predictive_density(predictions, y)
+            lambda predictions, y : torch.sum(predictions == test_y) / len(test_y),
         ]
     )
 
@@ -105,17 +114,17 @@ for run_count in range(num_runs):
     # Save predictions
 
     np.savetxt(
-        output_paths[run_count].joinpath('rbf_gp_predictions.csv'),
+        output_paths[run_count].joinpath('rbf_dkl_predictions.csv'),
         predictions.mean.cpu().detach().numpy()
     )
 
     # Save error metrics
 
     np.savetxt(
-        output_paths[run_count].joinpath('rbf_gp_error_metrics.csv'),
+        output_paths[run_count].joinpath('rbf_dkl_error_metrics.csv'),
         [scores.cpu().detach().numpy()],
         delimiter=',',
-        header='mean_abs_error,mean_sq_error,loss',
+        header='accuracy',
         comments=''
     )
 
@@ -135,17 +144,17 @@ stds = all_scores.std(dim=0)
 # %% Save error metric summaries across runs
 
 np.savetxt(
-    output_basepath.joinpath('rbf_gp_error_metric_means.csv'),
+    output_basepath.joinpath('rbf_dkl_error_metric_means.csv'),
     [means.cpu().detach().numpy()],
     delimiter=',',
-    header='mean_abs_error,mean_sq_error,loss',
+    header='accuracy',
     comments=''
 )
 
 np.savetxt(
-    output_basepath.joinpath('rbf_gp_error_metric_stds.csv'),
+    output_basepath.joinpath('rbf_dkl_error_metric_stds.csv'),
     [stds.cpu().detach().numpy()],
     delimiter=',',
-    header='mean_abs_error,mean_sq_error,loss',
+    header='accuracy',
     comments=''
 )

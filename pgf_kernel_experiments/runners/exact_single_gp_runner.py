@@ -50,10 +50,12 @@ class ExactSingleGPRunner:
 
     def predict(self, test_x):
         with torch.no_grad():
+            distribution = self.model(test_x)
+
             if self.model.task == 'regression':
-                predictions = self.model.likelihood(self.model(test_x))
+                predictions = self.model.likelihood(distribution)
             elif self.model.task == 'classification':
-                predictions = self.model(test_x).loc
+                predictions = distribution.loc.max(0)[1]
 
         return predictions
 

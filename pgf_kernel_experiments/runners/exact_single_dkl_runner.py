@@ -19,7 +19,7 @@ class ExactSingleDKLRunner:
     def step(self, train_x, train_y, optimizer):
         optimizer.zero_grad()
 
-        output, projected_x = self.model(train_x)
+        output, projected_x = self.model.run(train_x)
 
         if self.model.task == 'regression':
             loss = -self.mll(output, train_y)
@@ -55,10 +55,12 @@ class ExactSingleDKLRunner:
 
     def predict(self, test_x):
         with torch.no_grad():
+            distribution = self.model(test_x)
+
             if self.model.task == 'regression':
-                predictions = self.model.likelihood(self.model(test_x))
+                predictions = self.model.likelihood(distribution)
             elif self.model.task == 'classification':
-                predictions = self.model(test_x).loc
+                predictions = distribution.loc.max(0)[1]
 
         return predictions
 

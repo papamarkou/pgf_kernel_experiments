@@ -27,10 +27,14 @@ class ExactDKLModel(gpytorch.models.ExactGP):
             self.eval()
             self.likelihood.eval()
 
-    def forward(self, x):
+    def run(self, x):
         projected_x = self.feature_extractor(x)
 
         mean_x = self.mean_module(projected_x)
         covar_x = self.covar_module(projected_x)
 
         return gpytorch.distributions.MultivariateNormal(mean_x, covar_x), projected_x
+
+    def forward(self, x):
+        distribution, _ = self.run(x)
+        return distribution
