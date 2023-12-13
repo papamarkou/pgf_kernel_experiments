@@ -55,7 +55,7 @@ class ExactSingleGPRunner:
             if self.model.task == 'regression':
                 predictions = self.model.likelihood(distribution)
             elif self.model.task == 'classification':
-                predictions = distribution.loc.max(0)[1]
+                predictions = distribution.loc
 
         return predictions
 

@@ -97,7 +97,7 @@ for run_count in range(num_runs):
 
     # Make predictions
 
-    predictions = runner.test(test_x)
+    predictions = runner.test(test_x).max(0)[1]
 
     # Compute error metrics
 
@@ -115,7 +115,7 @@ for run_count in range(num_runs):
 
     np.savetxt(
         output_paths[run_count].joinpath('rbf_dkl_predictions.csv'),
-        predictions.mean.cpu().detach().numpy()
+        predictions.cpu().detach().numpy()
     )
 
     # Save error metrics
