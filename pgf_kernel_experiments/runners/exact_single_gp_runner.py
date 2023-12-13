@@ -59,8 +59,8 @@ class ExactSingleGPRunner:
 
         return predictions
 
-    def assess(self, predictions, test_y, metrics, verbose=True):
-        scores = torch.empty([len(metrics)], dtype=test_y.dtype, device=test_y.device)
+    def assess(self, predictions, test_y, metrics, dtype=torch.float64, verbose=True):
+        scores = torch.empty([len(metrics)], dtype=dtype, device=test_y.device)
 
         if verbose:
             msg = ', '.join(['{:.6f}']*len(metrics))

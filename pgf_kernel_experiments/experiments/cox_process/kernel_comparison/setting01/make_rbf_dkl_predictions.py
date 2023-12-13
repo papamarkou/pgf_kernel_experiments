@@ -105,7 +105,7 @@ for run_count in range(num_runs):
         predictions,
         test_y,
         metrics=[
-            lambda predictions, y : torch.sum(predictions == test_y) / len(test_y),
+            lambda predictions, y : (torch.sum(predictions == test_y) / len(test_y)).item(),
         ]
     )
 
@@ -115,7 +115,8 @@ for run_count in range(num_runs):
 
     np.savetxt(
         output_paths[run_count].joinpath('rbf_dkl_predictions.csv'),
-        predictions.cpu().detach().numpy()
+        predictions.cpu().detach().numpy(),
+        fmt='%d'
     )
 
     # Save error metrics
