@@ -7,11 +7,11 @@ from pathlib import Path
 
 # %% Indicate whereas to use GPUs or CPUs
 
-use_cuda = False # True
+use_cuda = True
 
 # %% Set number of runs
 
-num_runs = 2 # 4
+num_runs = 4
 
 # %% Data simulation setup
 
