@@ -11,11 +11,13 @@ class ExactMultiDKLRunner:
 
     def step(self, train_x, train_y, optimizers):
         losses = torch.empty([self.num_gps()], dtype=train_x.dtype, device=train_x.device)
+        projected_xs = []
 
         for i in range(self.num_gps()):
-            losses[i] = self.single_runners[i].step(train_x, train_y, optimizers[i])
+            losses[i], projected_x = self.single_runners[i].step(train_x, train_y, optimizers[i])
+            projected_xs.append(projected_x)
 
-        return losses
+        return losses, projected_xs
 
     def train(self, train_x, train_y, optimizers, num_iters, schedulers=None, verbose=True):
         if schedulers is None:
@@ -33,7 +35,8 @@ class ExactMultiDKLRunner:
                 msg += ', {:.6f}'
 
         for i in range(num_iters):
-            losses[i, :] = self.step(train_x, train_y, optimizers)
+            losses[i, :], projected_xs = self.step(train_x, train_y, optimizers)
+
 
             for j in range(self.num_gps()):
                 if schedulers[j] is not None:
@@ -42,7 +45,7 @@ class ExactMultiDKLRunner:
             if verbose:
                 print(msg.format(i + 1, num_iters, *(losses[i, :])))
 
-        return losses
+        return losses, projected_xs
 
     def predict(self, test_x):
         return [self.single_runners[i].predict(test_x) for i in range(self.num_gps())]
