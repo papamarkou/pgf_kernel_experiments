@@ -124,17 +124,26 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 
         # Train GP model to find optimal hyperparameters
 
-        losses = runner.train(train_x, train_y, optimizer, num_train_iters, scheduler=scheduler)
+        losses, projected_x = runner.train(train_x, train_y, optimizer, num_train_iters, scheduler=scheduler)
 
         # Save model state
 
-        torch.save(runner.model.state_dict(), output_paths[success_count].joinpath('spectral_gp_state.pth'))
+        torch.save(runner.model.state_dict(), output_paths[success_count].joinpath('spectral_dkl_state.pth'))
 
         # Save losses
 
         np.savetxt(
-            output_paths[success_count].joinpath('spectral_gp_losses.csv'),
+            output_paths[success_count].joinpath('spectral_dkl_losses.csv'),
             losses.cpu().detach().numpy(),
+            delimiter=',',
+            comments=''
+        )
+
+        # Save projected inputs
+
+        np.savetxt(
+            output_paths[success_count].joinpath('spectral_dkl_projections.csv'),
+            projected_x.cpu().detach().numpy(),
             delimiter=',',
             comments=''
         )
@@ -163,13 +172,13 @@ while ((success_count < num_runs) and (tot_count < num_train_seeds)):
 # %% Save successful and failed seeds
 
 np.savetxt(
-    output_basepath.joinpath('spectral_gp_successful_seeds.csv'),
+    output_basepath.joinpath('spectral_dkl_successful_seeds.csv'),
     np.array(successful_seeds),
     fmt='%i'
 )
 
 np.savetxt(
-    output_basepath.joinpath('spectral_gp_failed_seeds.csv'),
+    output_basepath.joinpath('spectral_dkl_failed_seeds.csv'),
     np.array(failed_seeds),
     fmt='%i'
 )
