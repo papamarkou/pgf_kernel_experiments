@@ -13,7 +13,7 @@ from pgf_kernel_experiments.plots import set_axes_equal
 verbose = True
 if verbose:
     num_run_digits = len(str(num_runs))
-    msg = 'Plotting predictions of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
+    msg = 'Plotting projections of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
 
 xyz_lim = 0.63
 
@@ -122,7 +122,7 @@ for i in range(num_runs):
     # Save plot
 
     plt.savefig(
-        output_paths[i].joinpath('predictions.pdf'),
+        output_paths[i].joinpath('projections.pdf'),
         dpi=dpi,
         bbox_inches='tight',
         pad_inches=0.1
