@@ -6,6 +6,7 @@ import numpy as np
 from pgf_kernel_experiments.experiments.cox_process.kernel_comparison.setting01.set_env import (
     data_paths, dpi, num_classes, num_runs, output_paths
 )
+from pgf_kernel_experiments.plots import set_axes_equal
 
 # %% Generate and save plots of predictions with Matern kernel
 
@@ -79,7 +80,7 @@ for i in range(num_runs):
 
     ax.set_box_aspect([1, 1, 1])
 
-    ax.set_aspect("equal")
+    set_axes_equal(ax)
 
     ax.grid(False)
     ax.axis('off')
