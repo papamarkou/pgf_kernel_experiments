@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from pgf_kernel_experiments.experiments.cox_process.kernel_comparison.setting01.set_env import (
-    data_paths, dpi, num_runs, output_paths
+    data_paths, dpi, num_classes, num_runs, output_paths
 )
 
 # %% Generate and save plots of predictions with RBF kernel
@@ -61,18 +61,19 @@ for i in range(num_runs):
         cstride=1,
         rstride=1,
         edgecolor='none',
-        alpha=0.25
+        alpha=0.15
     )
 
     # Plot projections
 
-    ax.scatter(
-        projected_x[:, 0],
-        projected_x[:, 1],
-        projected_x[:, 2],
-        color="k",
-        s=20
-    )
+    for j in range(num_classes):
+        ax.scatter(
+            projected_x[labels == j, 0],
+            projected_x[labels == j, 1],
+            projected_x[labels == j, 2],
+            color='C'+str(j),
+            s=10
+        )
 
     # Configure plot
 
@@ -97,5 +98,3 @@ for i in range(num_runs):
     )
 
     plt.close(fig)
-
-# %%
