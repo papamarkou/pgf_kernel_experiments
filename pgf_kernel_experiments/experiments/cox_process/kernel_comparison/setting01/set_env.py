@@ -32,6 +32,8 @@ num_gps = 5
 init_train_seed = 607000
 num_train_seeds = 5*num_gps*num_runs
 
+torch.manual_seed(init_train_seed)
+
 train_seeds = torch.randint(init_train_seed, init_train_seed+100*num_train_seeds, (num_gps, num_train_seeds))
 
 # %% Set hyperparameters of Cox process
