@@ -20,8 +20,8 @@ manual_ylim = True
 if manual_ylim:
     manual_ylims = [[15, 25] for _ in range(num_runs)]
 
-kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
-labels = ['PGF kernel','RBF kernel', 'Matern kernel', 'Periodic kernel', 'Spectral kernel']
+kernel_names = ['pgf', 'rbf', 'matern', 'periodic']
+labels = ['PGF kernel','RBF kernel', 'Matern kernel', 'Periodic kernel']
 
 label_fontsize = 11
 axis_fontsize = 11

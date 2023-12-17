@@ -16,7 +16,7 @@ num_runs = 1
 
 # %% Data simulation setup
 
-num_classes = 10
+num_classes = 5
 perc_train = 0.5
 
 # %% Training setup

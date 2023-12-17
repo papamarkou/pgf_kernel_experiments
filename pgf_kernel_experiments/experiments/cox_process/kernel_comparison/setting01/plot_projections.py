@@ -24,16 +24,14 @@ kernel_keys = {
     0 : 'pgf',
     1 : 'rbf',
     2 : 'matern',
-    3 : 'periodic',
-    4 : 'spectral' 
+    3 : 'periodic'
 }
 
 titles = {
     'pgf' : 'PGF kernel',
     'rbf' : 'RBF kernel',
     'matern' : 'Matern kernel',
-    'periodic' : 'Periodic kernel',
-    'spectral' : 'Spectral kernel'
+    'periodic' : 'Periodic kernel'
 }
 
 # %% Generate data that determine the spherical surface
@@ -69,7 +67,6 @@ for i in range(num_runs):
     projected_x['rbf'] = np.loadtxt(output_paths[i].joinpath('rbf_dkl_projections.csv'), delimiter=',')
     projected_x['matern'] = np.loadtxt(output_paths[i].joinpath('matern_dkl_projections.csv'), delimiter=',')
     projected_x['periodic'] = np.loadtxt(output_paths[i].joinpath('periodic_dkl_projections.csv'), delimiter=',')
-    projected_x['spectral'] = np.loadtxt(output_paths[i].joinpath('spectral_dkl_projections.csv'), delimiter=',')
 
     # Plot data, including separate training and test data (adding color map)
 

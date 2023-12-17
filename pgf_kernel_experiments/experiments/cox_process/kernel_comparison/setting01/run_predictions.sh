@@ -5,7 +5,6 @@ declare -a files=(
     "make_rbf_dkl_predictions.py"
     "make_matern_dkl_predictions.py"
     "make_periodic_dkl_predictions.py"
-    "make_spectral_dkl_predictions.py"
     "merge_predictions.py"
 )
 

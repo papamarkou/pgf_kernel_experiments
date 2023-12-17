@@ -5,7 +5,6 @@ declare -a files=(
     "train_rbf_dkl.py"
     "train_matern_dkl.py"
     "train_periodic_dkl.py"
-    "train_spectral_dkl.py"
 )
 
 for file in "${files[@]}"

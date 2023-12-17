@@ -6,7 +6,7 @@ from pgf_kernel_experiments.experiments.cox_process.kernel_comparison.setting01.
 
 # %% Merge and save predictions in a single file per run
 
-kernel_names = ['pgf', 'rbf', 'matern', 'periodic', 'spectral']
+kernel_names = ['pgf', 'rbf', 'matern', 'periodic']
 
 for run_count in range(num_runs):
     all_predictions = []
