@@ -11,7 +11,8 @@ use_cuda = True
 
 # %% Set number of runs
 
-num_runs = 4
+num_runs = 1
+# num_runs = 4
 
 # %% Data simulation setup
 
