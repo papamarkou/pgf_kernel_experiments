@@ -1,11 +1,11 @@
 #!/bin/bash
 
 declare -a files=(
-    "train_pgf_gp.py"
-    "train_rbf_gp.py"
-    "train_matern_gp.py"
-    "train_periodic_gp.py"
-    "train_spectral_gp.py"
+    "train_pgf_dkl.py"
+    "train_rbf_dkl.py"
+    "train_matern_dkl.py"
+    "train_periodic_dkl.py"
+    "train_spectral_dkl.py"
 )
 
 for file in "${files[@]}"
