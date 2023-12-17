@@ -1,11 +1,10 @@
 # %% Import packages
 
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 
-from pgf_kernel_experiments.experiments.discoball.kernel_comparison.setting01.set_env import (
-    a, data_paths, dpi, num_runs, num_test, output_paths
+from pgf_kernel_experiments.experiments.cox_process.kernel_comparison.setting01.set_env import (
+    data_paths, dpi, num_classes, num_runs, output_paths
 )
 from pgf_kernel_experiments.plots import set_axes_equal
 

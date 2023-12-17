@@ -8,7 +8,7 @@ from pgf_kernel_experiments.experiments.cox_process.kernel_comparison.setting01.
 )
 from pgf_kernel_experiments.plots import set_axes_equal
 
-# %% Generate and save plots of predictions with Matern kernel
+# %% Generate and save plots of projections with Matern kernel
 
 verbose = True
 if verbose:
