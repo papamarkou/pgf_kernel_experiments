@@ -1,7 +1,7 @@
 #!/bin/bash
 
 declare -a files=(
-    "plot_predictions.py"
+    "plot_projections.py"
     "plot_losses.py"
 )
 

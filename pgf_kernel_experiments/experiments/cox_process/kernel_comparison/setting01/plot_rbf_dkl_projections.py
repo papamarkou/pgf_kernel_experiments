@@ -8,12 +8,12 @@ from pgf_kernel_experiments.experiments.cox_process.kernel_comparison.setting01.
 )
 from pgf_kernel_experiments.plots import set_axes_equal
 
-# %% Generate and save plots of projections with spectral kernel
+# %% Generate and save plots of projections with RBF kernel
 
 verbose = True
 if verbose:
     num_run_digits = len(str(num_runs))
-    msg = 'Plotting predictions of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
+    msg = 'Plotting projections of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
 
 xyz_lim = 0.63
 
@@ -45,7 +45,7 @@ for i in range(num_runs):
 
     # Load projections
 
-    projected_x = np.loadtxt(output_paths[i].joinpath('spectral_dkl_projections.csv'), delimiter=',')
+    projected_x = np.loadtxt(output_paths[i].joinpath('rbf_dkl_projections.csv'), delimiter=',')
 
     # Set up figure
 
@@ -92,7 +92,7 @@ for i in range(num_runs):
     # Save plot
 
     plt.savefig(
-        output_paths[i].joinpath('spectral_dkl_predictions.pdf'),
+        output_paths[i].joinpath('rbf_dkl_projections.pdf'),
         dpi=dpi,
         bbox_inches='tight',
         pad_inches=0.1
