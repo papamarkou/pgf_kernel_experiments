@@ -28,7 +28,7 @@ if verbose:
 xyz_lim = 0.63
 
 view_inits = [
-    {'elev' : -10, 'azim' : 20, 'roll' : -40},
+    {'elev' : -20, 'azim' : 80, 'roll' : -30},
     {'elev' : 30, 'azim' : -60, 'roll' : 10},
     {'elev' : 30, 'azim' : -60, 'roll' : 10},
     {'elev' : 30, 'azim' : -60, 'roll' : 10}
@@ -55,6 +55,12 @@ for i in range(num_runs):
     fig = plt.figure()
 
     ax = fig.add_subplot(111, projection='3d')
+
+    ax.view_init(
+        elev=view_inits[i]['elev'],
+        azim=view_inits[i]['azim'],
+        roll=view_inits[i]['roll']
+    )
 
     # Plot spherical surface
 

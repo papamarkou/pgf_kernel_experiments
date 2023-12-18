@@ -56,6 +56,12 @@ for i in range(num_runs):
 
     ax = fig.add_subplot(111, projection='3d')
 
+    ax.view_init(
+        elev=view_inits[i]['elev'],
+        azim=view_inits[i]['azim'],
+        roll=view_inits[i]['roll']
+    )
+
     # Plot spherical surface
 
     ax.plot_surface(
