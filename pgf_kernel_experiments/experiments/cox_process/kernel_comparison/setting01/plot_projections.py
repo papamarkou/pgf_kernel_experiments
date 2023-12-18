@@ -8,7 +8,17 @@ from pgf_kernel_experiments.experiments.cox_process.kernel_comparison.setting01.
 )
 from pgf_kernel_experiments.plots import set_axes_equal
 
-# %% Generate and save plots of projections with PGF kernel
+# %% Generate data that determine the spherical surface
+
+# https://stackoverflow.com/questions/31768031/plotting-points-on-the-surface-of-a-sphere
+
+surface = {'r' : 1.}
+surface['phi'], surface['theta'] = np.mgrid[0.0:np.pi:100j, 0.0:2.0*np.pi:100j]
+surface['x'] = surface['r'] * np.sin(surface['phi']) * np.cos(surface['theta'])
+surface['y'] = surface['r'] * np.sin(surface['phi']) * np.sin(surface['theta'])
+surface['z'] = surface['r'] * np.cos(surface['phi'])
+
+# %% Generate and save plots of projections
 
 verbose = True
 if verbose:
@@ -34,19 +44,32 @@ titles = {
     'periodic' : 'Periodic kernel'
 }
 
-# %% Generate data that determine the spherical surface
-
-# https://stackoverflow.com/questions/31768031/plotting-points-on-the-surface-of-a-sphere
-
-surface = {'r' : 1.}
-surface['phi'], surface['theta'] = np.mgrid[0.0:np.pi:100j, 0.0:2.0*np.pi:100j]
-surface['x'] = surface['r'] * np.sin(surface['phi']) * np.cos(surface['theta'])
-surface['y'] = surface['r'] * np.sin(surface['phi']) * np.sin(surface['theta'])
-surface['z'] = surface['r'] * np.cos(surface['phi'])
-
-# %% Generate and save plots of projections
-
-# https://stackoverflow.com/questions/31768031/plotting-points-on-the-surface-of-a-sphere
+view_inits = {
+    'pgf' : [
+        {'elev' : -10, 'azim' : 20, 'roll' : -40},
+        {'elev' : 30, 'azim' : -60, 'roll' : 10},
+        {'elev' : 30, 'azim' : -60, 'roll' : 10},
+        {'elev' : 30, 'azim' : -60, 'roll' : 10}
+    ],
+    'rbf' : [
+        {'elev' : -20, 'azim' : 80, 'roll' : -30},
+        {'elev' : 30, 'azim' : -60, 'roll' : 10},
+        {'elev' : 30, 'azim' : -60, 'roll' : 10},
+        {'elev' : 30, 'azim' : -60, 'roll' : 10}
+    ],
+    'matern' : [
+        {'elev' : -10, 'azim' : 20, 'roll' : -20},
+        {'elev' : 30, 'azim' : -60, 'roll' : 10},
+        {'elev' : 30, 'azim' : -60, 'roll' : 10},
+        {'elev' : 30, 'azim' : -60, 'roll' : 10}
+    ],
+    'periodic' : [
+        {'elev' : -10, 'azim' : 0, 'roll' : -40},
+        {'elev' : 30, 'azim' : -60, 'roll' : 10},
+        {'elev' : 30, 'azim' : -60, 'roll' : 10},
+        {'elev' : 30, 'azim' : -60, 'roll' : 10}
+    ]
+}
 
 for i in range(num_runs):
     # If verbose, state run number
@@ -77,12 +100,18 @@ for i in range(num_runs):
         bottom=0.0,
         right=1.0,
         top=1.0,
-        wspace=-0.64,
+        wspace=0.0,
         hspace=0.15
     )
 
     for j in range(len(kernel_keys)):
-        ax = fig.add_subplot(2, 3, j+1, projection='3d')
+        ax = fig.add_subplot(1, 4, j+1, projection='3d')
+
+        ax.view_init(
+            elev=view_inits[kernel_keys[j]][i]['elev'],
+            azim=view_inits[kernel_keys[j]][i]['azim'],
+            roll=view_inits[kernel_keys[j]][i]['roll']
+        )
 
         ax.plot_surface(
             surface['x'],
