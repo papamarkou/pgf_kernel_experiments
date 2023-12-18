@@ -11,18 +11,16 @@ use_cuda = True
 
 # %% Set number of runs
 
-num_runs = 1
-# num_runs = 4
+num_runs = 4
 
 # %% Data simulation setup
 
 num_classes = 4
-# num_classes = 5
 perc_train = 0.5
 
 # %% Training setup
 
-num_train_iters = 1000
+num_train_iters = 500
 
 # %% Set seeds
 
@@ -39,8 +37,7 @@ train_seeds = torch.randint(init_train_seed, init_train_seed+100*num_train_seeds
 
 # %% Set hyperparameters of Cox process
 
-n = 14
-# n = 19
+n = 17
 lambdas = np.full(num_classes, 850.)
 kappas = np.full(num_classes, 20.)
 
