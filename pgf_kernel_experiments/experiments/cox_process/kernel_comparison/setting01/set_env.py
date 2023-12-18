@@ -16,7 +16,8 @@ num_runs = 1
 
 # %% Data simulation setup
 
-num_classes = 5
+num_classes = 4
+# num_classes = 5
 perc_train = 0.5
 
 # %% Training setup
@@ -38,7 +39,8 @@ train_seeds = torch.randint(init_train_seed, init_train_seed+100*num_train_seeds
 
 # %% Set hyperparameters of Cox process
 
-n = 19
+n = 14
+# n = 19
 lambdas = np.full(num_classes, 850.)
 kappas = np.full(num_classes, 20.)
 
