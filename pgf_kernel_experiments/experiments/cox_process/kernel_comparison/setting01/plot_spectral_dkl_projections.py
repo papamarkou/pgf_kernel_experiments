@@ -8,15 +8,6 @@ from pgf_kernel_experiments.experiments.cox_process.kernel_comparison.setting01.
 )
 from pgf_kernel_experiments.plots import set_axes_equal
 
-# %% Generate and save plots of projections with spectral kernel
-
-verbose = True
-if verbose:
-    num_run_digits = len(str(num_runs))
-    msg = 'Plotting projections of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
-
-xyz_lim = 0.63
-
 # %% Generate data that determine the spherical surface
 
 # https://stackoverflow.com/questions/31768031/plotting-points-on-the-surface-of-a-sphere
@@ -27,9 +18,21 @@ surface['x'] = surface['r'] * np.sin(surface['phi']) * np.cos(surface['theta'])
 surface['y'] = surface['r'] * np.sin(surface['phi']) * np.sin(surface['theta'])
 surface['z'] = surface['r'] * np.cos(surface['phi'])
 
-# %% Generate and save plots of projections
+# %% Generate and save plots of projections with spectral kernel
 
-# https://stackoverflow.com/questions/31768031/plotting-points-on-the-surface-of-a-sphere
+verbose = True
+if verbose:
+    num_run_digits = len(str(num_runs))
+    msg = 'Plotting projections of run {:'+str(num_run_digits)+'d}/{:'+str(num_run_digits)+'d}...'
+
+xyz_lim = 0.63
+
+view_inits = [
+    {'elev' : -10, 'azim' : 20, 'roll' : -40},
+    {'elev' : 30, 'azim' : -60, 'roll' : 10},
+    {'elev' : 30, 'azim' : -60, 'roll' : 10},
+    {'elev' : 30, 'azim' : -60, 'roll' : 10}
+]
 
 for i in range(num_runs):
     # If verbose, state run number
