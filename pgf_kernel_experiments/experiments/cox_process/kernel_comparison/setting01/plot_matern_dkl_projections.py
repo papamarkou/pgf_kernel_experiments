@@ -28,7 +28,7 @@ if verbose:
 xyz_lim = 0.63
 
 view_inits = [
-    {'elev' : -10, 'azim' : 20, 'roll' : -40},
+    {'elev' : -10, 'azim' : 20, 'roll' : -20},
     {'elev' : 30, 'azim' : -60, 'roll' : 10},
     {'elev' : 30, 'azim' : -60, 'roll' : 10},
     {'elev' : 30, 'azim' : -60, 'roll' : 10}
