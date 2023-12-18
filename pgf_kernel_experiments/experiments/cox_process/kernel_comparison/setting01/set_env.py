@@ -26,7 +26,7 @@ num_train_iters = 500
 
 data_seed = 7000
 
-num_gps = 5
+num_gps = 4
 
 init_train_seed = 607000
 num_train_seeds = 5*num_gps*num_runs
