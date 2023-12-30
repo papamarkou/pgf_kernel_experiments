@@ -23,7 +23,7 @@ if verbose:
 
 xyz_lim = 0.63
 
-title_fontsize = 19
+title_fontsize = 20
 colorbar_fontsize = 17
 
 for i in range(num_runs):

@@ -27,7 +27,7 @@ if verbose:
 
 xyz_lim = 0.63
 
-title_fontsize = 15
+title_fontsize = 16
 colorbar_fontsize = 11
 
 kernel_keys = {
