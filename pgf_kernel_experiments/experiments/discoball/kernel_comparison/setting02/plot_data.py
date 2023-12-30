@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from pgf_kernel_experiments.experiments.discoball.kernel_comparison.setting02.set_env import (
-    a, data_paths, dpi, num_runs, num_test, output_paths
+    data_paths, dpi, num_runs, num_test, output_paths
 )
 from pgf_kernel_experiments.plots import set_axes_equal
 
@@ -100,32 +100,32 @@ for i in range(num_runs):
 
     # Generate plot points for test data
 
-    non_test_ids = np.array(list(set(ids).difference(set(test_ids))))
-    non_test_ids.sort()
+    # non_test_ids = np.array(list(set(ids).difference(set(test_ids))))
+    # non_test_ids.sort()
 
-    test_v_signal_plot = v.flatten()
-    test_v_signal_plot[non_test_ids] = np.nan
-    test_v_signal_plot = test_v_signal_plot.reshape(dims[0], dims[1], order='C')
-    test_v_signal_plot = np.vstack([test_v_signal_plot, test_v_signal_plot[0, :]])
+    # test_v_signal_plot = v.flatten()
+    # test_v_signal_plot[non_test_ids] = np.nan
+    # test_v_signal_plot = test_v_signal_plot.reshape(dims[0], dims[1], order='C')
+    # test_v_signal_plot = np.vstack([test_v_signal_plot, test_v_signal_plot[0, :]])
 
     # Plot data, including separate training and test data (adding color map)
 
-    fig = plt.figure(figsize=[14, 6])
+    fig = plt.figure(figsize=[8.25, 6])
 
     # https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subplots_adjust.html
     # https://stackoverflow.com/questions/6541123/improve-subplot-size-spacing-with-many-subplots
     # https://www.geeksforgeeks.org/how-to-set-the-spacing-between-subplots-in-matplotlib-in-python/
 
     fig.subplots_adjust(
-        left=-0.1,
+        left=-0.2,
         bottom=0.0,
-        right=1.0,
+        right=1.1,
         top=1.0,
-        wspace=-0.02, # -0.65,
-        hspace=0.0 # 0.15
+        wspace=-0.02,
+        hspace=0.0
     )
 
-    ax1 = fig.add_subplot(1, 3, 1, projection='3d')
+    ax1 = fig.add_subplot(1, 2, 1, projection='3d')
 
     norm = plt.Normalize()
 
@@ -156,7 +156,7 @@ for i in range(num_runs):
     ax1.set_ylim(-xyz_lim, xyz_lim)
     ax1.set_zlim(-xyz_lim, xyz_lim)
 
-    ax2 = fig.add_subplot(1, 3, 2, projection='3d')
+    ax2 = fig.add_subplot(1, 2, 2, projection='3d')
 
     ax2.view_init(elev=30, azim=-50, roll=10)
     # ax2.view_init(elev=30, azim=-60, roll=10) # default
@@ -178,33 +178,33 @@ for i in range(num_runs):
     ax2.set_ylim(-xyz_lim, xyz_lim)
     ax2.set_zlim(-xyz_lim, xyz_lim)
 
-    ax3 = fig.add_subplot(1, 3, 3, projection='3d')
+    # ax3 = fig.add_subplot(1, 3, 3, projection='3d')
 
-    ax3.view_init(elev=30, azim=-50, roll=10)
-    # ax3.view_init(elev=30, azim=-60, roll=10) # default
+    # ax3.view_init(elev=30, azim=-50, roll=10)
+    # # ax3.view_init(elev=30, azim=-60, roll=10) # default
 
-    ax3.plot_surface(
-        x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(test_v_signal_plot)), edgecolor='none'
-    )
+    # ax3.plot_surface(
+    #     x_plot, y_plot, z_plot, cstride=1, rstride=1, facecolors=cmap(norm(test_v_signal_plot)), edgecolor='none'
+    # )
 
-    ax3.set_title('Test data', fontsize=title_fontsize)
+    # ax3.set_title('Test data', fontsize=title_fontsize)
 
-    ax3.set_box_aspect([1, 1, 1])
+    # ax3.set_box_aspect([1, 1, 1])
 
-    # ax3.set_proj_type('ortho') # default is perspective
+    # # ax3.set_proj_type('ortho') # default is perspective
 
-    set_axes_equal(ax3)
+    # set_axes_equal(ax3)
 
-    ax3.grid(False)
-    ax3.axis('off')
+    # ax3.grid(False)
+    # ax3.axis('off')
 
-    ax3.set_xlim(-xyz_lim, xyz_lim)
-    ax3.set_ylim(-xyz_lim, xyz_lim)
-    ax3.set_zlim(-xyz_lim, xyz_lim)
+    # ax3.set_xlim(-xyz_lim, xyz_lim)
+    # ax3.set_ylim(-xyz_lim, xyz_lim)
+    # ax3.set_zlim(-xyz_lim, xyz_lim)
 
     # https://www.geeksforgeeks.org/set-matplotlib-colorbar-size-to-match-graph/
 
-    fig.subplots_adjust(bottom=0.0, right=0.80, top=1.0)
+    fig.subplots_adjust(bottom=0.0, right=0.8, top=1.0)
 
     cax = fig.add_axes([0.80, 0.2, 0.01, 0.6])
 
@@ -215,11 +215,14 @@ for i in range(num_runs):
 
     # https://stackoverflow.com/questions/69435068/change-colorbar-limit-for-changing-scale-with-matplotlib-3-3
 
-    cb.mappable.set_clim(-a, a)
+    clim_l = round(v.min(), 1)
+    clim_u = round(v.max(), 1)
+
+    cb.mappable.set_clim(clim_l, clim_u)
 
     # https://jdhao.github.io/2017/06/11/mpl_multiplot_one_colorbar/
 
-    cb_tick_points = np.arange(-a, a+0.5*a, 0.5*a)
+    cb_tick_points = np.arange(0., 3.+1., 1.)
     cb.set_ticks(cb_tick_points)
     # cb.set_ticklabels(cb_tick_points)
 
