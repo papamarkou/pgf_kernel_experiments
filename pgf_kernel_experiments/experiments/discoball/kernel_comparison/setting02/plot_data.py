@@ -23,8 +23,8 @@ if verbose:
 
 xyz_lim = 0.63
 
-title_fontsize = 15
-colorbar_fontsize = 11
+title_fontsize = 19
+colorbar_fontsize = 17
 
 for i in range(num_runs):
     # If verbose, state run number
