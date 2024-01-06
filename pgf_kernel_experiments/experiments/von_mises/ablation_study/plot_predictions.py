@@ -16,14 +16,23 @@ data = np.loadtxt(
 grid = data[:, 1:3]
 x = data[:, 1]
 y = data[:, 2]
-z = data[:, 3]
+z_signal = data[:, 3]
+z = data[:, 5]
 
+train_ids = np.loadtxt(data_path.joinpath('train_ids.csv'), dtype='int')
 test_ids = np.loadtxt(data_path.joinpath('test_ids.csv'), dtype='int')
+
+# %% Get training data
+
+train_pos = grid[train_ids, :]
+
+train_output = z[train_ids]
 
 # %% Get test data
 
 test_pos = grid[test_ids, :]
-test_output = z[test_ids]
+
+test_output = z_signal[test_ids]
 
 # %% Load predictions
 
@@ -37,7 +46,7 @@ predictions = np.loadtxt(
 
 titles = [
     [r'$m_1 = 2$', r'$m_1 = 100$', r'$m_1 = 200$', 'Test data'],
-    [r'$m_1 = 10$', r'$m_1 = 10, m_2 = 10$', r'$m_1 = 10, m_2 = 10, m_3 = 10$', 'Test data']
+    [r'$m_1 = 10$', r'$m_1 = 10, m_2 = 10$', r'$m_1 = 10, m_2 = 10, m_3 = 10$', 'Training data']
 ]
 
 title_fontsize = 13
@@ -61,6 +70,7 @@ line_width = 2
 pdf_line_col = '#069AF3' # azure
 circle_line_col = 'black'
 
+train_point_col = '#F97306' # orange
 test_point_col = '#C20078' # magenta
 pred_point_col = '#E50000' # red
 
@@ -78,7 +88,7 @@ ax[0, 0].scatter(
     marker=point_marker,
     s=point_size
 )
-ax[0, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[0, 0].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[0, 1].scatter(
     test_pos[:, 0],
@@ -89,7 +99,7 @@ ax[0, 1].scatter(
     s=point_size
 )
 
-ax[0, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[0, 1].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[0, 2].scatter(
     test_pos[:, 0],
@@ -100,7 +110,7 @@ ax[0, 2].scatter(
     s=point_size
 )
 
-ax[0, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[0, 2].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[0, 3].scatter(
     test_pos[:, 0],
@@ -111,7 +121,7 @@ ax[0, 3].scatter(
     s=point_size
 )
 
-ax[0, 3].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[0, 3].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[1, 0].scatter(
     test_pos[:, 0],
@@ -122,7 +132,7 @@ ax[1, 0].scatter(
     s=point_size
 )
 
-ax[1, 0].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[1, 0].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[1, 1].scatter(
     test_pos[:, 0],
@@ -133,7 +143,7 @@ ax[1, 1].scatter(
     s=point_size
 )
 
-ax[1, 1].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[1, 1].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[1, 2].scatter(
     test_pos[:, 0],
@@ -144,18 +154,18 @@ ax[1, 2].scatter(
     s=point_size
 )
 
-ax[1, 2].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[1, 2].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 ax[1, 3].scatter(
-    test_pos[:, 0],
-    test_pos[:, 1],
-    test_output,
-    color=test_point_col,
+    train_pos[:, 0],
+    train_pos[:, 1],
+    train_output,
+    color=train_point_col,
     marker=point_marker,
     s=point_size
 )
 
-ax[1, 3].plot(x, y, z, color=pdf_line_col, lw=line_width)
+ax[1, 3].plot(x, y, z_signal, color=pdf_line_col, lw=line_width)
 
 for i in range(2):
     for j in range(4):
