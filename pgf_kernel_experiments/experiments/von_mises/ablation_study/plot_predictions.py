@@ -46,7 +46,12 @@ predictions = np.loadtxt(
 
 titles = [
     [r'$m_1 = 2$', r'$m_1 = 100$', r'$m_1 = 200$', 'Test data'],
-    [r'$m_1 = 10$', r'$m_1 = 10, m_2 = 10$', r'$m_1 = 10, m_2 = 10, m_3 = 10$', 'Training data']
+    [
+        r'$m_1 = 10$',
+        r'$(m_1, m_2) = (10, 10)$',
+        r'$(m_1, m_2, m_3) = (10, 10, 10)$',
+        'Training data'
+    ]
 ]
 
 title_fontsize = 13
