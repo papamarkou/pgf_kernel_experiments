@@ -234,9 +234,18 @@ for i in range(num_runs):
 
     # Save plot
 
+    # plt.savefig(
+    #     output_paths[i].joinpath('data.pdf'),
+    #     dpi=dpi,
+    #     bbox_inches='tight',
+    #     pad_inches=0.1
+    # )
+
     plt.savefig(
-        output_paths[i].joinpath('data.pdf'),
-        dpi=dpi,
+        output_paths[i].joinpath('data.png'),
+        dpi=300,
+        pil_kwargs={'quality': 100},
+        transparent=True,
         bbox_inches='tight',
         pad_inches=0.1
     )
